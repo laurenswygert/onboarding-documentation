@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Billing Deal Parameters: Importer & Integration Policy</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #404040;
+    background: #f5f5f5;
+    padding: 2rem 1rem;
+  }
+
+  .page {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 2.5rem 3rem;
+    border: 1px solid #ddd;
+  }
+
+  /* ── Title block ── */
+  .doc-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #767676;
+    margin-bottom: 0.4rem;
+  }
+
+  .doc-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1F3864;
+    border-bottom: 3px solid #4472C4;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.25;
+  }
+
+  .doc-meta {
+    font-size: 12px;
+    color: #767676;
+    margin-bottom: 2rem;
+  }
+
+  .doc-meta strong { color: #404040; }
+
+  /* ── Section headings ── */
+  h2 {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1F3864;
+    border-bottom: 2px solid #2E5496;
+    padding-bottom: 5px;
+    margin: 2.5rem 0 0.75rem;
+  }
+
+  h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #2E5496;
+    margin: 1.5rem 0 0.5rem;
+  }
+
+  h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1F3864;
+    margin: 1.25rem 0 0.4rem;
+  }
+
+  p { margin-bottom: 0.6rem; }
+
+  ul {
+    margin: 0.4rem 0 0.8rem 1.5rem;
+  }
+
+  ul li { margin-bottom: 0.3rem; }
+
+  /* ── Tables ── */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 1rem 0 0.5rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+  }
+
+  th {
+    background: #1F3864;
+    color: #fff;
+    font-weight: 700;
+    text-align: center;
+    padding: 9px 10px;
+    border: 1px solid #c0c0c0;
+    vertical-align: middle;
+    line-height: 1.3;
+  }
+
+  td {
+    padding: 8px 10px;
+    border: 1px solid #d4d4d4;
+    vertical-align: middle;
+    line-height: 1.4;
+  }
+
+  .tier-cell {
+    background: #D6E4F7;
+    color: #1F3864;
+    font-weight: 700;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .cell-yes {
+    background: #E2EFDA;
+    color: #375623;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  .cell-no {
+    background: #FCE4E4;
+    color: #C00000;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  .cell-cond {
+    background: #FFF2CC;
+    color: #C55A11;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .cell-center { text-align: center; }
+  .cell-mid { color: #2E5496; font-weight: 700; text-align: center; }
+  .cell-muted { color: #767676; text-align: center; }
+  .row-alt { background: #F2F2F2; }
+  .row-white { background: #fff; }
+
+  /* ── Note boxes ── */
+  .note-box {
+    border-left: 5px solid;
+    padding: 0.75rem 1rem;
+    margin: 1rem 0;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .note-box .note-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.35rem;
+  }
+
+  .note-box .note-body {
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .note-box.orange {
+    background: #FCE9DC;
+    border-color: #C55A11;
+  }
+  .note-box.orange .note-label { color: #C55A11; }
+
+  .note-box.red {
+    background: #FCE4E4;
+    border-color: #C00000;
+  }
+  .note-box.red .note-label { color: #C00000; }
+
+  .note-box.green {
+    background: #E2EFDA;
+    border-color: #375623;
+  }
+  .note-box.green .note-label { color: #375623; }
+
+  /* ── Footer ── */
+  .doc-footer {
+    border-top: 1px solid #ccc;
+    margin-top: 2.5rem;
+    padding-top: 0.75rem;
+    font-size: 12px;
+    color: #767676;
+    font-style: italic;
+    text-align: center;
+  }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .page { border: none; padding: 1.5rem 2rem; max-width: 100%; }
+    h2 { page-break-after: avoid; }
+    table { font-size: 11px; }
+    th, td { padding: 6px 8px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Title -->
+  <p class="doc-label">Internal — Sales Use Only</p>
+  <h1 class="doc-title">Billing Deal Parameters: Importer &amp; Integration Policy</h1>
+  <p class="doc-meta">Effective immediately &nbsp;|&nbsp; <strong>These parameters are non-negotiable unless explicitly noted.</strong></p>
+
+  <!-- ═══════════════════════════════════════════════════
+       SECTION 1: Importer Allowances
+  ════════════════════════════════════════════════════ -->
+  <h2>Section 1: Importer Allowances by Contract Tier</h2>
+  <p>Importers refer to importer formats, not providers. The limits below govern how many importer formats are included in each contract tier at no additional charge. These thresholds are firm and are not a negotiating point.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:20%">Contract Tier</th>
+          <th style="width:35%">Included Importers</th>
+          <th style="width:45%">Additional Importer Cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-alt">
+          <td class="tier-cell">Startup</td>
+          <td class="cell-mid">2 formats</td>
+          <td>$100/month per additional format</td>
+        </tr>
+        <tr class="row-white">
+          <td class="tier-cell">Commercial</td>
+          <td class="cell-mid">4 formats</td>
+          <td>$100/month per additional format</td>
+        </tr>
+        <tr class="row-alt">
+          <td class="tier-cell">Mid-Size</td>
+          <td class="cell-mid">6 formats</td>
+          <td>$100/month per additional format</td>
+        </tr>
+        <tr class="row-white">
+          <td class="tier-cell">Strategic</td>
+          <td class="cell-mid">8 formats</td>
+          <td>$100/month per additional format</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Key Rules — Importers</h3>
+  <ul>
+    <li>The $100/month per additional importer format charge is non-negotiable across all tiers.</li>
+    <li>Startup contracts are capped at 2 importer formats. No exceptions.</li>
+    <li>Additional importers beyond the included count must be charged at $100/month recurring — this cannot be waived or deferred.</li>
+  </ul>
+
+  <div class="note-box orange">
+    <p class="note-label">Commercial Tier — Critical Onboarding Requirement</p>
+    <p class="note-body">Any additional included importers for Commercial accounts must be built during the onboarding period. Clients may not defer unused importer slots to use later. The free-build window closes the moment the account transitions to Client Success. There are no exceptions to this policy.</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       SECTION 2: Integration & Free Period Policy
+  ════════════════════════════════════════════════════ -->
+  <h2>Section 2: Integration &amp; Free Period Policy</h2>
+  <p>Free periods (deferred billing, grace periods, or complimentary access periods) on integrations and add-ons are governed by the rules below. Deviations from this policy are not permitted.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:11%">Contract Tier</th>
+          <th style="width:15%">Enterprise Customer Portal</th>
+          <th style="width:14%">Agent Portal</th>
+          <th style="width:13%">DocuSign</th>
+          <th style="width:13%">QuickBooks</th>
+          <th style="width:14%">Odin Integration</th>
+          <th style="width:13%">ConnectWise</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="tier-cell">Startup</td>
+          <td class="cell-no">✗ Not Permitted</td>
+          <td class="cell-no">✗ Not Permitted</td>
+          <td class="cell-no">✗ Not Permitted</td>
+          <td class="cell-no">✗ Not Permitted</td>
+          <td class="cell-no">✗ Not Permitted</td>
+          <td class="cell-no">✗ Not Permitted</td>
+        </tr>
+        <tr>
+          <td class="tier-cell">Commercial</td>
+          <td class="cell-yes">✓ Permitted</td>
+          <td class="cell-cond">Max 6-month deferral</td>
+          <td class="cell-cond">Max 6-month deferral</td>
+          <td class="cell-cond">Max 6-month deferral</td>
+          <td class="cell-cond">Max 6-month deferral</td>
+          <td class="cell-no">✗ Not Permitted</td>
+        </tr>
+        <tr>
+          <td class="tier-cell">Mid-Size</td>
+          <td class="cell-yes">✓ Permitted</td>
+          <td class="cell-yes">✓ Permitted</td>
+          <td class="cell-yes">✓ Permitted</td>
+          <td class="cell-yes">✓ Permitted</td>
+          <td class="cell-yes">✓ Permitted</td>
+          <td class="cell-no">✗ Not Permitted</td>
+        </tr>
+        <tr>
+          <td class="tier-cell">Strategic</td>
+          <td class="cell-yes">✓ Permitted</td>
+          <td class="cell-yes">✓ Permitted</td>
+          <td class="cell-yes">✓ Permitted</td>
+          <td class="cell-yes">✓ Permitted</td>
+          <td class="cell-yes">✓ Permitted</td>
+          <td class="cell-no">✗ Not Permitted</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Policy Details by Integration Type</h3>
+
+  <h4>Enterprise Customer Portal</h4>
+  <ul>
+    <li>Startup: Not permitted.</li>
+    <li>Commercial: Free periods permitted.</li>
+    <li>Mid-Size &amp; Strategic: Free periods permitted.</li>
+  </ul>
+
+  <h4>Agent Portal &amp; DocuSign</h4>
+  <ul>
+    <li>Startup: Not permitted.</li>
+    <li>Commercial: Maximum 6-month deferral only. Cannot be extended.</li>
+    <li>Mid-Size &amp; Strategic: Free periods permitted.</li>
+  </ul>
+
+  <h4>QuickBooks &amp; Odin Integration</h4>
+  <ul>
+    <li>Startup: Not permitted.</li>
+    <li>Commercial: Maximum 6-month deferral only. Cannot be extended beyond 6 months under any circumstances.</li>
+    <li>Mid-Size &amp; Strategic: Free periods permitted.</li>
+  </ul>
+
+  <h4>ConnectWise Integration</h4>
+  <ul>
+    <li>No free periods at any tier — Startup, Commercial, Mid-Size, or Strategic. No exceptions.</li>
+    <li>The setup complexity of ConnectWise integrations makes free periods untenable regardless of deal size.</li>
+  </ul>
+
+  <div class="note-box red">
+    <p class="note-label">ConnectWise — Absolute Restriction</p>
+    <p class="note-body">There are no free periods for ConnectWise integrations at any tier. This is not negotiable and cannot be offered as a concession in any deal.</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       SECTION 3: Comparatives & Data Loads
+  ════════════════════════════════════════════════════ -->
+  <h2>Section 3: Data Loads &amp; Comparative Reports by Contract Tier</h2>
+  <p>The following outlines the standard data load and comparative reporting process included with each contract tier during onboarding. These are not negotiable as add-ons or concessions.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:11%">Contract Tier</th>
+          <th style="width:14%">Comparative Reports</th>
+          <th style="width:14%">Comparative Data Sets</th>
+          <th style="width:14%">Data Loads</th>
+          <th style="width:19%">Iterations</th>
+          <th style="width:28%">Activation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-alt">
+          <td class="tier-cell">Startup</td>
+          <td class="cell-no">None</td>
+          <td class="cell-no">None</td>
+          <td class="cell-center">1 (mock billing in Rev.io)</td>
+          <td class="cell-muted">N/A</td>
+          <td>21-day cleanup window after mock billing. Activate on client go-ahead or at day 21.</td>
+        </tr>
+        <tr class="row-white">
+          <td class="tier-cell">Commercial</td>
+          <td class="cell-yes">✓ Included</td>
+          <td class="cell-mid">1</td>
+          <td class="cell-center">1 initial + 1 final</td>
+          <td>Iterations within the 1 data set</td>
+          <td>Final data load performed after comparative is complete.</td>
+        </tr>
+        <tr class="row-alt">
+          <td class="tier-cell">Mid-Size</td>
+          <td class="cell-yes">✓ Included</td>
+          <td class="cell-mid">1</td>
+          <td class="cell-center">1 initial + 1 final</td>
+          <td>Iterations within the 1 data set</td>
+          <td>Final data load performed after comparative is complete.</td>
+        </tr>
+        <tr class="row-white">
+          <td class="tier-cell">Strategic</td>
+          <td class="cell-yes">✓ Included</td>
+          <td class="cell-mid">2</td>
+          <td class="cell-center">1 per data set + 1 final</td>
+          <td>Iterations within each data set</td>
+          <td>Final data load performed after both data sets are signed off.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Key Rules — Comparatives &amp; Data Loads</h3>
+
+  <h4>Startup</h4>
+  <ul>
+    <li>One data load is performed and a mock billing is run in Rev.io.</li>
+    <li>Comparative reports are not included at this tier.</li>
+    <li>Following the mock billing, the client has 21 days to review and clean up their data.</li>
+    <li>If the client provides go-ahead before the 21-day window closes, activation will proceed immediately.</li>
+  </ul>
+
+  <h4>Commercial &amp; Mid-Size</h4>
+  <ul>
+    <li>One comparative report is included, consisting of one comparative data set with iterations.</li>
+    <li>One initial data load is performed before the comparative, and one final data load is performed once the comparative is complete.</li>
+  </ul>
+
+  <h4>Strategic</h4>
+  <ul>
+    <li>Two comparative data sets are included, each with its own data load and iterations.</li>
+    <li>A final data load is performed after both comparative data sets have been signed off on.</li>
+  </ul>
+
+  <!-- ═══════════════════════════════════════════════════
+       SECTION 4: Quick Reference
+  ════════════════════════════════════════════════════ -->
+  <h2>Section 4: Quick Reference — What You Can and Cannot Offer</h2>
+
+  <div class="note-box red">
+    <p class="note-label">You Cannot Offer</p>
+    <p class="note-body">
+      • Additional importers beyond the tier limit at no charge<br>
+      • Additional importer formats as a negotiating concession (the $100/month fee is fixed)<br>
+      • Deferred importer builds for Commercial clients post-onboarding<br>
+      • Free periods on ConnectWise integrations (any tier)<br>
+      • Free periods on any integration/add-on for Startup contracts<br>
+      • QuickBooks, Odin, Agent Portal, or DocuSign deferrals beyond 6 months for Commercial clients<br>
+      • General integration free periods for Commercial clients
+    </p>
+  </div>
+
+  <div class="note-box green">
+    <p class="note-label">You Can Offer</p>
+    <p class="note-body">
+      • Enterprise Customer Portal free periods for Commercial, Mid-Size, and Strategic clients<br>
+      • Up to a 6-month deferral on Agent Portal, DocuSign, QuickBooks, and Odin for Commercial clients<br>
+      • Free periods on all non-ConnectWise integrations for Mid-Size and Strategic clients<br>
+      • Additional importer formats at $100/month recurring (all tiers)
+    </p>
+  </div>
+
+  <div class="doc-footer">
+    Questions on deal structuring? Escalate to Sales Leadership before making commitments to a prospect or client.
+  </div>
+
+</div>
+</body>
+</html>
