@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Processors — Rev.io PSA Onboarding</title>
+<style>
+:root{--blue-dark:#1d3756;--azure:#2499b6;--green:#6ebe4f;--white:#fff;--offwhite:#f5f7fa;--light:#e4eaf0;--gray:#5a6a7a;--text:#1a2530;--note-bg:#fffbf0;--note-bdr:#e09600;--prompt-bg:#f0f8fb;--prompt-bdr:#2499b6;--impact-bg:#f0f7f0;--impact-bdr:#6ebe4f;--connect-bg:#f0f5fb;--connect-bdr:#2499b6;--check-odd:#f0f4f8;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--offwhite);color:var(--text);font-size:15px;line-height:1.7;}
+.call-banner{display:flex;align-items:center;gap:.85rem;padding:.55rem 2rem;font-size:12px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--white);}
+.call-banner .pill{background:rgba(255,255,255,.18);border-radius:4px;padding:.18rem .65rem;font-size:11px;}
+.call-banner .sep{opacity:.35;}
+.topnav{background:var(--blue-dark);padding:.8rem 2rem;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.25);}
+.topnav-brand{display:flex;align-items:center;gap:.7rem;}
+.topnav-logo{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:var(--white);}
+.topnav-name{font-size:16px;font-weight:600;color:var(--white);}
+.topnav-tag{font-size:11px;font-weight:500;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,.4);}
+.hero{background:linear-gradient(120deg,var(--blue-dark) 60%,#1a4a72 100%);padding:2.25rem 2rem 1.75rem;border-bottom:3px solid var(--azure);}
+.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--azure);margin-bottom:.45rem;}
+.hero-title{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:700;color:var(--white);margin-bottom:.35rem;line-height:1.2;}
+.hero-sub{font-size:.85rem;color:rgba(255,255,255,.48);margin-bottom:1.25rem;}
+.hero-badges{display:flex;flex-wrap:wrap;gap:.5rem;}
+.badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:5px;padding:.22rem .7rem;font-size:11.5px;color:rgba(255,255,255,.72);}
+.badge strong{color:var(--white);}
+.legend{background:var(--white);border-bottom:1px solid var(--light);padding:.65rem 2rem;display:flex;flex-wrap:wrap;gap:.4rem 1.25rem;align-items:center;}
+.legend-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray);flex-basis:100%;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#444;}
+.pip{width:9px;height:9px;border-radius:2px;}
+.pip-script{background:var(--text);} .pip-note{background:#e09600;} .pip-prompt{background:var(--azure);} .pip-check{background:var(--gray);border-radius:50%;} .pip-impact{background:var(--green);} .pip-connect{background:var(--azure);border-radius:50%;}
+.wrapper{max-width:840px;margin:0 auto;padding:2rem 1.5rem 5rem;}
+.page-heading{font-size:1.2rem;font-weight:700;color:var(--blue-dark);margin:2rem 0 .4rem;padding-bottom:.35rem;border-bottom:2px solid var(--light);}
+.sublabel{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin:1.1rem 0 .45rem;}
+.sublabel:first-child{margin-top:0;}
+.section-block{margin-top:2rem;}
+.section-header{background:var(--blue-dark);border-radius:8px 8px 0 0;padding:.75rem 1.2rem;display:flex;align-items:center;gap:.7rem;}
+.section-num{background:var(--azure);color:var(--white);width:23px;height:23px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.section-title{font-size:.95rem;font-weight:600;color:var(--white);}
+.section-body{background:var(--white);border:1px solid var(--light);border-top:none;border-radius:0 0 8px 8px;padding:1.4rem 1.65rem;}
+.script-text{font-size:15px;line-height:1.75;color:var(--text);margin-bottom:.7rem;}
+.note-block{background:var(--note-bg);border-left:4px solid var(--note-bdr);border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#4a3800;line-height:1.6;}
+.note-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#9a6200;margin-bottom:2px;}
+.prompt-block{background:var(--prompt-bg);border-left:4px solid var(--prompt-bdr);border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:14px;color:var(--blue-dark);font-weight:500;line-height:1.65;}
+.prompt-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--azure);margin-bottom:2px;}
+.impact-block{background:var(--impact-bg);border-left:4px solid var(--impact-bdr);border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#2a4a1a;line-height:1.65;}
+.impact-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#4a8a20;margin-bottom:2px;}
+.connect-block{background:var(--connect-bg);border-left:4px solid var(--connect-bdr);border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#1a3050;line-height:1.65;}
+.connect-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--azure);margin-bottom:2px;}
+.checklist{list-style:none;margin:.35rem 0 .65rem;}
+.checklist li{display:flex;align-items:flex-start;gap:9px;padding:.38rem .55rem;border-radius:5px;font-size:14.5px;line-height:1.55;}
+.checklist li:nth-child(odd){background:var(--check-odd);}
+.checklist li::before{content:'';width:14px;height:14px;border:2px solid #bbb;border-radius:3px;flex-shrink:0;margin-top:2px;}
+.bullet-list{list-style:none;padding-left:.2rem;margin:.35rem 0 .65rem;}
+.bullet-list li{display:flex;align-items:flex-start;gap:9px;padding:.22rem 0;font-size:14.5px;line-height:1.6;}
+.bullet-list li::before{content:'';width:7px;height:7px;background:var(--azure);border-radius:50%;flex-shrink:0;margin-top:7px;}
+.action-box{background:#f0f4f8;border-radius:7px;padding:1rem 1.3rem;margin-top:.7rem;}
+.action-box .sublabel{margin-top:0;}
+hr.div{border:none;border-top:1px solid var(--light);margin:1.1rem 0;}
+footer{background:var(--blue-dark);padding:1.1rem 2rem;text-align:center;font-size:11.5px;color:rgba(255,255,255,.32);}
+footer a{color:var(--azure);text-decoration:none;}
+@media print{.topnav,.call-banner{position:relative;}.section-block{break-inside:avoid;}}
+</style>
+
+<style>
+.script-nav{background:#fff;border-bottom:1px solid #e4eaf0;position:sticky;top:0;z-index:200;box-shadow:0 1px 6px rgba(0,0,0,.07);}
+.script-nav.bottom{position:static;border-top:1px solid #e4eaf0;border-bottom:none;box-shadow:none;margin-top:2rem;}
+.script-nav-inner{max-width:860px;margin:0 auto;padding:.65rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+.nav-btn{display:inline-flex;align-items:center;gap:.4rem;font-size:13px;font-weight:600;padding:.5rem 1rem;border-radius:7px;white-space:nowrap;transition:opacity .15s,box-shadow .15s;}
+.nav-btn-ghost{background:#f0f4f8;color:#1d3756;}
+.nav-btn-ghost:hover{background:#e4eaf0;}
+.nav-btn-primary{color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.15);}
+.nav-btn-primary:hover{opacity:.88;}
+.nav-dots{display:flex;gap:6px;align-items:center;}
+.dot{width:8px;height:8px;border-radius:50%;background:#d0d8e4;transition:background .2s;}
+.dot-active{background:var(--nav-accent);}
+.end-of-call{background:linear-gradient(135deg,#1d3756 0%,#1a4a72 100%);min-height:340px;display:flex;align-items:center;justify-content:center;padding:3rem 1.5rem;}
+.eoc-inner{text-align:center;max-width:520px;}
+.eoc-icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;margin:0 auto 1.25rem;}
+.eoc-title{font-size:1.6rem;font-weight:700;color:#fff;margin-bottom:.6rem;}
+.eoc-sub{font-size:14.5px;color:rgba(255,255,255,.6);line-height:1.65;margin-bottom:1.75rem;}
+.eoc-actions{display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center;}
+.eoc-back-btn{display:inline-flex;align-items:center;gap:.4rem;font-size:13.5px;font-weight:600;padding:.6rem 1.2rem;border-radius:7px;background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);transition:background .15s;}
+.eoc-back-btn:hover{background:rgba(255,255,255,.2);}
+.eoc-next-btn{display:inline-flex;align-items:center;gap:.4rem;font-size:13.5px;font-weight:600;padding:.6rem 1.4rem;border-radius:7px;color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.2);transition:opacity .15s;}
+.eoc-next-btn:hover{opacity:.88;}
+.eoc-done{font-size:15px;color:rgba(255,255,255,.75);padding:.6rem 1rem;}
+</style>
+</head>
+<body>
+<div class="call-banner" style="background:#6ebe4f;">
+  <span class="pill">Call 3 of 3: Billing & Finance</span>
+  <span class="sep">|</span>
+  <span>Topic 2 of 6</span>
+  <span class="sep">·</span>
+  <span>Payment Processors</span>
+</div>
+<nav class="topnav">
+  <div class="topnav-brand">
+    <div class="topnav-logo">R</div>
+    <span class="topnav-name">Rev.io PSA</span>
+  </div>
+  <span class="topnav-tag">Onboarding Call Script</span>
+</nav>
+<div class="hero">
+  <div class="hero-eyebrow">Call 3 · Topic 2 of 6 &mdash; Topic 2 of 6</div>
+  <h1 class="hero-title">Payment Processors</h1>
+  <p class="hero-sub">Onboarding Call Facilitator Script &mdash; read aloud, personalize for each client</p>
+  <div class="hero-badges">
+    <div class="badge">Duration <strong>10–12 min</strong></div>
+    <div class="badge">Outcome <strong>Processor connected, autopay configured</strong></div>
+    <div class='badge'>Required Before Graduation <strong>Yes</strong></div>
+  </div>
+</div>
+<div class="legend">
+  <span class="legend-lbl">How to read this script</span>
+  <div class="legend-item"><span class="pip pip-script"></span> Speak to client</div>
+  <div class="legend-item"><span class="pip pip-note"></span> &#128161; Note &mdash; internal, do not read aloud</div>
+  <div class="legend-item"><span class="pip pip-prompt"></span> &#10067; Prompt &mdash; ask the client</div>
+  <div class="legend-item"><span class="pip pip-check"></span> &#9634; Pre-call checklist</div>
+  <div class="legend-item"><span class="pip pip-impact"></span> &#9650; Platform Impact &mdash; share with client</div>
+  <div class="legend-item"><span class="pip pip-connect"></span> &#8594; Connects To &mdash; share with client</div>
+</div>
+<div class="script-nav" style="--nav-accent:#6ebe4f;">
+  <div class="script-nav-inner">
+    <a class="nav-btn nav-btn-ghost" href="16_Billing_Call_Script.html">&#8592; Billing</a>
+    <div class="nav-dots"><span class="dot"></span><span class="dot dot-active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+    <a class="nav-btn nav-btn-primary" style="background:#6ebe4f;" href="18_Invoice_Templates_Call_Script.html">Invoice Templates &#8594;</a>
+  </div>
+</div>
+<main class="wrapper">
+<h2 class="page-heading">Pre-Call Checklist</h2><ul class="checklist"><li>Navigate to Admin &gt; Payment Settings</li><li>Know which payment processor the client uses</li><li>Confirm client has API credentials available if connecting today</li><li>Know which customers the client wants on autopay</li></ul><div class="section-block"><div class="section-header"><div class="section-num">1</div><div class="section-title">Why Payment Processors Matter to the Billing Workflow</div></div><div class="section-body"><p class="script-text">Connecting a payment processor to Rev.io PSA closes the loop on your billing workflow. Right now, when you send an invoice, payment collection is a separate, manual step — the customer pays by check or you take their card over the phone and manually record it. With a payment processor connected, customers can pay directly on their invoice, autopay can collect recurring charges automatically, and every payment records to the ledger without any manual entry.</p><p class="script-text">This session has two parts: the technical setup of connecting the processor, and the operational setup of adding payment methods to customers and configuring autopay.</p><div class="connect-block"><strong>&#8594; Connects To</strong>Payment Processors connect to: the customer's Billing tab (Payment Accounts sub-tab where cards and bank accounts are stored), Invoices (customers can pay directly from the invoice link), Autopay (processor charges the stored payment method automatically), and the Ledger (all payments record automatically). The Customer Portal also uses the payment processor to allow self-service payments.</div><div class="impact-block"><strong>&#9650; Platform Impact</strong>Without a connected processor, every payment requires manual intervention. For businesses with large numbers of recurring customers, this is hours of administrative work every month that could be fully automated.</div></div></div><div class="section-block"><div class="section-header"><div class="section-num">2</div><div class="section-title">Connecting a Processor</div></div><div class="section-body"><p class="script-text">Go to Admin &gt; Payment Settings and select your processor. You'll enter the API credentials provided by your payment gateway — typically an API key and merchant ID from your processor's admin portal. Once connected, PSA will confirm the connection and you can run a test transaction to verify everything works before going live.</p><div class="prompt-block"><strong>&#10067; Prompt</strong>Do you have your processor credentials with you today?</div><div class="note-block"><strong>&#128161; Internal Note</strong>Do not attempt to configure this without credentials in hand. If they don't have them today, schedule a follow-up. This is a sensitive integration step and should not be rushed.</div></div></div><div class="section-block"><div class="section-header"><div class="section-num">3</div><div class="section-title">Payment Accounts</div></div><div class="section-body"><p class="script-text">Once the processor is connected, you can store payment methods on customer accounts. Go to Customer &gt; Billing tab &gt; Payment Accounts &gt; Add Payment Account. Enter or tokenize a credit card or bank account (ACH). PSA stores a secure token — the actual card number never touches your system.</p><p class="script-text">You can add multiple payment methods per customer and set one as the default. The default is what's used for autopay and for one-click payment processing.</p><div class="prompt-block"><strong>&#10067; Prompt</strong>Which customers have a payment method on file with you today that we should add to PSA?</div></div></div><div class="section-block"><div class="section-header"><div class="section-num">4</div><div class="section-title">Processing Payments & Autopay</div></div><div class="section-body"><p class="script-text"><strong>One-time payment:</strong> Customer profile &gt; Quick Actions &gt; Add Payment. Select the amount, method, and invoice(s) to apply it to. Processes immediately and records to the Ledger.</p><hr class="div"><p class="script-text"><strong>Autopay:</strong> Customer &gt; Billing tab &gt; Payment Accounts &gt; Manage Autopay. Enable it, select the stored payment method, and set the trigger — either when the invoice is posted or when it reaches its due date. PSA charges the card automatically and records the payment.</p><div class="prompt-block"><strong>&#10067; Prompt</strong>Which of your recurring customers should be on autopay? Let's set those up now.</div><div class="impact-block"><strong>&#9650; Platform Impact</strong>Autopay is most valuable for managed service customers with predictable monthly invoices. It eliminates the need to chase payments, reduces your days sales outstanding, and gives customers a predictable, hassle-free billing experience.</div><div class="action-box"><p class="sublabel">Action Items</p><ul class="checklist"><li>Gather processor credentials and complete the connection if not done today</li><li>Add payment methods to all recurring customers</li><li>Set up autopay for customers on monthly plans</li><li>Run a test payment to confirm the processor is connected correctly</li></ul></div></div></div>
+<div class="script-nav bottom" style="--nav-accent:#6ebe4f;">
+  <div class="script-nav-inner">
+    <a class="nav-btn nav-btn-ghost" href="16_Billing_Call_Script.html">&#8592; Billing</a>
+    <div class="nav-dots"><span class="dot"></span><span class="dot  dot-active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+    <a class="nav-btn nav-btn-primary" style="background:#6ebe4f;" href="18_Invoice_Templates_Call_Script.html">Invoice Templates &#8594;</a>
+  </div>
+</div>
+</main>
+<footer>&copy; Rev.io PSA &nbsp;&mdash;&nbsp; Onboarding Call Script &nbsp;&mdash;&nbsp; <a href="https://help.psarev.io" target="_blank">help.psarev.io</a></footer>
+</body>
+</html>

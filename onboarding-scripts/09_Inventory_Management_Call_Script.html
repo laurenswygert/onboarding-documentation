@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventory Management — Rev.io PSA Onboarding</title>
+<style>
+:root{--blue-dark:#1d3756;--azure:#2499b6;--green:#6ebe4f;--white:#fff;--offwhite:#f5f7fa;--light:#e4eaf0;--gray:#5a6a7a;--text:#1a2530;--note-bg:#fffbf0;--note-bdr:#e09600;--prompt-bg:#f0f8fb;--prompt-bdr:#2499b6;--impact-bg:#f0f7f0;--impact-bdr:#6ebe4f;--connect-bg:#f0f5fb;--connect-bdr:#2499b6;--check-odd:#f0f4f8;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--offwhite);color:var(--text);font-size:15px;line-height:1.7;}
+.call-banner{display:flex;align-items:center;gap:.85rem;padding:.55rem 2rem;font-size:12px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--white);}
+.call-banner .pill{background:rgba(255,255,255,.18);border-radius:4px;padding:.18rem .65rem;font-size:11px;}
+.call-banner .sep{opacity:.35;}
+.topnav{background:var(--blue-dark);padding:.8rem 2rem;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.25);}
+.topnav-brand{display:flex;align-items:center;gap:.7rem;}
+.topnav-logo{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:var(--white);}
+.topnav-name{font-size:16px;font-weight:600;color:var(--white);}
+.topnav-tag{font-size:11px;font-weight:500;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,.4);}
+.hero{background:linear-gradient(120deg,var(--blue-dark) 60%,#1a4a72 100%);padding:2.25rem 2rem 1.75rem;border-bottom:3px solid var(--azure);}
+.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--azure);margin-bottom:.45rem;}
+.hero-title{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:700;color:var(--white);margin-bottom:.35rem;line-height:1.2;}
+.hero-sub{font-size:.85rem;color:rgba(255,255,255,.48);margin-bottom:1.25rem;}
+.hero-badges{display:flex;flex-wrap:wrap;gap:.5rem;}
+.badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:5px;padding:.22rem .7rem;font-size:11.5px;color:rgba(255,255,255,.72);}
+.badge strong{color:var(--white);}
+.legend{background:var(--white);border-bottom:1px solid var(--light);padding:.65rem 2rem;display:flex;flex-wrap:wrap;gap:.4rem 1.25rem;align-items:center;}
+.legend-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray);flex-basis:100%;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#444;}
+.pip{width:9px;height:9px;border-radius:2px;}
+.pip-script{background:var(--text);} .pip-note{background:#e09600;} .pip-prompt{background:var(--azure);} .pip-check{background:var(--gray);border-radius:50%;} .pip-impact{background:var(--green);} .pip-connect{background:var(--azure);border-radius:50%;}
+.wrapper{max-width:840px;margin:0 auto;padding:2rem 1.5rem 5rem;}
+.page-heading{font-size:1.2rem;font-weight:700;color:var(--blue-dark);margin:2rem 0 .4rem;padding-bottom:.35rem;border-bottom:2px solid var(--light);}
+.sublabel{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin:1.1rem 0 .45rem;}
+.sublabel:first-child{margin-top:0;}
+.section-block{margin-top:2rem;}
+.section-header{background:var(--blue-dark);border-radius:8px 8px 0 0;padding:.75rem 1.2rem;display:flex;align-items:center;gap:.7rem;}
+.section-num{background:var(--azure);color:var(--white);width:23px;height:23px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.section-title{font-size:.95rem;font-weight:600;color:var(--white);}
+.section-body{background:var(--white);border:1px solid var(--light);border-top:none;border-radius:0 0 8px 8px;padding:1.4rem 1.65rem;}
+.script-text{font-size:15px;line-height:1.75;color:var(--text);margin-bottom:.7rem;}
+.note-block{background:var(--note-bg);border-left:4px solid var(--note-bdr);border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#4a3800;line-height:1.6;}
+.note-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#9a6200;margin-bottom:2px;}
+.prompt-block{background:var(--prompt-bg);border-left:4px solid var(--prompt-bdr);border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:14px;color:var(--blue-dark);font-weight:500;line-height:1.65;}
+.prompt-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--azure);margin-bottom:2px;}
+.impact-block{background:var(--impact-bg);border-left:4px solid var(--impact-bdr);border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#2a4a1a;line-height:1.65;}
+.impact-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#4a8a20;margin-bottom:2px;}
+.connect-block{background:var(--connect-bg);border-left:4px solid var(--connect-bdr);border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#1a3050;line-height:1.65;}
+.connect-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--azure);margin-bottom:2px;}
+.checklist{list-style:none;margin:.35rem 0 .65rem;}
+.checklist li{display:flex;align-items:flex-start;gap:9px;padding:.38rem .55rem;border-radius:5px;font-size:14.5px;line-height:1.55;}
+.checklist li:nth-child(odd){background:var(--check-odd);}
+.checklist li::before{content:'';width:14px;height:14px;border:2px solid #bbb;border-radius:3px;flex-shrink:0;margin-top:2px;}
+.bullet-list{list-style:none;padding-left:.2rem;margin:.35rem 0 .65rem;}
+.bullet-list li{display:flex;align-items:flex-start;gap:9px;padding:.22rem 0;font-size:14.5px;line-height:1.6;}
+.bullet-list li::before{content:'';width:7px;height:7px;background:var(--azure);border-radius:50%;flex-shrink:0;margin-top:7px;}
+.action-box{background:#f0f4f8;border-radius:7px;padding:1rem 1.3rem;margin-top:.7rem;}
+.action-box .sublabel{margin-top:0;}
+hr.div{border:none;border-top:1px solid var(--light);margin:1.1rem 0;}
+footer{background:var(--blue-dark);padding:1.1rem 2rem;text-align:center;font-size:11.5px;color:rgba(255,255,255,.32);}
+footer a{color:var(--azure);text-decoration:none;}
+@media print{.topnav,.call-banner{position:relative;}.section-block{break-inside:avoid;}}
+</style>
+
+<style>
+.script-nav{background:#fff;border-bottom:1px solid #e4eaf0;position:sticky;top:0;z-index:200;box-shadow:0 1px 6px rgba(0,0,0,.07);}
+.script-nav.bottom{position:static;border-top:1px solid #e4eaf0;border-bottom:none;box-shadow:none;margin-top:2rem;}
+.script-nav-inner{max-width:860px;margin:0 auto;padding:.65rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+.nav-btn{display:inline-flex;align-items:center;gap:.4rem;font-size:13px;font-weight:600;padding:.5rem 1rem;border-radius:7px;white-space:nowrap;transition:opacity .15s,box-shadow .15s;}
+.nav-btn-ghost{background:#f0f4f8;color:#1d3756;}
+.nav-btn-ghost:hover{background:#e4eaf0;}
+.nav-btn-primary{color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.15);}
+.nav-btn-primary:hover{opacity:.88;}
+.nav-dots{display:flex;gap:6px;align-items:center;}
+.dot{width:8px;height:8px;border-radius:50%;background:#d0d8e4;transition:background .2s;}
+.dot-active{background:var(--nav-accent);}
+.end-of-call{background:linear-gradient(135deg,#1d3756 0%,#1a4a72 100%);min-height:340px;display:flex;align-items:center;justify-content:center;padding:3rem 1.5rem;}
+.eoc-inner{text-align:center;max-width:520px;}
+.eoc-icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;margin:0 auto 1.25rem;}
+.eoc-title{font-size:1.6rem;font-weight:700;color:#fff;margin-bottom:.6rem;}
+.eoc-sub{font-size:14.5px;color:rgba(255,255,255,.6);line-height:1.65;margin-bottom:1.75rem;}
+.eoc-actions{display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center;}
+.eoc-back-btn{display:inline-flex;align-items:center;gap:.4rem;font-size:13.5px;font-weight:600;padding:.6rem 1.2rem;border-radius:7px;background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);transition:background .15s;}
+.eoc-back-btn:hover{background:rgba(255,255,255,.2);}
+.eoc-next-btn{display:inline-flex;align-items:center;gap:.4rem;font-size:13.5px;font-weight:600;padding:.6rem 1.4rem;border-radius:7px;color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.2);transition:opacity .15s;}
+.eoc-next-btn:hover{opacity:.88;}
+.eoc-done{font-size:15px;color:rgba(255,255,255,.75);padding:.6rem 1rem;}
+</style>
+</head>
+<body>
+<div class="call-banner" style="background:#1d3756;">
+  <span class="pill">Call 1 of 3: Foundation & Setup</span>
+  <span class="sep">|</span>
+  <span>Topic 8 of 8</span>
+  <span class="sep">·</span>
+  <span>Inventory Management</span>
+</div>
+<nav class="topnav">
+  <div class="topnav-brand">
+    <div class="topnav-logo">R</div>
+    <span class="topnav-name">Rev.io PSA</span>
+  </div>
+  <span class="topnav-tag">Onboarding Call Script</span>
+</nav>
+<div class="hero">
+  <div class="hero-eyebrow">Call 1 · Topic 8 of 8 &mdash; Topic 8 of 8</div>
+  <h1 class="hero-title">Inventory Management</h1>
+  <p class="hero-sub">Onboarding Call Facilitator Script &mdash; read aloud, personalize for each client</p>
+  <div class="hero-badges">
+    <div class="badge">Duration <strong>10–12 min</strong></div>
+    <div class="badge">Outcome <strong>Warehouses set up, tracking enabled, assets understood</strong></div>
+    
+  </div>
+</div>
+<div class="legend">
+  <span class="legend-lbl">How to read this script</span>
+  <div class="legend-item"><span class="pip pip-script"></span> Speak to client</div>
+  <div class="legend-item"><span class="pip pip-note"></span> &#128161; Note &mdash; internal, do not read aloud</div>
+  <div class="legend-item"><span class="pip pip-prompt"></span> &#10067; Prompt &mdash; ask the client</div>
+  <div class="legend-item"><span class="pip pip-check"></span> &#9634; Pre-call checklist</div>
+  <div class="legend-item"><span class="pip pip-impact"></span> &#9650; Platform Impact &mdash; share with client</div>
+  <div class="legend-item"><span class="pip pip-connect"></span> &#8594; Connects To &mdash; share with client</div>
+</div>
+<div class="script-nav" style="--nav-accent:#1d3756;">
+  <div class="script-nav-inner">
+    <a class="nav-btn nav-btn-ghost" href="08_Providers_Call_Script.html">&#8592; Providers</a>
+    <div class="nav-dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot dot-active"></span></div>
+    
+  </div>
+</div>
+<main class="wrapper">
+<h2 class="page-heading">Pre-Call Checklist</h2><ul class="checklist"><li>Confirm Inventory Management is enabled in Admin &gt; System Settings</li><li>Confirm Product Catalog and Providers are built</li><li>Navigate to the Inventory module</li></ul><div class="section-block"><div class="section-header"><div class="section-num">1</div><div class="section-title">Inventory Management — The Full Picture</div></div><div class="section-body"><p class="script-text">Inventory Management in Rev.io PSA tracks physical stock quantities across your locations. It connects to almost everything we've set up today: catalog items (Parts) are what gets tracked, Providers are who you order from, Purchase Orders are how stock comes in, and Tickets are how stock goes out.</p><p class="script-text">It's worth knowing that inventory tracking is optional per item — not every catalog item needs it. Labor rates and flat-fee services definitely don't. Parts you physically stock and replenish do. You control this item by item in the catalog.</p><div class="prompt-block"><strong>&#10067; Prompt</strong>Do you keep physical stock — parts on shelves, in vans, in a warehouse? If yes, we'll make sure tracking is enabled for the right items.</div><div class="connect-block"><strong>&#8594; Connects To</strong>Inventory connects to: the Product Catalog (which items are tracked), Purchase Orders (receiving increments stock), Tickets (adding a part to a ticket decrements stock), Warehouses (where stock lives), and Assets (customer-owned equipment you've installed and service).</div></div></div><div class="section-block"><div class="section-header"><div class="section-num">2</div><div class="section-title">Warehouses & Stock Levels</div></div><div class="section-body"><p class="script-text">A warehouse is any physical location where you store parts — your office, a storage unit, or a technician's van. Each location is its own warehouse in PSA. Go to Inventory &gt; Warehouses &gt; Add Warehouse.</p><div class="prompt-block"><strong>&#10067; Prompt</strong>Where do you keep inventory? Do your techs carry their own stock in their vehicles?</div><hr class="div"><p class="script-text">Once warehouses are created, you assign stock quantities to each catalog item per warehouse from the item's Inventory tab. You can also set a Reorder Point — a minimum quantity that flags a low-stock alert before you run out. PSA tracks stock movement automatically: parts added to tickets reduce your count, parts received on POs increase it.</p><div class="impact-block"><strong>&#9650; Platform Impact</strong>Without warehouses and opening quantities set up, your inventory counts will be inaccurate from day one. Starting with correct on-hand quantities is important — it's much harder to reconcile inventory after the fact than to enter it correctly at setup.</div></div></div><div class="section-block"><div class="section-header"><div class="section-num">3</div><div class="section-title">Assets</div></div><div class="section-body"><p class="script-text">Assets are a related but separate concept. Where inventory tracks stock quantities in your possession, an Asset represents a specific piece of equipment installed at a customer's location — something you service and maintain over time. When you sell and install a product, you can convert it to an Asset on the customer's account.</p><p class="script-text">Assets live on the customer profile under the Service tab. Each time you create a ticket for that equipment, you link it to the Asset — building a complete service history for that specific piece of hardware over its lifetime.</p><div class="prompt-block"><strong>&#10067; Prompt</strong>Do you need to track equipment you've installed at customer sites — things like routers, cameras, alarm panels, or servers?</div><div class="impact-block"><strong>&#9650; Platform Impact</strong>Assets are especially valuable for recurring maintenance businesses. Without them, there's no way to see the full history of a specific piece of equipment — every ticket is isolated, and trends like repeated failures or aging equipment become invisible.</div><div class="action-box"><p class="sublabel">Action Items</p><ul class="checklist"><li>Enable inventory tracking on catalog items that are physical parts</li><li>Create warehouse locations — one per stocking location or technician vehicle</li><li>Set opening stock quantities on your most common parts</li><li>Set reorder points on high-turnover items</li><li>Start creating assets when equipment is installed at customer sites</li></ul></div></div></div>
+<div class="script-nav bottom" style="--nav-accent:#1d3756;">
+  <div class="script-nav-inner">
+    <a class="nav-btn nav-btn-ghost" href="08_Providers_Call_Script.html">&#8592; Providers</a>
+    <div class="nav-dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot  dot-active"></span></div>
+    <span class="nav-btn nav-btn-primary" style="background:#1d3756;opacity:.45;cursor:default;">End of Call</span>
+  </div>
+</div>
+</main>
+
+<div class="end-of-call">
+  <div class="eoc-inner">
+    <div class="eoc-icon" style="background:#1d3756;">&#10003;</div>
+    <h2 class="eoc-title">That's a wrap on Call 1 of 3!</h2>
+    <p class="eoc-sub">You've covered all 8 topics in <strong>Foundation & Setup</strong>. Great work — send the client a follow-up summary and confirm the next session.</p>
+    <div class="eoc-actions">
+      <a class="eoc-back-btn" href="call-1.html">&#8592; Back to Call Overview</a>
+      
+<a class="eoc-next-btn" href="call-2.html" style="background:#2499b6;">
+  Continue to Call 2: Service Operations &#8594;
+</a>
+    </div>
+  </div>
+</div>
+<footer>&copy; Rev.io PSA &nbsp;&mdash;&nbsp; Onboarding Call Script &nbsp;&mdash;&nbsp; <a href="https://help.psarev.io" target="_blank">help.psarev.io</a></footer>
+</body>
+</html>
