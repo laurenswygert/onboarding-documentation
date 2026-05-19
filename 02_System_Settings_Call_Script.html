@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Settings — Rev.io PSA Onboarding</title>
+<style>
+:root{--blue-dark:#1d3756;--azure:#2499b6;--green:#6ebe4f;--white:#fff;--offwhite:#f5f7fa;--light:#e4eaf0;--gray:#5a6a7a;--text:#1a2530;--note-bg:#fffbf0;--note-bdr:#e09600;--prompt-bg:#f0f8fb;--prompt-bdr:#2499b6;--impact-bg:#f0f7f0;--impact-bdr:#6ebe4f;--connect-bg:#f0f5fb;--connect-bdr:#2499b6;--check-odd:#f0f4f8;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--offwhite);color:var(--text);font-size:15px;line-height:1.7;}
+.call-banner{display:flex;align-items:center;gap:.85rem;padding:.55rem 2rem;font-size:12px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--white);}
+.call-banner .pill{background:rgba(255,255,255,.18);border-radius:4px;padding:.18rem .65rem;font-size:11px;}
+.call-banner .sep{opacity:.35;}
+.topnav{background:var(--blue-dark);padding:.8rem 2rem;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.25);}
+.topnav-brand{display:flex;align-items:center;gap:.7rem;}
+.topnav-logo{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:var(--white);}
+.topnav-name{font-size:16px;font-weight:600;color:var(--white);}
+.topnav-tag{font-size:11px;font-weight:500;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,.4);}
+.hero{background:linear-gradient(120deg,var(--blue-dark) 60%,#1a4a72 100%);padding:2.25rem 2rem 1.75rem;border-bottom:3px solid var(--azure);}
+.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--azure);margin-bottom:.45rem;}
+.hero-title{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:700;color:var(--white);margin-bottom:.35rem;line-height:1.2;}
+.hero-sub{font-size:.85rem;color:rgba(255,255,255,.48);margin-bottom:1.25rem;}
+.hero-badges{display:flex;flex-wrap:wrap;gap:.5rem;}
+.badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:5px;padding:.22rem .7rem;font-size:11.5px;color:rgba(255,255,255,.72);}
+.badge strong{color:var(--white);}
+.legend{background:var(--white);border-bottom:1px solid var(--light);padding:.65rem 2rem;display:flex;flex-wrap:wrap;gap:.4rem 1.25rem;align-items:center;}
+.legend-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray);flex-basis:100%;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#444;}
+.pip{width:9px;height:9px;border-radius:2px;}
+.pip-script{background:var(--text);} .pip-note{background:#e09600;} .pip-prompt{background:var(--azure);} .pip-check{background:var(--gray);border-radius:50%;} .pip-impact{background:var(--green);} .pip-connect{background:var(--azure);border-radius:50%;}
+.wrapper{max-width:840px;margin:0 auto;padding:2rem 1.5rem 5rem;}
+.page-heading{font-size:1.2rem;font-weight:700;color:var(--blue-dark);margin:2rem 0 .4rem;padding-bottom:.35rem;border-bottom:2px solid var(--light);}
+.sublabel{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin:1.1rem 0 .45rem;}
+.sublabel:first-child{margin-top:0;}
+.section-block{margin-top:2rem;}
+.section-header{background:var(--blue-dark);border-radius:8px 8px 0 0;padding:.75rem 1.2rem;display:flex;align-items:center;gap:.7rem;}
+.section-num{background:var(--azure);color:var(--white);width:23px;height:23px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.section-title{font-size:.95rem;font-weight:600;color:var(--white);}
+.section-body{background:var(--white);border:1px solid var(--light);border-top:none;border-radius:0 0 8px 8px;padding:1.4rem 1.65rem;}
+.script-text{font-size:15px;line-height:1.75;color:var(--text);margin-bottom:.7rem;}
+.note-block{background:var(--note-bg);border-left:4px solid var(--note-bdr);border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#4a3800;line-height:1.6;}
+.note-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#9a6200;margin-bottom:2px;}
+.prompt-block{background:var(--prompt-bg);border-left:4px solid var(--prompt-bdr);border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:14px;color:var(--blue-dark);font-weight:500;line-height:1.65;}
+.prompt-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--azure);margin-bottom:2px;}
+.impact-block{background:var(--impact-bg);border-left:4px solid var(--impact-bdr);border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#2a4a1a;line-height:1.65;}
+.impact-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#4a8a20;margin-bottom:2px;}
+.connect-block{background:var(--connect-bg);border-left:4px solid var(--connect-bdr);border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#1a3050;line-height:1.65;}
+.connect-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--azure);margin-bottom:2px;}
+.checklist{list-style:none;margin:.35rem 0 .65rem;}
+.checklist li{display:flex;align-items:flex-start;gap:9px;padding:.38rem .55rem;border-radius:5px;font-size:14.5px;line-height:1.55;}
+.checklist li:nth-child(odd){background:var(--check-odd);}
+.checklist li::before{content:'';width:14px;height:14px;border:2px solid #bbb;border-radius:3px;flex-shrink:0;margin-top:2px;}
+.bullet-list{list-style:none;padding-left:.2rem;margin:.35rem 0 .65rem;}
+.bullet-list li{display:flex;align-items:flex-start;gap:9px;padding:.22rem 0;font-size:14.5px;line-height:1.6;}
+.bullet-list li::before{content:'';width:7px;height:7px;background:var(--azure);border-radius:50%;flex-shrink:0;margin-top:7px;}
+.action-box{background:#f0f4f8;border-radius:7px;padding:1rem 1.3rem;margin-top:.7rem;}
+.action-box .sublabel{margin-top:0;}
+hr.div{border:none;border-top:1px solid var(--light);margin:1.1rem 0;}
+footer{background:var(--blue-dark);padding:1.1rem 2rem;text-align:center;font-size:11.5px;color:rgba(255,255,255,.32);}
+footer a{color:var(--azure);text-decoration:none;}
+@media print{.topnav,.call-banner{position:relative;}.section-block{break-inside:avoid;}}
+</style>
+</head>
+<body>
+<div class="call-banner" style="background:#1d3756;">
+  <span class="pill">Call 1 of 3: Foundation & Setup</span>
+  <span class="sep">|</span>
+  <span>Topic 2 of 8</span>
+  <span class="sep">·</span>
+  <span>System Settings</span>
+</div>
+<nav class="topnav">
+  <div class="topnav-brand">
+    <div class="topnav-logo">R</div>
+    <span class="topnav-name">Rev.io PSA</span>
+  </div>
+  <span class="topnav-tag">Onboarding Call Script</span>
+</nav>
+<div class="hero">
+  <div class="hero-eyebrow">Call 1 · Topic 2 of 8 &mdash; Topic 2 of 8</div>
+  <h1 class="hero-title">System Settings</h1>
+  <p class="hero-sub">Onboarding Call Facilitator Script &mdash; read aloud, personalize for each client</p>
+  <div class="hero-badges">
+    <div class="badge">Duration <strong>18–22 min</strong></div>
+    <div class="badge">Outcome <strong>All settings configured</strong></div>
+    <div class='badge'>Required Before Graduation <strong>Yes</strong></div>
+  </div>
+</div>
+<div class="legend">
+  <span class="legend-lbl">How to read this script</span>
+  <div class="legend-item"><span class="pip pip-script"></span> Speak to client</div>
+  <div class="legend-item"><span class="pip pip-note"></span> &#128161; Note &mdash; internal, do not read aloud</div>
+  <div class="legend-item"><span class="pip pip-prompt"></span> &#10067; Prompt &mdash; ask the client</div>
+  <div class="legend-item"><span class="pip pip-check"></span> &#9634; Pre-call checklist</div>
+  <div class="legend-item"><span class="pip pip-impact"></span> &#9650; Platform Impact &mdash; share with client</div>
+  <div class="legend-item"><span class="pip pip-connect"></span> &#8594; Connects To &mdash; share with client</div>
+</div>
+<main class="wrapper">
+<h2 class="page-heading">Pre-Call Checklist</h2><div class="note-block"><strong>&#128161; Internal Note</strong>Gather answers in advance where possible — this section moves fast.</div><ul class="checklist"><li>Open Admin &gt; System Settings</li><li>Confirm user groups have been created (referenced in ticket defaults)</li><li>Have business hours and holiday list if available</li><li>Know if client wants SMS notifications on for team and/or customers</li></ul><div class="section-block"><div class="section-header"><div class="section-num">1</div><div class="section-title">Why System Settings Matter</div></div><div class="section-body"><p class="script-text">System Settings is the control panel for how Rev.io PSA behaves across every module. The decisions we make here affect how tickets are created, how your team is notified, how SLAs are calculated, how time is tracked, and how billing is triggered. Getting this right during onboarding means the platform works your way from day one instead of fighting you.</p><p class="script-text">We'll move through each section together. I'll explain what the setting does, ask for your preference, and we'll configure it in real time. Some of these we can finalize today — others you may need to confirm internally and come back to.</p><div class="connect-block"><strong>&#8594; Connects To</strong>System Settings touches every module in the platform. Ticket defaults drive the Service module. Business hours and holidays affect SLA timers and the Dispatch Board. SMS settings control notifications in Ticketing and Billing. Time clock reasons appear on every ticket timesheet.</div></div></div><div class="section-block"><div class="section-header"><div class="section-num">2</div><div class="section-title">Company Settings</div></div><div class="section-body"><p class="script-text">Start with Company Name and Address. This information is pulled onto every customer-facing document — invoices, quotes, work orders, proposals. It needs to be exactly what you want customers to see.</p><div class="prompt-block"><strong>&#10067; Prompt</strong>Is the company name and address correct as shown? Is this your billing address or your primary office address?</div><hr class="div"><p class="script-text">Next, Business Hours. These define when your company is officially open and are used to calculate SLA response times and to display availability on the Dispatch Board. If a ticket comes in at 11 PM and your hours are 8 AM–5 PM, the SLA clock doesn't start until 8 AM the next morning.</p><div class="prompt-block"><strong>&#10067; Prompt</strong>What are your standard business hours, and are they the same Monday through Friday?</div><hr class="div"><p class="script-text">Company Holidays work the same way — dates you add here are excluded from SLA calculations. If you don't add them and a ticket comes in on Christmas, the system treats it like any other business day.</p><div class="prompt-block"><strong>&#10067; Prompt</strong>Do you have your holiday list for the year? We can add them now or as a follow-up.</div><div class="impact-block"><strong>&#9650; Platform Impact</strong>Incorrect business hours or missing holidays will cause your SLA timers to miscalculate — which can make your team look like they're missing response targets when they're actually working within their actual hours.</div></div></div><div class="section-block"><div class="section-header"><div class="section-num">3</div><div class="section-title">SMS Notifications</div></div><div class="section-body"><p class="script-text">Rev.io PSA can send SMS notifications to your internal team — things like ticket assignments and status updates going straight to a tech's phone — and to your customers, so they get text updates when their ticket changes status.</p><p class="script-text">These are separate settings, and you can control whether customers are auto-opted in or have to opt in manually.</p><div class="prompt-block"><strong>&#10067; Prompt</strong>Do you want SMS on for your internal team? For customers? And if yes, should customers be auto-opted in?</div><div class="note-block"><strong>&#128161; Internal Note</strong>Remind the client to check their compliance requirements around customer SMS if they're in a regulated industry. Auto-opt-in means all customers receive SMS unless they opt out.</div></div></div><div class="section-block"><div class="section-header"><div class="section-num">4</div><div class="section-title">Services — Ticket Defaults</div></div><div class="section-body"><p class="script-text">This is one of the most important sections we'll configure today. These settings determine how every new ticket starts — before anyone touches it. They create consistency so your team isn't making ad hoc decisions on every ticket.</p><ul class="bullet-list"><li><strong>New Ticket Status</strong> — the status assigned the moment a ticket is created. What stage does a brand new, untouched ticket belong in?</li><li><strong>Assumed Ticket Type</strong> — the placeholder type for tickets that haven't been triaged yet. Think of it as 'Unknown' or 'Unclassified' — it exists so nothing is left typeless.</li><li><strong>Default Ticket Type</strong> — what gets pre-selected when a tech creates a ticket manually. This should be your most common work type.</li><li><strong>Ticket Priority</strong> — what priority levels do you use, and what priority should new tickets start at before triage?</li><li><strong>Default Ticket User Group</strong> — which user group should new tickets land with first? This is where those user groups you just created come in.</li></ul><div class="prompt-block"><strong>&#10067; Prompt</strong>Let's go through each of these. I'll read them off and you tell me your preference — we'll configure as we go.</div><div class="connect-block"><strong>&#8594; Connects To</strong>Ticket defaults directly shape the Service module. Every ticket created — whether by a tech, via email-to-ticket, or through the customer portal — will start with these settings. They also affect how tickets appear in queue views and reporting.</div></div></div><div class="section-block"><div class="section-header"><div class="section-num">5</div><div class="section-title">Remaining Settings</div></div><div class="section-body"><p class="script-text">A few more important decisions to round out System Settings:</p><ul class="bullet-list"><li><strong>Email out public activity</strong> — when a tech adds a public note to a ticket, should the customer automatically get an email with that update? This is how you keep customers informed without techs having to remember to send separate emails.</li><li><strong>Auto-assign by email domain</strong> — if a ticket comes in from someone@acmecorp.com and you have Acme Corp as a customer, should PSA automatically link the ticket to that account?</li><li><strong>Signature acceptance clause</strong> — the legal language customers agree to when signing off on completed work. Review the default wording — is it acceptable or do you want changes?</li><li><strong>Ticket tags</strong> — do you want your team to be able to add searchable labels to tickets? Useful for filtering and categorizing work outside of ticket type.</li><li><strong>Time clock reasons</strong> — the categories your team selects when logging time. Examples: On-Site Labor, Remote Support, Travel Time, Project Management. These appear on every ticket timesheet and flow into billing and payroll reporting.</li></ul><div class="prompt-block"><strong>&#10067; Prompt</strong>Let's go through these one at a time. I'll ask, you answer, and we'll configure as we go.</div><div class="impact-block"><strong>&#9650; Platform Impact</strong>Time clock reasons are especially important if you bill time to customers — they appear on invoices and determine how hours are categorized in reports. Missing or vague reasons make billing disputes harder to resolve.</div><div class="action-box"><p class="sublabel">Action Items</p><ul class="checklist"><li>Add company holidays if not completed today</li><li>Confirm signature clause wording with legal if needed</li><li>Build out your full time entry reasons list</li></ul></div></div></div>
+</main>
+<footer>&copy; Rev.io PSA &nbsp;&mdash;&nbsp; Onboarding Call Script &nbsp;&mdash;&nbsp; <a href="https://help.psarev.io" target="_blank">help.psarev.io</a></footer>
+</body>
+</html>
