@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Invoice Templates — Rev.io PSA Deep Dive</title><style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f7fa;color:#1a2530;font-size:15px;line-height:1.7;}
+a{color:#2499b6;text-decoration:none;} a:hover{text-decoration:underline;}
+.topnav{background:#1d3756;padding:.8rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.25);}
+.topnav-brand{display:flex;align-items:center;gap:.7rem;}
+.topnav-logo{width:30px;height:30px;background:#2499b6;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;}
+.topnav-name{font-size:16px;font-weight:600;color:#fff;}
+.topnav-links{display:flex;align-items:center;gap:1.5rem;}
+.topnav-links a{font-size:12px;color:rgba(255,255,255,.55);font-weight:500;transition:color .15s;}
+.topnav-links a:hover{color:#fff;text-decoration:none;}
+.hero{background:linear-gradient(120deg,#1d3756 60%,#1a4a72 100%);padding:2.5rem 2rem 2rem;border-bottom:3px solid #2499b6;}
+.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#2499b6;margin-bottom:.45rem;}
+.hero h1{font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;color:#fff;margin-bottom:.35rem;line-height:1.2;}
+.hero-sub{font-size:.9rem;color:rgba(255,255,255,.5);margin-bottom:1.25rem;}
+.hero-badges{display:flex;flex-wrap:wrap;gap:.5rem;}
+.badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:5px;padding:.22rem .7rem;font-size:11.5px;color:rgba(255,255,255,.72);}
+.badge strong{color:#fff;}
+.legend{background:#fff;border-bottom:1px solid #e4eaf0;padding:.65rem 2rem;display:flex;flex-wrap:wrap;gap:.4rem 1.25rem;align-items:center;}
+.legend-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#5a6a7a;flex-basis:100%;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#444;}
+.pip{width:9px;height:9px;border-radius:2px;}
+.wrapper{max-width:860px;margin:0 auto;padding:2rem 1.5rem 5rem;}
+.toc{background:#fff;border:1px solid #e4eaf0;border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:2rem;}
+.toc-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#5a6a7a;margin-bottom:.75rem;}
+.toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.3rem .75rem;}
+.toc-item{font-size:13.5px;color:#2499b6;padding:.15rem 0;display:block;}
+.page-heading{font-size:1.2rem;font-weight:700;color:#1d3756;margin:2rem 0 .4rem;padding-bottom:.35rem;border-bottom:2px solid #e4eaf0;}
+.sublabel{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#5a6a7a;margin:1.1rem 0 .45rem;}
+.sublabel:first-child{margin-top:0;}
+.section-block{margin-top:2rem;}
+.section-header{background:#1d3756;border-radius:8px 8px 0 0;padding:.75rem 1.2rem;display:flex;align-items:center;gap:.7rem;}
+.section-num{background:#2499b6;color:#fff;width:23px;height:23px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.section-title{font-size:.95rem;font-weight:600;color:#fff;}
+.section-body{background:#fff;border:1px solid #e4eaf0;border-top:none;border-radius:0 0 8px 8px;padding:1.4rem 1.65rem;}
+.script-text{font-size:15px;line-height:1.75;color:#1a2530;margin-bottom:.7rem;}
+.note-block{background:#fffbf0;border-left:4px solid #e09600;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#4a3800;line-height:1.6;}
+.note-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#9a6200;margin-bottom:2px;}
+.prompt-block{background:#f0f8fb;border-left:4px solid #2499b6;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:14px;color:#1d3756;font-weight:500;line-height:1.65;}
+.prompt-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#2499b6;margin-bottom:2px;}
+.impact-block{background:#f0f7f0;border-left:4px solid #6ebe4f;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#2a4a1a;line-height:1.65;}
+.impact-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#4a8a20;margin-bottom:2px;}
+.connect-block{background:#f0f5fb;border-left:4px solid #2499b6;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#1a3050;line-height:1.65;}
+.connect-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#2499b6;margin-bottom:2px;}
+.warn-block{background:#fff5f5;border-left:4px solid #e05050;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#5a1a1a;line-height:1.65;}
+.warn-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#c03030;margin-bottom:2px;}
+.tip-block{background:#f5f0fb;border-left:4px solid #8a50c8;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#2a1a4a;line-height:1.65;}
+.tip-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#8a50c8;margin-bottom:2px;}
+.checklist{list-style:none;margin:.35rem 0 .65rem;}
+.checklist li{display:flex;align-items:flex-start;gap:9px;padding:.38rem .55rem;border-radius:5px;font-size:14.5px;line-height:1.55;}
+.checklist li:nth-child(odd){background:#f0f4f8;}
+.checklist li::before{content:'';width:14px;height:14px;border:2px solid #bbb;border-radius:3px;flex-shrink:0;margin-top:2px;}
+.bullet-list{list-style:none;padding-left:.2rem;margin:.35rem 0 .65rem;}
+.bullet-list li{display:flex;align-items:flex-start;gap:9px;padding:.22rem 0;font-size:14.5px;line-height:1.6;}
+.bullet-list li::before{content:'';width:7px;height:7px;background:#2499b6;border-radius:50%;flex-shrink:0;margin-top:7px;}
+.num-list{list-style:none;padding-left:.2rem;margin:.35rem 0 .65rem;counter-reset:num;}
+.num-list li{display:flex;align-items:flex-start;gap:9px;padding:.25rem 0;font-size:14.5px;line-height:1.6;counter-increment:num;}
+.num-list li::before{content:counter(num);min-width:22px;height:22px;background:#1d3756;color:#fff;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.field-table{width:100%;border-collapse:collapse;margin:.5rem 0 .75rem;font-size:14px;}
+.field-table th{background:#1d3756;color:#fff;text-align:left;padding:.5rem .75rem;font-size:11px;letter-spacing:.5px;text-transform:uppercase;}
+.field-table td{padding:.5rem .75rem;border-bottom:1px solid #e4eaf0;vertical-align:top;}
+.field-table tr:nth-child(even) td{background:#f7f9fc;}
+.field-table td:first-child{font-weight:600;color:#1d3756;white-space:nowrap;}
+.action-box{background:#f0f4f8;border-radius:7px;padding:1rem 1.3rem;margin-top:.75rem;}
+.action-box .sublabel{margin-top:0;}
+hr.div{border:none;border-top:1px solid #e4eaf0;margin:1.1rem 0;}
+.nav-strip{background:#fff;border-top:1px solid #e4eaf0;padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;margin-top:2rem;}
+.nav-strip a{display:inline-flex;align-items:center;gap:.4rem;font-size:13px;font-weight:600;padding:.5rem 1rem;border-radius:7px;transition:background .15s;}
+.nav-prev{background:#f0f4f8;color:#1d3756;} .nav-prev:hover{background:#e4eaf0;text-decoration:none;}
+.nav-next{background:#2499b6;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.15);} .nav-next:hover{opacity:.88;text-decoration:none;}
+footer{background:#1d3756;padding:1.1rem 2rem;text-align:center;font-size:11.5px;color:rgba(255,255,255,.32);}
+footer a{color:#2499b6;}
+</style></head><body>
+<nav class="topnav"><div class="topnav-brand"><div class="topnav-logo">R</div><span class="topnav-name">Rev.io PSA</span></div>
+<div class="topnav-links"><a href="deep-dive-index.html">&#8592; All Modules</a><a href="../index.html">Onboarding Scripts</a></div></nav>
+<div class="hero"><div class="hero-eyebrow">Module Deep Dive</div><h1>Invoice Templates</h1><p class="hero-sub">Complete guide to configuring invoice and quote templates in Rev.io PSA</p>
+<div class="hero-badges"><div class="badge">Type <strong>Deep Dive Reference</strong></div><div class="badge">Format <strong>Facilitator Script</strong></div></div></div>
+<div class="legend">
+  <span class="legend-lbl">How to read this script</span>
+  <div class="legend-item"><span class="pip" style="background:#1a2530;border-radius:2px;"></span> Speak to client</div>
+  <div class="legend-item"><span class="pip" style="background:#e09600;border-radius:2px;"></span> &#128161; Internal Note</div>
+  <div class="legend-item"><span class="pip" style="background:#2499b6;border-radius:2px;"></span> &#10067; Prompt</div>
+  <div class="legend-item"><span class="pip" style="background:#6ebe4f;border-radius:2px;"></span> &#9650; Platform Impact</div>
+  <div class="legend-item"><span class="pip" style="background:#2499b6;border-radius:50%;"></span> &#8594; Connects To</div>
+  <div class="legend-item"><span class="pip" style="background:#8a50c8;border-radius:2px;"></span> &#128161; Pro Tip</div>
+  <div class="legend-item"><span class="pip" style="background:#e05050;border-radius:2px;"></span> &#9888; Watch Out</div>
+</div><main class="wrapper"><div class="toc"><div class="toc-title">In This Guide</div><div class="toc-grid"><a class="toc-item" href="#s1">Templates Overview</a><a class="toc-item" href="#s2">Invoice Template Fields</a><a class="toc-item" href="#s3">Quote Templates</a><a class="toc-item" href="#s4">Multiple Templates</a></div></div><h2 class="page-heading">Pre-Session Checklist</h2><ul class="checklist"><li>Navigate to Admin &gt; Invoice Templates</li><li>Have company logo file ready (PNG or JPG)</li><li>Know payment terms, late fee language, and footer content</li><li>Know if separate templates are needed for different brands or customer types</li></ul><div class="section-block" id="s1"><div class="section-header"><div class="section-num">1</div><div class="section-title">Templates — Your Brand on Every Document</div></div><div class="section-body"><p class="script-text">Every invoice and quote that goes to a customer is formatted by a template. The template controls your logo, company header, line item layout, subtotals, tax display, and footer. Configure it once and it applies to every document automatically.</p><div class="connect-block"><strong>&#8594; Connects To</strong>Invoice Templates are used whenever: an invoice is generated (individual or batch), a credit memo is created, or a work order document is produced. Quote Templates are used when a proposal is sent to a customer. Both template types reference your company information from System Settings.</div></div></div><div class="section-block" id="s2"><div class="section-header"><div class="section-num">2</div><div class="section-title">Building an Invoice Template</div></div><div class="section-body"><p class="script-text">Navigate to Admin &gt; Invoice Templates. Edit the default or create a new one.</p><p class="sublabel">Header Section</p><ul class="bullet-list"><li><strong>Logo:</strong> Upload your company logo. PNG or JPG at 150+ DPI for crisp rendering. Position top-left or top-center.</li><li><strong>Company Name and Address:</strong> Auto-populated from System Settings. Verify it matches.</li><li><strong>Contact Information:</strong> Phone number, email, and website for the company header.</li><li><strong>Document Title:</strong> The label at the top of the document — 'Invoice', 'Tax Invoice', 'Service Invoice'. Change to match your business context.</li></ul><p class="sublabel">Line Item Layout</p><ul class="bullet-list"><li><strong>Columns to display:</strong> Description, Quantity, Unit Price, Total are standard. Add or remove columns based on what your customers expect to see.</li><li><strong>Group by category:</strong> Option to group line items by catalog category on the invoice.</li><li><strong>Show item notes:</strong> Whether per-line notes from the Parts &amp; Labor tab appear on the invoice.</li><li><strong>Show tax per line:</strong> Whether tax is broken out per item or shown as a single subtotal.</li></ul><p class="sublabel">Footer Section</p><p class="script-text">The footer is the legal and payment section of every document. It should include:</p><ul class="bullet-list"><li>Payment terms: 'Net 30,' 'Due on Receipt,' 'Payment due within 30 days of invoice date'</li><li>Accepted payment methods: 'We accept Visa, Mastercard, ACH, and check'</li><li>Late fee language: 'Invoices past due are subject to a 1.5% monthly finance charge'</li><li>Billing contact: 'Questions? Contact billing@yourcompany.com or call 555-1234'</li><li>Thank you message: 'Thank you for your business'</li><li>Legal disclaimers if required by your industry or jurisdiction</li></ul><div class="prompt-block"><strong>&#10067; Prompt</strong>What do you want in your invoice footer? Walk me through your payment terms, late fee policy, and any legal language you need to include.</div></div></div><div class="section-block" id="s3"><div class="section-header"><div class="section-num">3</div><div class="section-title">Quote Templates</div></div><div class="section-body"><p class="script-text">Navigate to Admin &gt; Quote Templates. The configuration process is identical to Invoice Templates but the content is different — this is a sales document, not a billing document.</p><p class="sublabel">Quote-Specific Footer Content</p><ul class="bullet-list"><li>Quote validity: 'This estimate is valid for 30 days from the date above'</li><li>Acceptance instructions: 'To accept this quote, click Accept on the proposal link or contact us to confirm'</li><li>Scope notes: 'This quote covers the items listed. Additional work not listed is out of scope and will be quoted separately'</li><li>Commencement language: 'Work will begin within 5 business days of written acceptance'</li></ul><div class="prompt-block"><strong>&#10067; Prompt</strong>Should your quote footer language differ from your invoice footer? Most clients want separate messaging — quotes are sales documents, invoices are billing documents.</div></div></div><div class="section-block" id="s4"><div class="section-header"><div class="section-num">4</div><div class="section-title">Multiple Templates</div></div><div class="section-body"><p class="script-text">You can create multiple invoice templates and multiple quote templates. This is useful when:</p><ul class="bullet-list"><li>You have multiple brands or DBAs and need different logos and company names on documents</li><li>You have different customer types that require different formats (consumer vs. enterprise)</li><li>Your invoices for different service types look meaningfully different</li><li>You have bilingual customers requiring documents in different languages</li></ul><p class="script-text">When creating an invoice or selecting a quote template, you choose which template to use. The default template applies automatically unless overridden.</p><div class="tip-block"><strong>&#128161; Pro Tip</strong>Create a 'Template Review' step in your go-live checklist. Generate a test invoice and a test proposal. Share both with your finance team and your best customer relationship and ask for feedback before going live. Document layout is one of those things that's very visible to customers.</div></div></div><div class="action-box"><p class="sublabel">Action Items</p><ul class="checklist"><li>Upload your company logo in the correct format</li><li>Finalize all footer language: payment terms, late fees, contact info, thank-you</li><li>Review the line item layout with a sample invoice to confirm it looks right</li><li>Build a Quote Template with quote-specific footer language</li><li>Create additional templates if needed for multiple brands or customer types</li><li>Generate test documents and review them before going live</li></ul></div></main>
+<div class="nav-strip"><a class="nav-prev" href="dd_16_payment_processors.html">&#8592; Payment Processors</a><a class="nav-next" href="dd_18_invoicing.html">Invoicing &#8594;</a></div>
+<footer>&copy; Rev.io PSA &nbsp;&mdash;&nbsp; Deep Dive Scripts &nbsp;&mdash;&nbsp; <a href="https://help.psarev.io" target="_blank">help.psarev.io</a></footer>
+</body></html>

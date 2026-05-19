@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Project Management — Rev.io PSA Deep Dive</title><style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f7fa;color:#1a2530;font-size:15px;line-height:1.7;}
+a{color:#2499b6;text-decoration:none;} a:hover{text-decoration:underline;}
+.topnav{background:#1d3756;padding:.8rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.25);}
+.topnav-brand{display:flex;align-items:center;gap:.7rem;}
+.topnav-logo{width:30px;height:30px;background:#2499b6;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;}
+.topnav-name{font-size:16px;font-weight:600;color:#fff;}
+.topnav-links{display:flex;align-items:center;gap:1.5rem;}
+.topnav-links a{font-size:12px;color:rgba(255,255,255,.55);font-weight:500;transition:color .15s;}
+.topnav-links a:hover{color:#fff;text-decoration:none;}
+.hero{background:linear-gradient(120deg,#1d3756 60%,#1a4a72 100%);padding:2.5rem 2rem 2rem;border-bottom:3px solid #2499b6;}
+.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#2499b6;margin-bottom:.45rem;}
+.hero h1{font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;color:#fff;margin-bottom:.35rem;line-height:1.2;}
+.hero-sub{font-size:.9rem;color:rgba(255,255,255,.5);margin-bottom:1.25rem;}
+.hero-badges{display:flex;flex-wrap:wrap;gap:.5rem;}
+.badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:5px;padding:.22rem .7rem;font-size:11.5px;color:rgba(255,255,255,.72);}
+.badge strong{color:#fff;}
+.legend{background:#fff;border-bottom:1px solid #e4eaf0;padding:.65rem 2rem;display:flex;flex-wrap:wrap;gap:.4rem 1.25rem;align-items:center;}
+.legend-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#5a6a7a;flex-basis:100%;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#444;}
+.pip{width:9px;height:9px;border-radius:2px;}
+.wrapper{max-width:860px;margin:0 auto;padding:2rem 1.5rem 5rem;}
+.toc{background:#fff;border:1px solid #e4eaf0;border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:2rem;}
+.toc-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#5a6a7a;margin-bottom:.75rem;}
+.toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.3rem .75rem;}
+.toc-item{font-size:13.5px;color:#2499b6;padding:.15rem 0;display:block;}
+.page-heading{font-size:1.2rem;font-weight:700;color:#1d3756;margin:2rem 0 .4rem;padding-bottom:.35rem;border-bottom:2px solid #e4eaf0;}
+.sublabel{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#5a6a7a;margin:1.1rem 0 .45rem;}
+.sublabel:first-child{margin-top:0;}
+.section-block{margin-top:2rem;}
+.section-header{background:#1d3756;border-radius:8px 8px 0 0;padding:.75rem 1.2rem;display:flex;align-items:center;gap:.7rem;}
+.section-num{background:#2499b6;color:#fff;width:23px;height:23px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.section-title{font-size:.95rem;font-weight:600;color:#fff;}
+.section-body{background:#fff;border:1px solid #e4eaf0;border-top:none;border-radius:0 0 8px 8px;padding:1.4rem 1.65rem;}
+.script-text{font-size:15px;line-height:1.75;color:#1a2530;margin-bottom:.7rem;}
+.note-block{background:#fffbf0;border-left:4px solid #e09600;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#4a3800;line-height:1.6;}
+.note-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#9a6200;margin-bottom:2px;}
+.prompt-block{background:#f0f8fb;border-left:4px solid #2499b6;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:14px;color:#1d3756;font-weight:500;line-height:1.65;}
+.prompt-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#2499b6;margin-bottom:2px;}
+.impact-block{background:#f0f7f0;border-left:4px solid #6ebe4f;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#2a4a1a;line-height:1.65;}
+.impact-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#4a8a20;margin-bottom:2px;}
+.connect-block{background:#f0f5fb;border-left:4px solid #2499b6;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#1a3050;line-height:1.65;}
+.connect-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#2499b6;margin-bottom:2px;}
+.warn-block{background:#fff5f5;border-left:4px solid #e05050;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#5a1a1a;line-height:1.65;}
+.warn-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#c03030;margin-bottom:2px;}
+.tip-block{background:#f5f0fb;border-left:4px solid #8a50c8;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#2a1a4a;line-height:1.65;}
+.tip-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#8a50c8;margin-bottom:2px;}
+.checklist{list-style:none;margin:.35rem 0 .65rem;}
+.checklist li{display:flex;align-items:flex-start;gap:9px;padding:.38rem .55rem;border-radius:5px;font-size:14.5px;line-height:1.55;}
+.checklist li:nth-child(odd){background:#f0f4f8;}
+.checklist li::before{content:'';width:14px;height:14px;border:2px solid #bbb;border-radius:3px;flex-shrink:0;margin-top:2px;}
+.bullet-list{list-style:none;padding-left:.2rem;margin:.35rem 0 .65rem;}
+.bullet-list li{display:flex;align-items:flex-start;gap:9px;padding:.22rem 0;font-size:14.5px;line-height:1.6;}
+.bullet-list li::before{content:'';width:7px;height:7px;background:#2499b6;border-radius:50%;flex-shrink:0;margin-top:7px;}
+.num-list{list-style:none;padding-left:.2rem;margin:.35rem 0 .65rem;counter-reset:num;}
+.num-list li{display:flex;align-items:flex-start;gap:9px;padding:.25rem 0;font-size:14.5px;line-height:1.6;counter-increment:num;}
+.num-list li::before{content:counter(num);min-width:22px;height:22px;background:#1d3756;color:#fff;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.field-table{width:100%;border-collapse:collapse;margin:.5rem 0 .75rem;font-size:14px;}
+.field-table th{background:#1d3756;color:#fff;text-align:left;padding:.5rem .75rem;font-size:11px;letter-spacing:.5px;text-transform:uppercase;}
+.field-table td{padding:.5rem .75rem;border-bottom:1px solid #e4eaf0;vertical-align:top;}
+.field-table tr:nth-child(even) td{background:#f7f9fc;}
+.field-table td:first-child{font-weight:600;color:#1d3756;white-space:nowrap;}
+.action-box{background:#f0f4f8;border-radius:7px;padding:1rem 1.3rem;margin-top:.75rem;}
+.action-box .sublabel{margin-top:0;}
+hr.div{border:none;border-top:1px solid #e4eaf0;margin:1.1rem 0;}
+.nav-strip{background:#fff;border-top:1px solid #e4eaf0;padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;margin-top:2rem;}
+.nav-strip a{display:inline-flex;align-items:center;gap:.4rem;font-size:13px;font-weight:600;padding:.5rem 1rem;border-radius:7px;transition:background .15s;}
+.nav-prev{background:#f0f4f8;color:#1d3756;} .nav-prev:hover{background:#e4eaf0;text-decoration:none;}
+.nav-next{background:#2499b6;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.15);} .nav-next:hover{opacity:.88;text-decoration:none;}
+footer{background:#1d3756;padding:1.1rem 2rem;text-align:center;font-size:11.5px;color:rgba(255,255,255,.32);}
+footer a{color:#2499b6;}
+</style></head><body>
+<nav class="topnav"><div class="topnav-brand"><div class="topnav-logo">R</div><span class="topnav-name">Rev.io PSA</span></div>
+<div class="topnav-links"><a href="deep-dive-index.html">&#8592; All Modules</a><a href="../index.html">Onboarding Scripts</a></div></nav>
+<div class="hero"><div class="hero-eyebrow">Module Deep Dive</div><h1>Project Management</h1><p class="hero-sub">Complete guide to managing multi-phase projects in Rev.io PSA</p>
+<div class="hero-badges"><div class="badge">Type <strong>Deep Dive Reference</strong></div><div class="badge">Format <strong>Facilitator Script</strong></div></div></div>
+<div class="legend">
+  <span class="legend-lbl">How to read this script</span>
+  <div class="legend-item"><span class="pip" style="background:#1a2530;border-radius:2px;"></span> Speak to client</div>
+  <div class="legend-item"><span class="pip" style="background:#e09600;border-radius:2px;"></span> &#128161; Internal Note</div>
+  <div class="legend-item"><span class="pip" style="background:#2499b6;border-radius:2px;"></span> &#10067; Prompt</div>
+  <div class="legend-item"><span class="pip" style="background:#6ebe4f;border-radius:2px;"></span> &#9650; Platform Impact</div>
+  <div class="legend-item"><span class="pip" style="background:#2499b6;border-radius:50%;"></span> &#8594; Connects To</div>
+  <div class="legend-item"><span class="pip" style="background:#8a50c8;border-radius:2px;"></span> &#128161; Pro Tip</div>
+  <div class="legend-item"><span class="pip" style="background:#e05050;border-radius:2px;"></span> &#9888; Watch Out</div>
+</div><main class="wrapper"><div class="toc"><div class="toc-title">In This Guide</div><div class="toc-grid"><a class="toc-item" href="#s1">When Projects Replace Tickets</a><a class="toc-item" href="#s2">The Project Hierarchy</a><a class="toc-item" href="#s3">All Fields</a><a class="toc-item" href="#s4">Phases and Tickets</a><a class="toc-item" href="#s5">Progress and Economics</a><a class="toc-item" href="#s6">Closing a Project</a></div></div><h2 class="page-heading">Pre-Session Checklist</h2><ul class="checklist"><li>Navigate to the Projects module</li><li>Confirm Ticketing has been covered</li><li>Have a real multi-phase engagement in mind to use as an example</li></ul><div class="section-block" id="s1"><div class="section-header"><div class="section-num">1</div><div class="section-title">When Projects Replace Tickets</div></div><div class="section-body"><p class="script-text">Most work in Rev.io PSA lives on individual tickets. But some engagements are too complex for a single ticket — they span weeks or months, involve multiple team members, have distinct phases with dependencies, and need to be tracked as a whole rather than as isolated work orders. That's when Projects become the right tool.</p><p class="script-text">A Project is a container that organizes related tickets into a structured hierarchy. All time, parts, and billing from those tickets roll up to the project level, giving you a complete view of progress and cost for the entire engagement without hunting through individual tickets.</p><div class="connect-block"><strong>&#8594; Connects To</strong>Projects connect to: Tickets (organized into phases within the project), Customer records (the project belongs to a customer), Users (project manager, plus users assigned to individual tickets), Time Logs (roll up to project-level reporting), Billing (ticket charges flow to billing as normal), and Analytics (project-level profitability and status reports).</div></div></div><div class="section-block" id="s2"><div class="section-header"><div class="section-num">2</div><div class="section-title">Project Structure — The Hierarchy</div></div><div class="section-body"><table class="field-table"><thead><tr><th>Level</th><th>Description</th><th>Example</th></tr></thead><tbody><tr><td>Project</td><td>The overall engagement</td><td>'Acme Corp — Network Infrastructure Upgrade 2025'</td></tr><tr><td>Phase</td><td>A logical stage of the project</td><td>'Phase 1: Assessment', 'Phase 2: Installation', 'Phase 3: Testing & Handoff'</td></tr><tr><td>Ticket</td><td>Individual work orders within a phase</td><td>'Configure core switches', 'Deploy access points', 'Test throughput'</td></tr><tr><td>Task</td><td>Granular to-do items on tickets</td><td>'Document current network topology', 'Verify firmware versions'</td></tr></tbody></table><p class="script-text">Progress is tracked at each level. When all tickets in a phase are closed, the phase is complete. When all phases are complete, the project is ready to close. Closing the project archives the record while keeping all history accessible.</p></div></div><div class="section-block" id="s3"><div class="section-header"><div class="section-num">3</div><div class="section-title">Creating a Project — All Fields</div></div><div class="section-body"><p class="script-text">Navigate to Projects &gt; Add Project.</p><table class="field-table"><thead><tr><th>Field</th><th>Description</th></tr></thead><tbody><tr><td>Project Name</td><td>Descriptive name including customer and engagement type</td></tr><tr><td>Customer</td><td>The customer this project is for — required</td></tr><tr><td>Project Manager</td><td>The internal owner responsible for overall project progress</td></tr><tr><td>Start Date</td><td>When project work begins</td></tr><tr><td>Target Completion Date</td><td>The planned completion date — used in scheduling and reporting</td></tr><tr><td>Status</td><td>Planning, Active, On Hold, Completed</td></tr><tr><td>Description</td><td>Scope summary, objectives, and any key notes</td></tr><tr><td>Budget</td><td>Optional planned budget — compare to actual cost in reporting</td></tr><tr><td>Tags</td><td>Searchable labels for filtering projects in list view</td></tr></tbody></table><div class="prompt-block"><strong>&#10067; Prompt</strong>Let's create a project together. Think of a current or upcoming multi-phase engagement. What's the customer, what are the main phases, and what does the first phase involve?</div></div></div><div class="section-block" id="s4"><div class="section-header"><div class="section-num">4</div><div class="section-title">Building Phases and Adding Tickets</div></div><div class="section-body"><p class="script-text">Once the project is saved, click Add Phase. Name the phase to reflect the logical stage of work it represents. You can add as many phases as the project requires, and reorder them by drag-and-drop.</p><p class="script-text">Within each phase, add tickets two ways:</p><ul class="bullet-list"><li><strong>Link existing tickets:</strong> If tickets for this work already exist, search for and add them to the phase.</li><li><strong>Create new tickets:</strong> Create new tickets directly from the phase — they're automatically linked and inherit the customer from the project.</li></ul><p class="script-text">Tasks can also be added directly to phases for smaller action items that don't need a full ticket. These show in the phase's progress calculation.</p><div class="tip-block"><strong>&#128161; Pro Tip</strong>Create a project template for your most common project type. Once you've built one project with the right phases and standard tickets, use it as a reference when setting up similar projects. PSA doesn't have formal project templates, but a documented structure speeds up setup significantly.</div></div></div><div class="section-block" id="s5"><div class="section-header"><div class="section-num">5</div><div class="section-title">Tracking Progress and Project Economics</div></div><div class="section-body"><p class="script-text">The project overview shows: phases and their ticket counts, status of each ticket, overall percentage complete (based on closed vs. open tickets), total time logged, and total charges accumulated.</p><p class="sublabel">Budget vs. Actual</p><p class="script-text">If you enter a Budget on the project, PSA tracks actual spend (time + parts) against that budget. This gives you an early warning when a project is trending over budget — before it becomes a financial problem.</p><p class="sublabel">Time Tracking on Projects</p><p class="script-text">All time logged on tickets within the project rolls up to the project level. You can view total hours by phase, by technician, and by time type (labor, travel, etc.). Compare planned hours (from the quote that generated this project) to actual hours to understand efficiency.</p><div class="tip-block"><strong>&#128161; Pro Tip</strong>Review project economics weekly during active engagements. If you're 80% done on time but 95% through your budget, you have a problem. Catching it early lets you have a proactive conversation with the customer rather than a surprise at billing.</div></div></div><div class="section-block" id="s6"><div class="section-header"><div class="section-num">6</div><div class="section-title">Closing a Project</div></div><div class="section-body"><p class="script-text">When all phases are complete and the work is done, close the project. Set the status to Completed and add a completion date. The project moves to your closed projects list, but all tickets, time logs, notes, and billing history remain accessible.</p><p class="script-text">After closing, you can generate a project summary from the project record — a consolidated view of all work done, time spent, and charges billed. Useful for customer-facing project review conversations.</p></div></div><div class="action-box"><p class="sublabel">Action Items</p><ul class="checklist"><li>Identify current or upcoming engagements that need project tracking</li><li>Create a project for each one with a clear phase structure</li><li>Add all relevant tickets to each phase</li><li>Set budgets on projects where cost control is important</li><li>Review project economics weekly during active projects</li><li>Build a standard phase template for your most common project type</li></ul></div></main>
+<div class="nav-strip"><a class="nav-prev" href="dd_13_scheduling.html">&#8592; Scheduling & Dispatch</a><a class="nav-next" href="dd_15_billing.html">Billing &#8594;</a></div>
+<footer>&copy; Rev.io PSA &nbsp;&mdash;&nbsp; Deep Dive Scripts &nbsp;&mdash;&nbsp; <a href="https://help.psarev.io" target="_blank">help.psarev.io</a></footer>
+</body></html>

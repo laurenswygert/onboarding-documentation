@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Packages — Rev.io PSA Deep Dive</title><style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f7fa;color:#1a2530;font-size:15px;line-height:1.7;}
+a{color:#2499b6;text-decoration:none;}
+a:hover{text-decoration:underline;}
+.topnav{background:#1d3756;padding:.8rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.25);}
+.topnav-brand{display:flex;align-items:center;gap:.7rem;}
+.topnav-logo{width:30px;height:30px;background:#2499b6;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;}
+.topnav-name{font-size:16px;font-weight:600;color:#fff;}
+.topnav-links{display:flex;align-items:center;gap:1.5rem;}
+.topnav-links a{font-size:12px;color:rgba(255,255,255,.55);font-weight:500;letter-spacing:.3px;transition:color .15s;}
+.topnav-links a:hover{color:#fff;text-decoration:none;}
+.hero{background:linear-gradient(120deg,#1d3756 60%,#1a4a72 100%);padding:2.5rem 2rem 2rem;border-bottom:3px solid #2499b6;}
+.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#2499b6;margin-bottom:.45rem;}
+.hero h1{font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;color:#fff;margin-bottom:.35rem;line-height:1.2;}
+.hero-sub{font-size:.9rem;color:rgba(255,255,255,.5);margin-bottom:1.25rem;}
+.hero-badges{display:flex;flex-wrap:wrap;gap:.5rem;}
+.badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:5px;padding:.22rem .7rem;font-size:11.5px;color:rgba(255,255,255,.72);}
+.badge strong{color:#fff;}
+.legend{background:#fff;border-bottom:1px solid #e4eaf0;padding:.65rem 2rem;display:flex;flex-wrap:wrap;gap:.4rem 1.25rem;align-items:center;}
+.legend-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#5a6a7a;flex-basis:100%;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#444;}
+.pip{width:9px;height:9px;border-radius:2px;}
+.pip-s{background:#1a2530;} .pip-n{background:#e09600;} .pip-p{background:#2499b6;} .pip-i{background:#6ebe4f;} .pip-c{background:#2499b6;border-radius:50%;}
+.wrapper{max-width:860px;margin:0 auto;padding:2rem 1.5rem 5rem;}
+.toc{background:#fff;border:1px solid #e4eaf0;border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:2rem;}
+.toc-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#5a6a7a;margin-bottom:.75rem;}
+.toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.3rem .75rem;}
+.toc-item{font-size:13.5px;color:#2499b6;padding:.15rem 0;display:block;}
+.page-heading{font-size:1.2rem;font-weight:700;color:#1d3756;margin:2rem 0 .4rem;padding-bottom:.35rem;border-bottom:2px solid #e4eaf0;}
+.sublabel{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#5a6a7a;margin:1.1rem 0 .45rem;}
+.sublabel:first-child{margin-top:0;}
+.section-block{margin-top:2rem;}
+.section-header{background:#1d3756;border-radius:8px 8px 0 0;padding:.75rem 1.2rem;display:flex;align-items:center;gap:.7rem;}
+.section-num{background:#2499b6;color:#fff;width:23px;height:23px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.section-title{font-size:.95rem;font-weight:600;color:#fff;}
+.section-body{background:#fff;border:1px solid #e4eaf0;border-top:none;border-radius:0 0 8px 8px;padding:1.4rem 1.65rem;}
+.script-text{font-size:15px;line-height:1.75;color:#1a2530;margin-bottom:.7rem;}
+.note-block{background:#fffbf0;border-left:4px solid #e09600;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#4a3800;line-height:1.6;}
+.note-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#9a6200;margin-bottom:2px;}
+.prompt-block{background:#f0f8fb;border-left:4px solid #2499b6;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:14px;color:#1d3756;font-weight:500;line-height:1.65;}
+.prompt-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#2499b6;margin-bottom:2px;}
+.impact-block{background:#f0f7f0;border-left:4px solid #6ebe4f;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#2a4a1a;line-height:1.65;}
+.impact-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#4a8a20;margin-bottom:2px;}
+.connect-block{background:#f0f5fb;border-left:4px solid #2499b6;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#1a3050;line-height:1.65;}
+.connect-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#2499b6;margin-bottom:2px;}
+.warn-block{background:#fff5f5;border-left:4px solid #e05050;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#5a1a1a;line-height:1.65;}
+.warn-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#c03030;margin-bottom:2px;}
+.tip-block{background:#f5f0fb;border-left:4px solid #8a50c8;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#2a1a4a;line-height:1.65;}
+.tip-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#8a50c8;margin-bottom:2px;}
+.checklist{list-style:none;margin:.35rem 0 .65rem;}
+.checklist li{display:flex;align-items:flex-start;gap:9px;padding:.38rem .55rem;border-radius:5px;font-size:14.5px;line-height:1.55;}
+.checklist li:nth-child(odd){background:#f0f4f8;}
+.checklist li::before{content:'';width:14px;height:14px;border:2px solid #bbb;border-radius:3px;flex-shrink:0;margin-top:2px;}
+.bullet-list{list-style:none;padding-left:.2rem;margin:.35rem 0 .65rem;}
+.bullet-list li{display:flex;align-items:flex-start;gap:9px;padding:.22rem 0;font-size:14.5px;line-height:1.6;}
+.bullet-list li::before{content:'';width:7px;height:7px;background:#2499b6;border-radius:50%;flex-shrink:0;margin-top:7px;}
+.num-list{list-style:none;padding-left:.2rem;margin:.35rem 0 .65rem;counter-reset:num;}
+.num-list li{display:flex;align-items:flex-start;gap:9px;padding:.25rem 0;font-size:14.5px;line-height:1.6;counter-increment:num;}
+.num-list li::before{content:counter(num);min-width:22px;height:22px;background:#1d3756;color:#fff;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.field-table{width:100%;border-collapse:collapse;margin:.5rem 0 .75rem;font-size:14px;}
+.field-table th{background:#1d3756;color:#fff;text-align:left;padding:.5rem .75rem;font-size:11px;letter-spacing:.5px;text-transform:uppercase;}
+.field-table td{padding:.5rem .75rem;border-bottom:1px solid #e4eaf0;vertical-align:top;}
+.field-table tr:nth-child(even) td{background:#f7f9fc;}
+.field-table td:first-child{font-weight:600;color:#1d3756;white-space:nowrap;}
+.action-box{background:#f0f4f8;border-radius:7px;padding:1rem 1.3rem;margin-top:.75rem;}
+.action-box .sublabel{margin-top:0;}
+hr.div{border:none;border-top:1px solid #e4eaf0;margin:1.1rem 0;}
+.nav-strip{background:#fff;border-top:1px solid #e4eaf0;padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;margin-top:2rem;}
+.nav-strip a{display:inline-flex;align-items:center;gap:.4rem;font-size:13px;font-weight:600;padding:.5rem 1rem;border-radius:7px;transition:background .15s;}
+.nav-prev{background:#f0f4f8;color:#1d3756;}
+.nav-prev:hover{background:#e4eaf0;text-decoration:none;}
+.nav-next{background:#2499b6;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.15);}
+.nav-next:hover{opacity:.88;text-decoration:none;}
+footer{background:#1d3756;padding:1.1rem 2rem;text-align:center;font-size:11.5px;color:rgba(255,255,255,.32);}
+footer a{color:#2499b6;}
+</style></head>
+<body>
+<nav class="topnav"><div class="topnav-brand"><div class="topnav-logo">R</div><span class="topnav-name">Rev.io PSA</span></div>
+<div class="topnav-links"><a href="deep-dive-index.html">&#8592; All Modules</a><a href="../index.html">Onboarding Scripts</a></div></nav>
+<div class="hero"><div class="hero-eyebrow">Module Deep Dive</div><h1>Packages</h1><p class="hero-sub">Complete guide to building and managing service packages in Rev.io PSA</p>
+<div class="hero-badges"><div class="badge">Type <strong>Deep Dive Reference</strong></div><div class="badge">Format <strong>Facilitator Script</strong></div></div></div>
+<div class="legend">
+  <span class="legend-lbl">How to read this script</span>
+  <div class="legend-item"><span class="pip pip-s"></span> Speak to client</div>
+  <div class="legend-item"><span class="pip pip-n"></span> &#128161; Internal Note</div>
+  <div class="legend-item"><span class="pip pip-p"></span> &#10067; Prompt</div>
+  <div class="legend-item"><span class="pip pip-i"></span> &#9650; Platform Impact</div>
+  <div class="legend-item"><span class="pip pip-c"></span> &#8594; Connects To</div>
+  <div class="legend-item"><span class="pip" style="background:#8a50c8;border-radius:2px;"></span> &#128161; Pro Tip</div>
+  <div class="legend-item"><span class="pip" style="background:#e05050;border-radius:2px;"></span> &#9888; Watch Out</div>
+</div>
+<main class="wrapper"><div class="toc"><div class="toc-title">In This Guide</div><div class="toc-grid"><a class="toc-item" href="#s1">What Packages Are</a><a class="toc-item" href="#s2">All Fields Explained</a><a class="toc-item" href="#s3">Pricing Strategies</a><a class="toc-item" href="#s4">Optional Items</a></div></div><h2 class="page-heading">Pre-Session Checklist</h2><ul class="checklist"><li>Navigate to Inventory &gt; Packages</li><li>Confirm Product Catalog is fully built</li><li>Know client's bundled offerings and tiered service structures</li></ul><div class="section-block" id="s1"><div class="section-header"><div class="section-num">1</div><div class="section-title">What Packages Are and Why They Matter</div></div><div class="section-body"><p class="script-text">Packages bundle multiple catalog items into a single, named offering. When added to a quote or ticket, the package expands into all its component items automatically. This means your team quotes complex offerings in seconds instead of minutes, pricing is always correct and consistent, and nothing gets left off.</p><div class="connect-block"><strong>&#8594; Connects To</strong>Packages appear in: Quoting (as a single selectable line item that expands into components), Tickets via the Parts &amp; Labor tab, and can be used in Recurring Services if your managed service charge is a packaged bundle. All component catalog items (Parts, Labor, Services) remain individually tracked in billing and reporting.</div><div class="impact-block"><strong>&#9650; Platform Impact</strong>Without packages, your team builds the same complex quote from scratch every time. This creates inconsistency — one tech includes everything, another forgets a line item. Packages standardize your offerings and protect margins.</div></div></div><div class="section-block" id="s2"><div class="section-header"><div class="section-num">2</div><div class="section-title">Creating a Package — Complete Field Guide</div></div><div class="section-body"><p class="script-text">Navigate to Inventory &gt; Packages &gt; Add Package.</p><table class="field-table"><thead><tr><th>Field</th><th>Description</th><th>Notes</th></tr></thead><tbody><tr><td>Name</td><td>Package display name</td><td>Appears on quotes and invoices. Customer-facing. Be descriptive: 'Basic Installation Package' not 'Package 1'.</td></tr><tr><td>Description</td><td>Customer-facing description</td><td>Describe what's included from the customer's perspective. This is marketing copy as much as a technical list.</td></tr><tr><td>Category</td><td>Grouping for filtering</td><td>Use same categories as catalog items where possible.</td></tr><tr><td>Package Items</td><td>The catalog items that make up this package</td><td>Add each item, set quantity, mark required or optional.</td></tr><tr><td>Required vs. Optional</td><td>Whether each item must be included</td><td>Optional items allow customers to customize the package when accepting a proposal.</td></tr><tr><td>Package Price</td><td>Overall price for the package</td><td>Set a flat price to override item-level prices, or leave blank to sum components automatically.</td></tr><tr><td>Active</td><td>Whether it appears in search</td><td>Deactivate retired packages without losing historical data.</td></tr></tbody></table><div class="prompt-block"><strong>&#10067; Prompt</strong>Let's build your most commonly sold bundled offering. What package would save your team the most time if it were pre-built?</div></div></div><div class="section-block" id="s3"><div class="section-header"><div class="section-num">3</div><div class="section-title">Pricing Strategies for Packages</div></div><div class="section-body"><p class="sublabel">Flat Package Price vs. Sum of Components</p><p class="script-text">When you set a flat package price, the component items lose their individual prices in the customer's view — the customer sees one line item at one price. When you let the price sum from components, each item is visible with its individual price.</p><table class="field-table"><thead><tr><th>Approach</th><th>Pros</th><th>Cons</th><th>Best For</th></tr></thead><tbody><tr><td>Flat price</td><td>Simpler customer invoice, easier to discount</td><td>Less line-item visibility</td><td>Consumer/residential customers, fixed-price contracts</td></tr><tr><td>Sum of components</td><td>Full transparency, easier to adjust individual items</td><td>More complex invoice, harder to bundle discount</td><td>Enterprise customers, itemized billing requirements</td></tr></tbody></table><p class="sublabel">Tiered Package Structures</p><p class="script-text">If you offer tiered service levels (Basic/Standard/Premium or Silver/Gold/Platinum), create one package per tier. Name them clearly and ensure each tier's component items reflect exactly what's included at that level.</p><div class="tip-block"><strong>&#128161; Pro Tip</strong>Create a 'package comparison' document alongside your PSA setup that shows customers what's in each tier side by side. This lives outside PSA but references your package names — it makes the sales conversation cleaner.</div></div></div><div class="section-block" id="s4"><div class="section-header"><div class="section-num">4</div><div class="section-title">Optional Items and Customer Customization</div></div><div class="section-body"><p class="script-text">When building a package, you can mark individual items as optional. When a customer receives a proposal containing this package, they see the package with required items pre-selected and optional items they can add or remove.</p><p class="script-text">This is useful for: add-on services that complement the base package, equipment upgrades (standard vs. premium hardware), warranty extensions, or additional coverage tiers.</p><div class="prompt-block"><strong>&#10067; Prompt</strong>Are there items in your packages that customers sometimes add and sometimes don't? Those should be flagged as optional.</div></div></div><div class="action-box"><p class="sublabel">Action Items</p><ul class="checklist"><li>Identify all standard bundled offerings your team sells regularly</li><li>Build a package for each bundled offering</li><li>Build tiered packages if you have service tiers</li><li>Define which items are required vs. optional in each package</li><li>Set package-level pricing or verify component sum is correct</li><li>Test each package by adding it to a draft quote to verify it expands correctly</li></ul></div></main>
+<div class="nav-strip"><a class="nav-prev" href="dd_04_product_catalog.html">&#8592; Product Catalog</a><a class="nav-next" href="dd_06_purchase_orders.html">Purchase Orders &#8594;</a></div>
+<footer>&copy; Rev.io PSA &nbsp;&mdash;&nbsp; Module Deep Dive Scripts &nbsp;&mdash;&nbsp; <a href="https://help.psarev.io" target="_blank">help.psarev.io</a></footer>
+</body></html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Customers & Contacts — Rev.io PSA Deep Dive</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f7fa;color:#1a2530;font-size:15px;line-height:1.7;}
+a{color:#2499b6;text-decoration:none;}
+a:hover{text-decoration:underline;}
+.topnav{background:#1d3756;padding:.8rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.25);}
+.topnav-brand{display:flex;align-items:center;gap:.7rem;}
+.topnav-logo{width:30px;height:30px;background:#2499b6;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;}
+.topnav-name{font-size:16px;font-weight:600;color:#fff;}
+.topnav-links{display:flex;align-items:center;gap:1.5rem;}
+.topnav-links a{font-size:12px;color:rgba(255,255,255,.55);font-weight:500;letter-spacing:.3px;transition:color .15s;}
+.topnav-links a:hover{color:#fff;text-decoration:none;}
+.hero{background:linear-gradient(120deg,#1d3756 60%,#1a4a72 100%);padding:2.5rem 2rem 2rem;border-bottom:3px solid #2499b6;}
+.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#2499b6;margin-bottom:.45rem;}
+.hero h1{font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;color:#fff;margin-bottom:.35rem;line-height:1.2;}
+.hero-sub{font-size:.9rem;color:rgba(255,255,255,.5);margin-bottom:1.25rem;}
+.hero-badges{display:flex;flex-wrap:wrap;gap:.5rem;}
+.badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:5px;padding:.22rem .7rem;font-size:11.5px;color:rgba(255,255,255,.72);}
+.badge strong{color:#fff;}
+.legend{background:#fff;border-bottom:1px solid #e4eaf0;padding:.65rem 2rem;display:flex;flex-wrap:wrap;gap:.4rem 1.25rem;align-items:center;}
+.legend-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#5a6a7a;flex-basis:100%;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#444;}
+.pip{width:9px;height:9px;border-radius:2px;}
+.pip-s{background:#1a2530;} .pip-n{background:#e09600;} .pip-p{background:#2499b6;} .pip-i{background:#6ebe4f;} .pip-c{background:#2499b6;border-radius:50%;}
+.wrapper{max-width:860px;margin:0 auto;padding:2rem 1.5rem 5rem;}
+.toc{background:#fff;border:1px solid #e4eaf0;border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:2rem;}
+.toc-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#5a6a7a;margin-bottom:.75rem;}
+.toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.3rem .75rem;}
+.toc-item{font-size:13.5px;color:#2499b6;padding:.15rem 0;}
+.toc-item:hover{color:#1d3756;}
+.page-heading{font-size:1.2rem;font-weight:700;color:#1d3756;margin:2rem 0 .4rem;padding-bottom:.35rem;border-bottom:2px solid #e4eaf0;}
+.sublabel{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#5a6a7a;margin:1.1rem 0 .45rem;}
+.sublabel:first-child{margin-top:0;}
+.section-block{margin-top:2rem;}
+.section-header{background:#1d3756;border-radius:8px 8px 0 0;padding:.75rem 1.2rem;display:flex;align-items:center;gap:.7rem;}
+.section-num{background:#2499b6;color:#fff;width:23px;height:23px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.section-title{font-size:.95rem;font-weight:600;color:#fff;}
+.section-body{background:#fff;border:1px solid #e4eaf0;border-top:none;border-radius:0 0 8px 8px;padding:1.4rem 1.65rem;}
+.script-text{font-size:15px;line-height:1.75;color:#1a2530;margin-bottom:.7rem;}
+.note-block{background:#fffbf0;border-left:4px solid #e09600;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#4a3800;line-height:1.6;}
+.note-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#9a6200;margin-bottom:2px;}
+.prompt-block{background:#f0f8fb;border-left:4px solid #2499b6;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:14px;color:#1d3756;font-weight:500;line-height:1.65;}
+.prompt-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#2499b6;margin-bottom:2px;}
+.impact-block{background:#f0f7f0;border-left:4px solid #6ebe4f;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#2a4a1a;line-height:1.65;}
+.impact-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#4a8a20;margin-bottom:2px;}
+.connect-block{background:#f0f5fb;border-left:4px solid #2499b6;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#1a3050;line-height:1.65;}
+.connect-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#2499b6;margin-bottom:2px;}
+.warn-block{background:#fff5f5;border-left:4px solid #e05050;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#5a1a1a;line-height:1.65;}
+.warn-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#c03030;margin-bottom:2px;}
+.tip-block{background:#f5f0fb;border-left:4px solid #8a50c8;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#2a1a4a;line-height:1.65;}
+.tip-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#8a50c8;margin-bottom:2px;}
+.checklist{list-style:none;margin:.35rem 0 .65rem;}
+.checklist li{display:flex;align-items:flex-start;gap:9px;padding:.38rem .55rem;border-radius:5px;font-size:14.5px;line-height:1.55;}
+.checklist li:nth-child(odd){background:#f0f4f8;}
+.checklist li::before{content:'';width:14px;height:14px;border:2px solid #bbb;border-radius:3px;flex-shrink:0;margin-top:2px;}
+.bullet-list{list-style:none;padding-left:.2rem;margin:.35rem 0 .65rem;}
+.bullet-list li{display:flex;align-items:flex-start;gap:9px;padding:.22rem 0;font-size:14.5px;line-height:1.6;}
+.bullet-list li::before{content:'';width:7px;height:7px;background:#2499b6;border-radius:50%;flex-shrink:0;margin-top:7px;}
+.num-list{list-style:none;padding-left:.2rem;margin:.35rem 0 .65rem;counter-reset:num;}
+.num-list li{display:flex;align-items:flex-start;gap:9px;padding:.25rem 0;font-size:14.5px;line-height:1.6;counter-increment:num;}
+.num-list li::before{content:counter(num);min-width:22px;height:22px;background:#1d3756;color:#fff;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.field-table{width:100%;border-collapse:collapse;margin:.5rem 0 .75rem;font-size:14px;}
+.field-table th{background:#1d3756;color:#fff;text-align:left;padding:.5rem .75rem;font-size:11px;letter-spacing:.5px;text-transform:uppercase;}
+.field-table td{padding:.5rem .75rem;border-bottom:1px solid #e4eaf0;vertical-align:top;}
+.field-table tr:nth-child(even) td{background:#f7f9fc;}
+.field-table td:first-child{font-weight:600;color:#1d3756;white-space:nowrap;}
+.action-box{background:#f0f4f8;border-radius:7px;padding:1rem 1.3rem;margin-top:.75rem;}
+.action-box .sublabel{margin-top:0;}
+hr.div{border:none;border-top:1px solid #e4eaf0;margin:1.1rem 0;}
+.nav-strip{background:#fff;border-top:1px solid #e4eaf0;padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;margin-top:2rem;}
+.nav-strip a{display:inline-flex;align-items:center;gap:.4rem;font-size:13px;font-weight:600;padding:.5rem 1rem;border-radius:7px;transition:background .15s;}
+.nav-prev{background:#f0f4f8;color:#1d3756;}
+.nav-prev:hover{background:#e4eaf0;text-decoration:none;}
+.nav-next{background:#2499b6;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.15);}
+.nav-next:hover{opacity:.88;text-decoration:none;}
+footer{background:#1d3756;padding:1.1rem 2rem;text-align:center;font-size:11.5px;color:rgba(255,255,255,.32);}
+footer a{color:#2499b6;}
+@media print{.topnav,.nav-strip{position:relative;}.section-block{break-inside:avoid;}}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <div class="topnav-brand">
+    <div class="topnav-logo">R</div>
+    <span class="topnav-name">Rev.io PSA</span>
+  </div>
+  <div class="topnav-links">
+    <a href="deep-dive-index.html">&#8592; All Modules</a>
+    <a href="../index.html">Onboarding Scripts</a>
+  </div>
+</nav>
+<div class="hero">
+  <div class="hero-eyebrow">Module Deep Dive</div>
+  <h1>Customers & Contacts</h1>
+  <p class="hero-sub">Complete guide to customer records, contacts, the customer profile, and the customer portal</p>
+  <div class="hero-badges">
+    <div class="badge">Type <strong>Deep Dive Reference</strong></div>
+    <div class="badge">Format <strong>Facilitator Script</strong></div>
+  </div>
+</div>
+<div class="legend">
+  <span class="legend-lbl">How to read this script</span>
+  <div class="legend-item"><span class="pip pip-s"></span> Speak to client</div>
+  <div class="legend-item"><span class="pip pip-n"></span> &#128161; Internal Note</div>
+  <div class="legend-item"><span class="pip pip-p"></span> &#10067; Prompt — ask the client</div>
+  <div class="legend-item"><span class="pip pip-i"></span> &#9650; Platform Impact</div>
+  <div class="legend-item"><span class="pip pip-c"></span> &#8594; Connects To</div>
+  <div class="legend-item"><span class="pip" style="background:#8a50c8;border-radius:2px;"></span> &#128161; Pro Tip</div>
+  <div class="legend-item"><span class="pip" style="background:#e05050;border-radius:2px;"></span> &#9888; Watch Out</div>
+</div>
+<main class="wrapper">
+<div class="toc"><div class="toc-title">In This Guide</div><div class="toc-grid"><a class="toc-item" href="#s1">The Customer Record as the Platform Anchor</a><a class="toc-item" href="#s2">Creating a Customer</a><a class="toc-item" href="#s3">Contacts</a><a class="toc-item" href="#s4">The Customer Profile</a><a class="toc-item" href="#s5">Related Accounts</a><a class="toc-item" href="#s6">Customer Portal</a></div></div>
+<h2 class="page-heading">Pre-Session Checklist</h2><ul class="checklist"><li>Navigate to the Customers module</li><li>Know if client is migrating from another system — data import may apply</li><li>Know if they use Rev.io Billing — customers may already be synced</li><li>Have a real or test customer ready to create during the session</li></ul><div class="section-block" id="s1"><div class="section-header"><div class="section-num">1</div><div class="section-title">The Customer Record as the Platform Anchor</div></div><div class="section-body"><p class="script-text">In Rev.io PSA, every piece of work, every financial transaction, and every document ties back to a customer record. Tickets require a customer. Invoices are sent to a customer. Quotes are built for a customer. Contracts live under a customer. Assets are installed at a customer. Recurring services bill to a customer.</p><p class="script-text">A complete, well-structured customer database is not just a contact list — it's the operational foundation of the entire platform. Data quality here determines the quality of everything downstream: billing accuracy, ticket routing, customer communication, and reporting.</p><div class="connect-block"><strong>&#8594; Connects To</strong>Customer records are the parent record for: Tickets (every ticket requires a linked customer), Billing (invoices, payments, charges, and ledger all belong to a customer), Quotes and Opportunities, Contracts and Recurring Services, Assets, Calendar Events (can be linked to a customer), and the Customer Portal (portal access is managed per customer).</div></div></div><div class="section-block" id="s2"><div class="section-header"><div class="section-num">2</div><div class="section-title">Creating a Customer — Every Field Explained</div></div><div class="section-body"><p class="script-text">Navigate to Customers &gt; Add Customer.</p><table class="field-table"><thead><tr><th>Field</th><th>Description</th><th>Best Practice</th></tr></thead><tbody><tr><td>Customer Name</td><td>Name displayed across the entire platform</td><td>Use what your team calls them day-to-day. Legal name goes in a separate field.</td></tr><tr><td>Legal Name</td><td>Formal legal entity name</td><td>Used on contracts and formal documents. May differ from display name.</td></tr><tr><td>Account Number</td><td>Unique identifier for the account</td><td>Auto-generate or match your existing numbering system for continuity.</td></tr><tr><td>Customer Type</td><td>Classification for filtering and reporting</td><td>Create types that match your business: Residential, Commercial, Government, Non-Profit, Internal.</td></tr><tr><td>Stage</td><td>Relationship stage</td><td>Active (working customers), Prospect (potential), Inactive (churned). Only Active customers appear in ticket creation search by default.</td></tr><tr><td>Referred By</td><td>Source attribution</td><td>Track how customers found you — useful for marketing ROI reporting.</td></tr><tr><td>Tax Exempt</td><td>Whether this customer is exempt from tax</td><td>Overrides line-item tax settings on invoices.</td></tr><tr><td>Tax ID</td><td>Customer's tax identification number</td><td>Required for tax-exempt invoicing in many jurisdictions.</td></tr><tr><td>Business Hours</td><td>Customer-specific operating hours</td><td>Overrides company business hours for SLA calculations on this account. Use for customers with unusual hours.</td></tr><tr><td>Primary Address</td><td>Main billing address</td><td>Appears on invoices. Service location is set at the ticket level.</td></tr><tr><td>Tags</td><td>Freeform labels for filtering</td><td>Examples: VIP, Net30, AutoPay, Escalation Watch. Searchable across the system.</td></tr><tr><td>Notes/Journal</td><td>Freeform account notes</td><td>Visible to your team only. Good for account history, relationship context, special handling notes.</td></tr></tbody></table><div class="prompt-block"><strong>&#10067; Prompt</strong>Let's create your first customer together. Use a real account or a test record — walk through every field so you understand what each one does.</div><div class="tip-block"><strong>&#128161; Pro Tip</strong>Don't skip Customer Type and Stage — they seem optional but become very valuable for filtering your customer list and for segment-level reporting in Analytics. It's much harder to retroactively categorize thousands of customers than to set it during creation.</div></div></div><div class="section-block" id="s3"><div class="section-header"><div class="section-num">3</div><div class="section-title">Contacts — Structure and Best Practices</div></div><div class="section-body"><p class="script-text">A Contact is an individual person at the customer account. Every customer should have at least one contact — the person who calls in for support, receives invoices, and signs off on work. Most business customers will have multiple contacts with different roles.</p><p class="script-text">From the customer record &gt; Overview tab &gt; Contacts sub-tab &gt; Add Contact.</p><table class="field-table"><thead><tr><th>Field</th><th>Description</th><th>Why It Matters</th></tr></thead><tbody><tr><td>First / Last Name</td><td>Contact's full name</td><td>Appears on tickets, email communications, and portal access.</td></tr><tr><td>Email</td><td>Contact's email address</td><td>Used for ticket notifications, portal login, invoice delivery, and email-to-ticket domain matching. Most important field on the contact.</td></tr><tr><td>Phone / Mobile</td><td>Contact phone numbers</td><td>Mobile is used for SMS notifications if enabled.</td></tr><tr><td>Role / Title</td><td>Job title at their company</td><td>Helps your team know who they're dealing with when a ticket comes in.</td></tr><tr><td>Primary Contact</td><td>Designates the main contact for the account</td><td>The Primary Contact receives all account-level notifications by default. Every customer should have exactly one.</td></tr><tr><td>Billing Contact</td><td>Designates this person to receive invoices</td><td>Invoices are sent to the billing contact's email. Can be different from the primary contact.</td></tr><tr><td>Portal Access</td><td>Whether this contact can log into the customer portal</td><td>Enable to give the contact a login. They can view tickets, submit requests, and pay invoices depending on portal configuration.</td></tr><tr><td>Do Not Contact</td><td>Suppresses all outbound communication to this contact</td><td>Use when a contact has opted out or when communication should be routed elsewhere.</td></tr></tbody></table><div class="prompt-block"><strong>&#10067; Prompt</strong>Add the primary contact and billing contact for the customer we just created. In many cases they'll be the same person — but confirm.</div><div class="impact-block"><strong>&#9650; Platform Impact</strong>The contact's email address is the most important field. It drives email-to-ticket domain matching, ticket notification emails, portal access, and invoice delivery. An incorrect or missing email means the customer won't receive updates about their own service tickets.</div></div></div><div class="section-block" id="s4"><div class="section-header"><div class="section-num">4</div><div class="section-title">The Customer Profile — Full Navigation</div></div><div class="section-body"><p class="script-text">The customer profile is organized into four main tabs, each representing a different aspect of the customer relationship. Your team will use different tabs depending on their role.</p><p class="sublabel">Overview Tab</p><p class="script-text">The primary account information view. Contains: contact list, portal users, related/child accounts, account notes and journal entries, tags, and account history summary. This is where account managers and dispatchers spend most of their time when looking up a customer.</p><p class="sublabel">Service Tab</p><p class="script-text">The complete service history for this customer. Sub-tabs include: Tickets (all open and historical tickets), Calendar (all scheduled work for this customer), Assets (all equipment installed at this customer's locations), Contracts (all active and historical service agreements), and Recurring Services (all repeating charges and scheduled services).</p><p class="sublabel">Billing Tab</p><p class="script-text">The complete financial picture of the customer. Sub-tabs include: Ledger (every charge, payment, credit, and adjustment in chronological order), Invoices (all invoices — draft, sent, paid, and voided), Unposted Charges (pending charges awaiting review and posting), Payment History (all payments received), Payment Accounts (stored credit card and bank account tokens), and Recurring Services billing view.</p><p class="sublabel">Quotes Tab</p><p class="script-text">All quoting activity for this customer. Sub-tabs include: Quotes (all active and historical quotes), Opportunities (pipeline tracking for potential work), and Proposals (all proposals sent and their acceptance status).</p></div></div><div class="section-block" id="s5"><div class="section-header"><div class="section-num">5</div><div class="section-title">Related Accounts and Account Hierarchy</div></div><div class="section-body"><p class="script-text">Rev.io PSA supports parent-child account relationships. If you have enterprise customers with multiple locations, subsidiaries, or divisions — each with their own billing and service history — you can create each as its own customer account and link them together as related accounts.</p><p class="script-text">From the customer's Overview tab, you can add Related Accounts. The parent account provides a consolidated view while each child account maintains its own independent tickets, billing, and contracts.</p><div class="prompt-block"><strong>&#10067; Prompt</strong>Do any of your customers have multiple locations that need to be managed separately but tied to a parent account?</div><div class="tip-block"><strong>&#128161; Pro Tip</strong>Related accounts are especially valuable for national or multi-location enterprise customers where each site has its own service team and billing contact, but account management needs a consolidated view of the whole relationship.</div></div></div><div class="section-block" id="s6"><div class="section-header"><div class="section-num">6</div><div class="section-title">Customer Portal Overview</div></div><div class="section-body"><p class="script-text">The Customer Portal gives your customers a self-service interface where they can view their open tickets, submit new service requests, see their invoice history, and pay invoices online. Portal access is managed at the contact level — you grant individual contacts portal access from the customer's Overview tab.</p><p class="script-text">Portal capabilities typically include: submit a new ticket, view open and closed tickets on their account, add notes or files to tickets, view invoice history and pay outstanding invoices, and view their service agreements and assets.</p><div class="prompt-block"><strong>&#10067; Prompt</strong>Do you want to enable portal access for your customers? Which customers and which contacts would you like to start with?</div><div class="connect-block"><strong>&#8594; Connects To</strong>The customer portal connects to: Ticket creation and viewing, Billing and invoice payment, Payment Processors (portal payments require a connected processor), Contact email (portal login and notifications), and Customer-facing ticket notification settings.</div></div></div><div class="action-box"><p class="sublabel">Action Items</p><ul class="checklist"><li>Add all active customers with complete information (name, type, stage, address)</li><li>Add at least one Primary Contact and one Billing Contact per customer</li><li>Confirm contact email addresses are current and accurate</li><li>Set Business Hours overrides for any customers with unusual operating hours</li><li>Tag VIP or high-priority accounts for easy filtering</li><li>Configure portal access for customers who should have self-service capability</li><li>Set up parent-child relationships for any multi-location enterprise customers</li></ul></div>
+</main>
+<div class="nav-strip">
+  <a class="nav-prev" href="dd_02_system_settings.html">&#8592; System Settings</a>
+  <a class="nav-next" href="dd_04_product_catalog.html">Product Catalog &#8594;</a>
+</div>
+<footer>&copy; Rev.io PSA &nbsp;&mdash;&nbsp; Module Deep Dive Scripts &nbsp;&mdash;&nbsp; <a href="https://help.psarev.io" target="_blank">help.psarev.io</a></footer>
+</body>
+</html>

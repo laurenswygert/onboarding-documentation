@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Billing — Rev.io PSA Deep Dive</title><style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f7fa;color:#1a2530;font-size:15px;line-height:1.7;}
+a{color:#2499b6;text-decoration:none;} a:hover{text-decoration:underline;}
+.topnav{background:#1d3756;padding:.8rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.25);}
+.topnav-brand{display:flex;align-items:center;gap:.7rem;}
+.topnav-logo{width:30px;height:30px;background:#2499b6;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;}
+.topnav-name{font-size:16px;font-weight:600;color:#fff;}
+.topnav-links{display:flex;align-items:center;gap:1.5rem;}
+.topnav-links a{font-size:12px;color:rgba(255,255,255,.55);font-weight:500;transition:color .15s;}
+.topnav-links a:hover{color:#fff;text-decoration:none;}
+.hero{background:linear-gradient(120deg,#1d3756 60%,#1a4a72 100%);padding:2.5rem 2rem 2rem;border-bottom:3px solid #2499b6;}
+.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#2499b6;margin-bottom:.45rem;}
+.hero h1{font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;color:#fff;margin-bottom:.35rem;line-height:1.2;}
+.hero-sub{font-size:.9rem;color:rgba(255,255,255,.5);margin-bottom:1.25rem;}
+.hero-badges{display:flex;flex-wrap:wrap;gap:.5rem;}
+.badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:5px;padding:.22rem .7rem;font-size:11.5px;color:rgba(255,255,255,.72);}
+.badge strong{color:#fff;}
+.legend{background:#fff;border-bottom:1px solid #e4eaf0;padding:.65rem 2rem;display:flex;flex-wrap:wrap;gap:.4rem 1.25rem;align-items:center;}
+.legend-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#5a6a7a;flex-basis:100%;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#444;}
+.pip{width:9px;height:9px;border-radius:2px;}
+.wrapper{max-width:860px;margin:0 auto;padding:2rem 1.5rem 5rem;}
+.toc{background:#fff;border:1px solid #e4eaf0;border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:2rem;}
+.toc-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#5a6a7a;margin-bottom:.75rem;}
+.toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.3rem .75rem;}
+.toc-item{font-size:13.5px;color:#2499b6;padding:.15rem 0;display:block;}
+.page-heading{font-size:1.2rem;font-weight:700;color:#1d3756;margin:2rem 0 .4rem;padding-bottom:.35rem;border-bottom:2px solid #e4eaf0;}
+.sublabel{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#5a6a7a;margin:1.1rem 0 .45rem;}
+.sublabel:first-child{margin-top:0;}
+.section-block{margin-top:2rem;}
+.section-header{background:#1d3756;border-radius:8px 8px 0 0;padding:.75rem 1.2rem;display:flex;align-items:center;gap:.7rem;}
+.section-num{background:#2499b6;color:#fff;width:23px;height:23px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.section-title{font-size:.95rem;font-weight:600;color:#fff;}
+.section-body{background:#fff;border:1px solid #e4eaf0;border-top:none;border-radius:0 0 8px 8px;padding:1.4rem 1.65rem;}
+.script-text{font-size:15px;line-height:1.75;color:#1a2530;margin-bottom:.7rem;}
+.note-block{background:#fffbf0;border-left:4px solid #e09600;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#4a3800;line-height:1.6;}
+.note-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#9a6200;margin-bottom:2px;}
+.prompt-block{background:#f0f8fb;border-left:4px solid #2499b6;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:14px;color:#1d3756;font-weight:500;line-height:1.65;}
+.prompt-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#2499b6;margin-bottom:2px;}
+.impact-block{background:#f0f7f0;border-left:4px solid #6ebe4f;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#2a4a1a;line-height:1.65;}
+.impact-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#4a8a20;margin-bottom:2px;}
+.connect-block{background:#f0f5fb;border-left:4px solid #2499b6;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#1a3050;line-height:1.65;}
+.connect-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#2499b6;margin-bottom:2px;}
+.warn-block{background:#fff5f5;border-left:4px solid #e05050;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#5a1a1a;line-height:1.65;}
+.warn-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#c03030;margin-bottom:2px;}
+.tip-block{background:#f5f0fb;border-left:4px solid #8a50c8;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#2a1a4a;line-height:1.65;}
+.tip-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#8a50c8;margin-bottom:2px;}
+.checklist{list-style:none;margin:.35rem 0 .65rem;}
+.checklist li{display:flex;align-items:flex-start;gap:9px;padding:.38rem .55rem;border-radius:5px;font-size:14.5px;line-height:1.55;}
+.checklist li:nth-child(odd){background:#f0f4f8;}
+.checklist li::before{content:'';width:14px;height:14px;border:2px solid #bbb;border-radius:3px;flex-shrink:0;margin-top:2px;}
+.bullet-list{list-style:none;padding-left:.2rem;margin:.35rem 0 .65rem;}
+.bullet-list li{display:flex;align-items:flex-start;gap:9px;padding:.22rem 0;font-size:14.5px;line-height:1.6;}
+.bullet-list li::before{content:'';width:7px;height:7px;background:#2499b6;border-radius:50%;flex-shrink:0;margin-top:7px;}
+.num-list{list-style:none;padding-left:.2rem;margin:.35rem 0 .65rem;counter-reset:num;}
+.num-list li{display:flex;align-items:flex-start;gap:9px;padding:.25rem 0;font-size:14.5px;line-height:1.6;counter-increment:num;}
+.num-list li::before{content:counter(num);min-width:22px;height:22px;background:#1d3756;color:#fff;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.field-table{width:100%;border-collapse:collapse;margin:.5rem 0 .75rem;font-size:14px;}
+.field-table th{background:#1d3756;color:#fff;text-align:left;padding:.5rem .75rem;font-size:11px;letter-spacing:.5px;text-transform:uppercase;}
+.field-table td{padding:.5rem .75rem;border-bottom:1px solid #e4eaf0;vertical-align:top;}
+.field-table tr:nth-child(even) td{background:#f7f9fc;}
+.field-table td:first-child{font-weight:600;color:#1d3756;white-space:nowrap;}
+.action-box{background:#f0f4f8;border-radius:7px;padding:1rem 1.3rem;margin-top:.75rem;}
+.action-box .sublabel{margin-top:0;}
+hr.div{border:none;border-top:1px solid #e4eaf0;margin:1.1rem 0;}
+.nav-strip{background:#fff;border-top:1px solid #e4eaf0;padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;margin-top:2rem;}
+.nav-strip a{display:inline-flex;align-items:center;gap:.4rem;font-size:13px;font-weight:600;padding:.5rem 1rem;border-radius:7px;transition:background .15s;}
+.nav-prev{background:#f0f4f8;color:#1d3756;} .nav-prev:hover{background:#e4eaf0;text-decoration:none;}
+.nav-next{background:#2499b6;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.15);} .nav-next:hover{opacity:.88;text-decoration:none;}
+footer{background:#1d3756;padding:1.1rem 2rem;text-align:center;font-size:11.5px;color:rgba(255,255,255,.32);}
+footer a{color:#2499b6;}
+</style></head><body>
+<nav class="topnav"><div class="topnav-brand"><div class="topnav-logo">R</div><span class="topnav-name">Rev.io PSA</span></div>
+<div class="topnav-links"><a href="deep-dive-index.html">&#8592; All Modules</a><a href="../index.html">Onboarding Scripts</a></div></nav>
+<div class="hero"><div class="hero-eyebrow">Module Deep Dive</div><h1>Billing</h1><p class="hero-sub">Complete guide to the billing module, charge management, and the customer ledger</p>
+<div class="hero-badges"><div class="badge">Type <strong>Deep Dive Reference</strong></div><div class="badge">Format <strong>Facilitator Script</strong></div></div></div>
+<div class="legend">
+  <span class="legend-lbl">How to read this script</span>
+  <div class="legend-item"><span class="pip" style="background:#1a2530;border-radius:2px;"></span> Speak to client</div>
+  <div class="legend-item"><span class="pip" style="background:#e09600;border-radius:2px;"></span> &#128161; Internal Note</div>
+  <div class="legend-item"><span class="pip" style="background:#2499b6;border-radius:2px;"></span> &#10067; Prompt</div>
+  <div class="legend-item"><span class="pip" style="background:#6ebe4f;border-radius:2px;"></span> &#9650; Platform Impact</div>
+  <div class="legend-item"><span class="pip" style="background:#2499b6;border-radius:50%;"></span> &#8594; Connects To</div>
+  <div class="legend-item"><span class="pip" style="background:#8a50c8;border-radius:2px;"></span> &#128161; Pro Tip</div>
+  <div class="legend-item"><span class="pip" style="background:#e05050;border-radius:2px;"></span> &#9888; Watch Out</div>
+</div><main class="wrapper"><div class="toc"><div class="toc-title">In This Guide</div><div class="toc-grid"><a class="toc-item" href="#s1">The Billing Module Overview</a><a class="toc-item" href="#s2">Charge Sources</a><a class="toc-item" href="#s3">Unposted Tab</a><a class="toc-item" href="#s4">The Ledger</a><a class="toc-item" href="#s5">Manual Charges and Credits</a></div></div><h2 class="page-heading">Pre-Session Checklist</h2><ul class="checklist"><li>Navigate to the Billing module</li><li>Have a customer with at least one closed ticket and Parts/Labor added</li><li>Confirm recurring services and contracts are configured</li><li>Know the client's billing cycle</li></ul><div class="section-block" id="s1"><div class="section-header"><div class="section-num">1</div><div class="section-title">The Billing Module — Revenue Collection Hub</div></div><div class="section-body"><p class="script-text">The Billing module is where all the work your team has done becomes money. Every ticket your techs close, every recurring service that fires, every contract fee that generates — it all flows here as an Unposted charge, waits for review, gets posted to the Ledger, and becomes an invoice that goes to the customer.</p><p class="script-text">Understanding the billing workflow — where charges come from, how they move through the system, and how to manage exceptions — is critical for anyone who processes billing in Rev.io PSA.</p><div class="connect-block"><strong>&#8594; Connects To</strong>Billing receives charges from: Tickets (Parts &amp; Labor when a ticket is sent to billing), Recurring Services (auto-generated on billing dates), Contracts (flat fees from billing parameters), and Manual Charges (added directly on a customer). From Billing, charges flow to Invoices which go to customers. Payments come back and are applied to invoices on the Ledger.</div></div></div><div class="section-block" id="s2"><div class="section-header"><div class="section-num">2</div><div class="section-title">Charge Sources — How Money Enters Billing</div></div><div class="section-body"><table class="field-table"><thead><tr><th>Source</th><th>How It Works</th><th>Where to Find It</th></tr></thead><tbody><tr><td>Ticket Parts & Labor</td><td>When a ticket is closed and 'Send to Billing' is selected, all items on the Parts & Labor tab become charges</td><td>Customer &gt; Billing tab &gt; Unposted after ticket close</td></tr><tr><td>Recurring Services</td><td>Auto-generated on the configured Next Bill Date. No manual trigger needed</td><td>Customer &gt; Billing tab &gt; Unposted on the billing date</td></tr><tr><td>Contract Billing Parameters</td><td>Generated on the contract's billing schedule — flat recurring fee</td><td>Customer &gt; Billing tab &gt; Unposted on the contract billing date</td></tr><tr><td>Manual Charges</td><td>Added directly by a billing admin</td><td>Customer profile &gt; Quick Actions &gt; Add Charge</td></tr></tbody></table><p class="script-text">All charges — regardless of source — start as Unposted. This is intentional. The Unposted tab is your review checkpoint before anything is finalized and sent to a customer.</p></div></div><div class="section-block" id="s3"><div class="section-header"><div class="section-num">3</div><div class="section-title">The Unposted Tab — Review and Post</div></div><div class="section-body"><p class="script-text">Navigate to Customer &gt; Billing tab &gt; Unposted sub-tab. Every pending charge for this customer lives here.</p><p class="sublabel">What You Can Do From Unposted</p><ul class="bullet-list"><li><strong>Review:</strong> Verify each charge — description, quantity, unit price, total, tax treatment</li><li><strong>Edit:</strong> Change quantity, price, or description on any unposted charge before it's finalized</li><li><strong>Delete:</strong> Remove a charge that shouldn't be billed (warranty work, error, goodwill)</li><li><strong>Add:</strong> Add a charge that was missed — select from the catalog or enter manually</li><li><strong>Post individually:</strong> Post specific charges while leaving others in Unposted for further review</li><li><strong>Post all:</strong> Post all pending charges for this customer at once</li></ul><p class="script-text">Posting moves charges to the Ledger. Once posted, a charge can still be corrected — but it requires a Credit Memo, which creates a paper trail. The easiest correction is always before posting.</p><div class="prompt-block"><strong>&#10067; Prompt</strong>Do you want to review every charge before posting, or are you comfortable auto-posting certain types? For example, recurring service charges are predictable — many clients auto-post those but manually review ticket-based charges.</div><div class="tip-block"><strong>&#128161; Pro Tip</strong>Build a pre-billing review checklist: before posting any charges for the month, run the 'Unposted Charges' report in Analytics to see everything pending across all customers. Catch missing charges and errors before they become customer-facing problems.</div></div></div><div class="section-block" id="s4"><div class="section-header"><div class="section-num">4</div><div class="section-title">The Ledger — The Complete Financial Record</div></div><div class="section-body"><p class="script-text">The Ledger is the immutable financial record of a customer account. Every transaction in chronological order: charges, invoices, payments, credits, adjustments. It never disappears — even voided invoices remain as void records.</p><p class="script-text">The Ledger shows the customer's current balance at the top. Below it, every line tells a story: a charge was posted on this date, an invoice was created, the customer paid on this date, a credit was applied.</p><p class="script-text">When a customer calls to dispute a charge or question a payment, the Ledger is your first and usually only stop. Every transaction is traceable back to its source — you can click through from a Ledger entry to the original ticket, the original recurring service, or the original invoice.</p><div class="tip-block"><strong>&#128161; Pro Tip</strong>Print or export the Ledger when a customer disputes billing. Having the complete documented history — timestamped, with every transaction referenced — resolves most billing disputes quickly and professionally.</div></div></div><div class="section-block" id="s5"><div class="section-header"><div class="section-num">5</div><div class="section-title">Manual Charges and Credits</div></div><div class="section-body"><p class="sublabel">Adding a Manual Charge</p><p class="script-text">From the customer profile &gt; Quick Actions &gt; Add Charge. Select a catalog item or enter a description and price manually. The charge appears immediately in Unposted.</p><p class="sublabel">Issuing a Credit Memo</p><p class="script-text">A credit memo reduces the customer's balance. Use it to correct a billing error on a posted charge, apply a goodwill credit, or acknowledge a refund. From the customer's Billing tab, find the posted charge or invoice and issue a credit against it. The credit appears on the Ledger as a negative amount, reducing the outstanding balance.</p><p class="sublabel">Rebilling</p><p class="script-text">If a ticket was closed and billed incorrectly — wrong items, wrong quantities, wrong prices — you can rebill it. From the ticket, use the Rebill option to pull the charges back to Unposted, make corrections, and re-post them. The Ledger records the full history of the original charge and the rebill.</p><div class="warn-block"><strong>&#9888; Watch Out</strong>Rebilling creates complexity on the customer's Ledger. It's the right tool for significant errors, but for small adjustments, a Credit Memo is cleaner and simpler. Reserve rebilling for cases where the original charge is materially wrong.</div></div></div><div class="action-box"><p class="sublabel">Action Items</p><ul class="checklist"><li>Close a real ticket and trace its charges through to Unposted</li><li>Practice posting charges and reviewing them on the Ledger</li><li>Issue a test Credit Memo to understand the correction workflow</li><li>Define your billing cycle: how often will you post and invoice?</li><li>Decide which charge types to auto-post vs. manually review</li><li>Run the Unposted Charges report before each billing cycle</li></ul></div></main>
+<div class="nav-strip"><a class="nav-prev" href="dd_14_project_management.html">&#8592; Project Management</a><a class="nav-next" href="dd_16_payment_processors.html">Payment Processors &#8594;</a></div>
+<footer>&copy; Rev.io PSA &nbsp;&mdash;&nbsp; Deep Dive Scripts &nbsp;&mdash;&nbsp; <a href="https://help.psarev.io" target="_blank">help.psarev.io</a></footer>
+</body></html>

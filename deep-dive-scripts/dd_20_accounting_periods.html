@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Accounting Periods — Rev.io PSA Deep Dive</title><style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f7fa;color:#1a2530;font-size:15px;line-height:1.7;}
+a{color:#2499b6;text-decoration:none;} a:hover{text-decoration:underline;}
+.topnav{background:#1d3756;padding:.8rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.25);}
+.topnav-brand{display:flex;align-items:center;gap:.7rem;}
+.topnav-logo{width:30px;height:30px;background:#2499b6;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;}
+.topnav-name{font-size:16px;font-weight:600;color:#fff;}
+.topnav-links{display:flex;align-items:center;gap:1.5rem;}
+.topnav-links a{font-size:12px;color:rgba(255,255,255,.55);font-weight:500;transition:color .15s;}
+.topnav-links a:hover{color:#fff;text-decoration:none;}
+.hero{background:linear-gradient(120deg,#1d3756 60%,#1a4a72 100%);padding:2.5rem 2rem 2rem;border-bottom:3px solid #2499b6;}
+.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#2499b6;margin-bottom:.45rem;}
+.hero h1{font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;color:#fff;margin-bottom:.35rem;line-height:1.2;}
+.hero-sub{font-size:.9rem;color:rgba(255,255,255,.5);margin-bottom:1.25rem;}
+.hero-badges{display:flex;flex-wrap:wrap;gap:.5rem;}
+.badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:5px;padding:.22rem .7rem;font-size:11.5px;color:rgba(255,255,255,.72);}
+.badge strong{color:#fff;}
+.legend{background:#fff;border-bottom:1px solid #e4eaf0;padding:.65rem 2rem;display:flex;flex-wrap:wrap;gap:.4rem 1.25rem;align-items:center;}
+.legend-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#5a6a7a;flex-basis:100%;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#444;}
+.pip{width:9px;height:9px;border-radius:2px;}
+.wrapper{max-width:860px;margin:0 auto;padding:2rem 1.5rem 5rem;}
+.toc{background:#fff;border:1px solid #e4eaf0;border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:2rem;}
+.toc-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#5a6a7a;margin-bottom:.75rem;}
+.toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.3rem .75rem;}
+.toc-item{font-size:13.5px;color:#2499b6;padding:.15rem 0;display:block;}
+.page-heading{font-size:1.2rem;font-weight:700;color:#1d3756;margin:2rem 0 .4rem;padding-bottom:.35rem;border-bottom:2px solid #e4eaf0;}
+.sublabel{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#5a6a7a;margin:1.1rem 0 .45rem;}
+.sublabel:first-child{margin-top:0;}
+.section-block{margin-top:2rem;}
+.section-header{background:#1d3756;border-radius:8px 8px 0 0;padding:.75rem 1.2rem;display:flex;align-items:center;gap:.7rem;}
+.section-num{background:#2499b6;color:#fff;width:23px;height:23px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.section-title{font-size:.95rem;font-weight:600;color:#fff;}
+.section-body{background:#fff;border:1px solid #e4eaf0;border-top:none;border-radius:0 0 8px 8px;padding:1.4rem 1.65rem;}
+.script-text{font-size:15px;line-height:1.75;color:#1a2530;margin-bottom:.7rem;}
+.note-block{background:#fffbf0;border-left:4px solid #e09600;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#4a3800;line-height:1.6;}
+.note-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#9a6200;margin-bottom:2px;}
+.prompt-block{background:#f0f8fb;border-left:4px solid #2499b6;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:14px;color:#1d3756;font-weight:500;line-height:1.65;}
+.prompt-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#2499b6;margin-bottom:2px;}
+.impact-block{background:#f0f7f0;border-left:4px solid #6ebe4f;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#2a4a1a;line-height:1.65;}
+.impact-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#4a8a20;margin-bottom:2px;}
+.connect-block{background:#f0f5fb;border-left:4px solid #2499b6;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#1a3050;line-height:1.65;}
+.connect-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#2499b6;margin-bottom:2px;}
+.warn-block{background:#fff5f5;border-left:4px solid #e05050;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#5a1a1a;line-height:1.65;}
+.warn-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#c03030;margin-bottom:2px;}
+.tip-block{background:#f5f0fb;border-left:4px solid #8a50c8;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#2a1a4a;line-height:1.65;}
+.tip-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#8a50c8;margin-bottom:2px;}
+.checklist{list-style:none;margin:.35rem 0 .65rem;}
+.checklist li{display:flex;align-items:flex-start;gap:9px;padding:.38rem .55rem;border-radius:5px;font-size:14.5px;line-height:1.55;}
+.checklist li:nth-child(odd){background:#f0f4f8;}
+.checklist li::before{content:'';width:14px;height:14px;border:2px solid #bbb;border-radius:3px;flex-shrink:0;margin-top:2px;}
+.bullet-list{list-style:none;padding-left:.2rem;margin:.35rem 0 .65rem;}
+.bullet-list li{display:flex;align-items:flex-start;gap:9px;padding:.22rem 0;font-size:14.5px;line-height:1.6;}
+.bullet-list li::before{content:'';width:7px;height:7px;background:#2499b6;border-radius:50%;flex-shrink:0;margin-top:7px;}
+.num-list{list-style:none;padding-left:.2rem;margin:.35rem 0 .65rem;counter-reset:num;}
+.num-list li{display:flex;align-items:flex-start;gap:9px;padding:.25rem 0;font-size:14.5px;line-height:1.6;counter-increment:num;}
+.num-list li::before{content:counter(num);min-width:22px;height:22px;background:#1d3756;color:#fff;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.field-table{width:100%;border-collapse:collapse;margin:.5rem 0 .75rem;font-size:14px;}
+.field-table th{background:#1d3756;color:#fff;text-align:left;padding:.5rem .75rem;font-size:11px;letter-spacing:.5px;text-transform:uppercase;}
+.field-table td{padding:.5rem .75rem;border-bottom:1px solid #e4eaf0;vertical-align:top;}
+.field-table tr:nth-child(even) td{background:#f7f9fc;}
+.field-table td:first-child{font-weight:600;color:#1d3756;white-space:nowrap;}
+.action-box{background:#f0f4f8;border-radius:7px;padding:1rem 1.3rem;margin-top:.75rem;}
+.action-box .sublabel{margin-top:0;}
+hr.div{border:none;border-top:1px solid #e4eaf0;margin:1.1rem 0;}
+.nav-strip{background:#fff;border-top:1px solid #e4eaf0;padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;margin-top:2rem;}
+.nav-strip a{display:inline-flex;align-items:center;gap:.4rem;font-size:13px;font-weight:600;padding:.5rem 1rem;border-radius:7px;transition:background .15s;}
+.nav-prev{background:#f0f4f8;color:#1d3756;} .nav-prev:hover{background:#e4eaf0;text-decoration:none;}
+.nav-next{background:#2499b6;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.15);} .nav-next:hover{opacity:.88;text-decoration:none;}
+footer{background:#1d3756;padding:1.1rem 2rem;text-align:center;font-size:11.5px;color:rgba(255,255,255,.32);}
+footer a{color:#2499b6;}
+</style></head><body>
+<nav class="topnav"><div class="topnav-brand"><div class="topnav-logo">R</div><span class="topnav-name">Rev.io PSA</span></div>
+<div class="topnav-links"><a href="deep-dive-index.html">&#8592; All Modules</a><a href="../index.html">Onboarding Scripts</a></div></nav>
+<div class="hero"><div class="hero-eyebrow">Module Deep Dive</div><h1>Accounting Periods</h1><p class="hero-sub">Complete guide to accounting periods and the month-end close process in Rev.io PSA</p>
+<div class="hero-badges"><div class="badge">Type <strong>Deep Dive Reference</strong></div><div class="badge">Format <strong>Facilitator Script</strong></div></div></div>
+<div class="legend">
+  <span class="legend-lbl">How to read this script</span>
+  <div class="legend-item"><span class="pip" style="background:#1a2530;border-radius:2px;"></span> Speak to client</div>
+  <div class="legend-item"><span class="pip" style="background:#e09600;border-radius:2px;"></span> &#128161; Internal Note</div>
+  <div class="legend-item"><span class="pip" style="background:#2499b6;border-radius:2px;"></span> &#10067; Prompt</div>
+  <div class="legend-item"><span class="pip" style="background:#6ebe4f;border-radius:2px;"></span> &#9650; Platform Impact</div>
+  <div class="legend-item"><span class="pip" style="background:#2499b6;border-radius:50%;"></span> &#8594; Connects To</div>
+  <div class="legend-item"><span class="pip" style="background:#8a50c8;border-radius:2px;"></span> &#128161; Pro Tip</div>
+  <div class="legend-item"><span class="pip" style="background:#e05050;border-radius:2px;"></span> &#9888; Watch Out</div>
+</div><main class="wrapper"><div class="toc"><div class="toc-title">In This Guide</div><div class="toc-grid"><a class="toc-item" href="#s1">Why Accounting Periods Matter</a><a class="toc-item" href="#s2">Understanding Periods</a><a class="toc-item" href="#s3">Month-End Close Process</a><a class="toc-item" href="#s4">Accounting Integrations</a></div></div><h2 class="page-heading">Pre-Session Checklist</h2><ul class="checklist"><li>Navigate to Accounting Periods in Admin or Billing</li><li>Know if client uses calendar months or custom fiscal periods</li><li>Know if they use an accounting integration (QuickBooks, Sage, etc.)</li><li>Know who is responsible for month-end close</li></ul><div class="section-block" id="s1"><div class="section-header"><div class="section-num">1</div><div class="section-title">Accounting Periods — Why They Matter</div></div><div class="section-body"><p class="script-text">Accounting Periods define the time windows for your financial records in Rev.io PSA. Every transaction — every charge, invoice, payment, and credit — belongs to the period in which it was posted. When you close a period, its records are locked and cannot be changed retroactively.</p><p class="script-text">This creates financial integrity: your numbers for March are your numbers for March, permanently. Month-over-month comparisons are reliable. Reports can be run for any closed period with confidence that the data is final. If you export to an accounting system, the data you export is the data you'll have — no post-export modifications.</p><div class="connect-block"><strong>&#8594; Connects To</strong>Accounting Periods affect all financial activity in the Billing module — every transaction belongs to an open period. Period closure coordinates with accounting integrations (QuickBooks, Sage, etc.) where the close in PSA triggers or aligns with the export to the external system. Analytics reporting by period produces the clean monthly snapshots finance teams need.</div><div class="impact-block"><strong>&#9650; Platform Impact</strong>Without a consistent period close process, old transactions can be backdated, month-over-month reports become unreliable, and reconciliation with your accounting system becomes a manual exercise in finding discrepancies. The period close is a small operational step with significant financial integrity implications.</div></div></div><div class="section-block" id="s2"><div class="section-header"><div class="section-num">2</div><div class="section-title">Understanding Periods</div></div><div class="section-body"><p class="script-text">PSA typically generates periods automatically by calendar month. Navigate to Accounting Periods to see the list: open periods, closed periods, and the current active period.</p><table class="field-table"><thead><tr><th>Period Status</th><th>Meaning</th><th>Actions Available</th></tr></thead><tbody><tr><td>Open</td><td>Current period — transactions post here</td><td>Post charges, invoices, payments, credits</td></tr><tr><td>Closed</td><td>Finalized — locked</td><td>View only. No new transactions can post.</td></tr><tr><td>Future</td><td>Scheduled but not yet active</td><td>Cannot post transactions — must wait for the period to open</td></tr></tbody></table><div class="prompt-block"><strong>&#10067; Prompt</strong>Do you use calendar months, or do you operate on a non-standard fiscal calendar?</div><div class="note-block"><strong>&#128161; Internal Note</strong>Most clients use calendar months. If they use a non-standard fiscal year (e.g., April–March, or fiscal quarters that don't align with calendar quarters), confirm this before go-live and verify period configuration with the implementation team.</div></div></div><div class="section-block" id="s3"><div class="section-header"><div class="section-num">3</div><div class="section-title">The Month-End Close Process</div></div><div class="section-body"><p class="script-text">A complete month-end close in PSA should follow this sequence:</p><ul class="num-list"><li>Review all Unposted charges and post any that belong in this period</li><li>Generate and post all invoices for the month</li><li>Confirm all payments received this period are recorded and applied</li><li>Run the AR Aging report — note any overdue accounts for follow-up</li><li>Verify the period's Ledger totals match your expected billing amounts</li><li>Close the period in PSA</li><li>If using an accounting integration — trigger the export to your accounting system</li></ul><p class="script-text">Once the period is closed, any corrections that arise must be handled in the next open period through credit memos or adjustments. The closed period record is permanent.</p><div class="tip-block"><strong>&#128161; Pro Tip</strong>Assign period close ownership to one person on your finance team. When multiple people can close periods, close timing becomes inconsistent and accountability is unclear. One owner, one process, same date every month.</div></div></div><div class="section-block" id="s4"><div class="section-header"><div class="section-num">4</div><div class="section-title">Accounting Integrations</div></div><div class="section-body"><p class="script-text">If you sync PSA data to QuickBooks, Sage, or another accounting platform, the accounting period is the unit of synchronization. You export a period's data after closing it in PSA, and the accounting system receives finalized, locked records.</p><p class="script-text">Coordinate your PSA period close date with your accounting team's close schedule. If accounting closes books on the 5th of the following month, close your PSA period by the 4th to give them clean data.</p><div class="prompt-block"><strong>&#10067; Prompt</strong>Are you using an accounting integration? If so, what system, and when does your accounting team close their books each month?</div><div class="warn-block"><strong>&#9888; Watch Out</strong>If you post transactions in PSA after you've already exported a closed period to your accounting system, those transactions won't be in the accounting system without a manual re-export or reconciliation entry. The PSA close and accounting close must stay synchronized.</div></div></div><div class="action-box"><p class="sublabel">Action Items</p><ul class="checklist"><li>Confirm your accounting period structure — calendar month or custom</li><li>Assign one person as the period close owner</li><li>Build a written month-end close checklist with each step and who does it</li><li>Align your PSA close date with your accounting team's schedule</li><li>If using an integration, confirm the export timing and process</li><li>Run the first period close as a dry run before going fully live</li></ul></div></main>
+<div class="nav-strip"><a class="nav-prev" href="dd_19_bill_profiles.html">&#8592; Bill Profiles</a><a class="nav-next" href="dd_21_analytics.html">Analytics &#8594;</a></div>
+<footer>&copy; Rev.io PSA &nbsp;&mdash;&nbsp; Deep Dive Scripts &nbsp;&mdash;&nbsp; <a href="https://help.psarev.io" target="_blank">help.psarev.io</a></footer>
+</body></html>

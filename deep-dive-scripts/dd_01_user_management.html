@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>User Management — Rev.io PSA Deep Dive</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f7fa;color:#1a2530;font-size:15px;line-height:1.7;}
+a{color:#2499b6;text-decoration:none;}
+a:hover{text-decoration:underline;}
+.topnav{background:#1d3756;padding:.8rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.25);}
+.topnav-brand{display:flex;align-items:center;gap:.7rem;}
+.topnav-logo{width:30px;height:30px;background:#2499b6;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;}
+.topnav-name{font-size:16px;font-weight:600;color:#fff;}
+.topnav-links{display:flex;align-items:center;gap:1.5rem;}
+.topnav-links a{font-size:12px;color:rgba(255,255,255,.55);font-weight:500;letter-spacing:.3px;transition:color .15s;}
+.topnav-links a:hover{color:#fff;text-decoration:none;}
+.hero{background:linear-gradient(120deg,#1d3756 60%,#1a4a72 100%);padding:2.5rem 2rem 2rem;border-bottom:3px solid #2499b6;}
+.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#2499b6;margin-bottom:.45rem;}
+.hero h1{font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;color:#fff;margin-bottom:.35rem;line-height:1.2;}
+.hero-sub{font-size:.9rem;color:rgba(255,255,255,.5);margin-bottom:1.25rem;}
+.hero-badges{display:flex;flex-wrap:wrap;gap:.5rem;}
+.badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:5px;padding:.22rem .7rem;font-size:11.5px;color:rgba(255,255,255,.72);}
+.badge strong{color:#fff;}
+.legend{background:#fff;border-bottom:1px solid #e4eaf0;padding:.65rem 2rem;display:flex;flex-wrap:wrap;gap:.4rem 1.25rem;align-items:center;}
+.legend-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#5a6a7a;flex-basis:100%;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#444;}
+.pip{width:9px;height:9px;border-radius:2px;}
+.pip-s{background:#1a2530;} .pip-n{background:#e09600;} .pip-p{background:#2499b6;} .pip-i{background:#6ebe4f;} .pip-c{background:#2499b6;border-radius:50%;}
+.wrapper{max-width:860px;margin:0 auto;padding:2rem 1.5rem 5rem;}
+.toc{background:#fff;border:1px solid #e4eaf0;border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:2rem;}
+.toc-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#5a6a7a;margin-bottom:.75rem;}
+.toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.3rem .75rem;}
+.toc-item{font-size:13.5px;color:#2499b6;padding:.15rem 0;}
+.toc-item:hover{color:#1d3756;}
+.page-heading{font-size:1.2rem;font-weight:700;color:#1d3756;margin:2rem 0 .4rem;padding-bottom:.35rem;border-bottom:2px solid #e4eaf0;}
+.sublabel{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#5a6a7a;margin:1.1rem 0 .45rem;}
+.sublabel:first-child{margin-top:0;}
+.section-block{margin-top:2rem;}
+.section-header{background:#1d3756;border-radius:8px 8px 0 0;padding:.75rem 1.2rem;display:flex;align-items:center;gap:.7rem;}
+.section-num{background:#2499b6;color:#fff;width:23px;height:23px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.section-title{font-size:.95rem;font-weight:600;color:#fff;}
+.section-body{background:#fff;border:1px solid #e4eaf0;border-top:none;border-radius:0 0 8px 8px;padding:1.4rem 1.65rem;}
+.script-text{font-size:15px;line-height:1.75;color:#1a2530;margin-bottom:.7rem;}
+.note-block{background:#fffbf0;border-left:4px solid #e09600;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#4a3800;line-height:1.6;}
+.note-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#9a6200;margin-bottom:2px;}
+.prompt-block{background:#f0f8fb;border-left:4px solid #2499b6;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:14px;color:#1d3756;font-weight:500;line-height:1.65;}
+.prompt-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#2499b6;margin-bottom:2px;}
+.impact-block{background:#f0f7f0;border-left:4px solid #6ebe4f;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#2a4a1a;line-height:1.65;}
+.impact-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#4a8a20;margin-bottom:2px;}
+.connect-block{background:#f0f5fb;border-left:4px solid #2499b6;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#1a3050;line-height:1.65;}
+.connect-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#2499b6;margin-bottom:2px;}
+.warn-block{background:#fff5f5;border-left:4px solid #e05050;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#5a1a1a;line-height:1.65;}
+.warn-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#c03030;margin-bottom:2px;}
+.tip-block{background:#f5f0fb;border-left:4px solid #8a50c8;border-radius:0 6px 6px 0;padding:.65rem .95rem;margin:.7rem 0;font-size:13.5px;color:#2a1a4a;line-height:1.65;}
+.tip-block strong{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#8a50c8;margin-bottom:2px;}
+.checklist{list-style:none;margin:.35rem 0 .65rem;}
+.checklist li{display:flex;align-items:flex-start;gap:9px;padding:.38rem .55rem;border-radius:5px;font-size:14.5px;line-height:1.55;}
+.checklist li:nth-child(odd){background:#f0f4f8;}
+.checklist li::before{content:'';width:14px;height:14px;border:2px solid #bbb;border-radius:3px;flex-shrink:0;margin-top:2px;}
+.bullet-list{list-style:none;padding-left:.2rem;margin:.35rem 0 .65rem;}
+.bullet-list li{display:flex;align-items:flex-start;gap:9px;padding:.22rem 0;font-size:14.5px;line-height:1.6;}
+.bullet-list li::before{content:'';width:7px;height:7px;background:#2499b6;border-radius:50%;flex-shrink:0;margin-top:7px;}
+.num-list{list-style:none;padding-left:.2rem;margin:.35rem 0 .65rem;counter-reset:num;}
+.num-list li{display:flex;align-items:flex-start;gap:9px;padding:.25rem 0;font-size:14.5px;line-height:1.6;counter-increment:num;}
+.num-list li::before{content:counter(num);min-width:22px;height:22px;background:#1d3756;color:#fff;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.field-table{width:100%;border-collapse:collapse;margin:.5rem 0 .75rem;font-size:14px;}
+.field-table th{background:#1d3756;color:#fff;text-align:left;padding:.5rem .75rem;font-size:11px;letter-spacing:.5px;text-transform:uppercase;}
+.field-table td{padding:.5rem .75rem;border-bottom:1px solid #e4eaf0;vertical-align:top;}
+.field-table tr:nth-child(even) td{background:#f7f9fc;}
+.field-table td:first-child{font-weight:600;color:#1d3756;white-space:nowrap;}
+.action-box{background:#f0f4f8;border-radius:7px;padding:1rem 1.3rem;margin-top:.75rem;}
+.action-box .sublabel{margin-top:0;}
+hr.div{border:none;border-top:1px solid #e4eaf0;margin:1.1rem 0;}
+.nav-strip{background:#fff;border-top:1px solid #e4eaf0;padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;margin-top:2rem;}
+.nav-strip a{display:inline-flex;align-items:center;gap:.4rem;font-size:13px;font-weight:600;padding:.5rem 1rem;border-radius:7px;transition:background .15s;}
+.nav-prev{background:#f0f4f8;color:#1d3756;}
+.nav-prev:hover{background:#e4eaf0;text-decoration:none;}
+.nav-next{background:#2499b6;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.15);}
+.nav-next:hover{opacity:.88;text-decoration:none;}
+footer{background:#1d3756;padding:1.1rem 2rem;text-align:center;font-size:11.5px;color:rgba(255,255,255,.32);}
+footer a{color:#2499b6;}
+@media print{.topnav,.nav-strip{position:relative;}.section-block{break-inside:avoid;}}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <div class="topnav-brand">
+    <div class="topnav-logo">R</div>
+    <span class="topnav-name">Rev.io PSA</span>
+  </div>
+  <div class="topnav-links">
+    <a href="deep-dive-index.html">&#8592; All Modules</a>
+    <a href="../index.html">Onboarding Scripts</a>
+  </div>
+</nav>
+<div class="hero">
+  <div class="hero-eyebrow">Module Deep Dive</div>
+  <h1>User Management</h1>
+  <p class="hero-sub">Complete guide to users, permissions, groups, and access control in Rev.io PSA</p>
+  <div class="hero-badges">
+    <div class="badge">Type <strong>Deep Dive Reference</strong></div>
+    <div class="badge">Format <strong>Facilitator Script</strong></div>
+  </div>
+</div>
+<div class="legend">
+  <span class="legend-lbl">How to read this script</span>
+  <div class="legend-item"><span class="pip pip-s"></span> Speak to client</div>
+  <div class="legend-item"><span class="pip pip-n"></span> &#128161; Internal Note</div>
+  <div class="legend-item"><span class="pip pip-p"></span> &#10067; Prompt — ask the client</div>
+  <div class="legend-item"><span class="pip pip-i"></span> &#9650; Platform Impact</div>
+  <div class="legend-item"><span class="pip pip-c"></span> &#8594; Connects To</div>
+  <div class="legend-item"><span class="pip" style="background:#8a50c8;border-radius:2px;"></span> &#128161; Pro Tip</div>
+  <div class="legend-item"><span class="pip" style="background:#e05050;border-radius:2px;"></span> &#9888; Watch Out</div>
+</div>
+<main class="wrapper">
+<div class="toc"><div class="toc-title">In This Guide</div><div class="toc-grid"><a class="toc-item" href="#s1">Why User Management Comes First</a><a class="toc-item" href="#s2">Creating a User</a><a class="toc-item" href="#s3">Permission Sets</a><a class="toc-item" href="#s4">User Groups</a><a class="toc-item" href="#s5">Managing Users Over Time</a></div></div>
+<h2 class="page-heading">Pre-Session Checklist</h2><div class="note-block"><strong>&#128161; Internal Note</strong>Complete before the session begins.</div><p class="sublabel">Environment</p><ul class="checklist"><li>Log into [clientname].psarev.io with Admin-level access</li><li>Admin &gt; User Management — open and ready</li><li>Admin &gt; User Management &gt; Permission Sets — open in second tab</li><li>Admin &gt; User Management &gt; User Groups — open in third tab</li></ul><p class="sublabel">Know Before You Start</p><ul class="checklist"><li>Who is the primary admin/owner of the PSA instance?</li><li>What roles exist on the team — technician, dispatcher, admin, manager, billing?</li><li>Are there team members who need limited access vs. full access?</li><li>Does the client use any SSO or external identity provider?</li><li>Are there any compliance or data access requirements driving permission decisions?</li></ul><div class="section-block" id="s1"><div class="section-header"><div class="section-num">1</div><div class="section-title">Why User Management Is Your Starting Point</div></div><div class="section-body"><p class="script-text">User Management is the foundation every other module sits on. The users you create here are the people who will own tickets, log time, get dispatched to jobs, process billing, generate reports, and administer the platform. The permission sets you assign determine what each of those people can see and do across every module. The groups you create control how work gets routed, who gets notified, and how the dispatch board is organized.</p><p class="script-text">There is no meaningful work to do in Rev.io PSA until users exist. Everything downstream — System Settings ticket defaults, the Dispatch Board, ticket assignment, billing approvals, report access — references what you build here.</p><div class="connect-block"><strong>&#8594; Connects To</strong>User groups are referenced directly in System Settings for default ticket routing. Permission sets gate access to every module: Billing, Quoting, Admin, Inventory, Customers, Reports, and Service. Users appear on tickets (assigned to), time logs (logged by), calendar events (assigned to), the dispatch board (scheduled), and all reporting dimensions.</div><div class="impact-block"><strong>&#9650; Platform Impact</strong>Poorly configured permissions create two types of problems: users blocked from doing their job because access is too restrictive, or users with access to sensitive financial data, billing records, or admin settings they shouldn't see. Both are disruptive — one creates operational bottlenecks, the other creates security and compliance risk. Getting permissions right at setup is far easier than cleaning them up after the fact.</div></div></div><div class="section-block" id="s2"><div class="section-header"><div class="section-num">2</div><div class="section-title">Creating a User</div></div><div class="section-body"><p class="script-text">Navigate to Admin &gt; User Management. Click Add User. Every person on the team who will interact with Rev.io PSA needs a user record — even administrative staff who only process invoices, or managers who only view reports.</p><p class="sublabel">All Fields Explained</p><table class="field-table"><thead><tr><th>Field</th><th>Description</th><th>Notes</th></tr></thead><tbody><tr><td>First / Last Name</td><td>How the user appears across the platform</td><td>Shows on tickets, time logs, dispatch board, reports, and calendar events</td></tr><tr><td>Email Address</td><td>Login username AND notification address</td><td>Must be their actual work email — password reset goes here. Cannot be changed without admin action.</td></tr><tr><td>Phone</td><td>Internal contact number</td><td>Optional. Useful for in-system contact visibility, not used for SMS configuration.</td></tr><tr><td>Mobile Phone</td><td>Used for SMS notifications if enabled</td><td>Separate from main phone. Required if internal SMS is turned on.</td></tr><tr><td>Role</td><td>High-level job label</td><td>Technician, Dispatcher, Admin, Manager, Billing, etc. This is a label, NOT a security control.</td></tr><tr><td>Permission Set</td><td>Security access control</td><td>Controls which modules and actions are available. Every user MUST have one assigned.</td></tr><tr><td>User Group</td><td>Team membership for routing and scheduling</td><td>Can belong to multiple groups. Used on dispatch board and for ticket routing.</td></tr><tr><td>Active Toggle</td><td>Enables or disables system access</td><td>Deactivating immediately revokes all access. Historical data is preserved.</td></tr><tr><td>Default Labor Rate</td><td>The catalog labor item used when this user logs time</td><td>Pre-populates the labor item on time logs. Saves techs from having to select it every time.</td></tr><tr><td>Hourly Cost</td><td>Internal cost rate for this user</td><td>Used in profitability reporting. Not customer-facing.</td></tr><tr><td>Calendar Color</td><td>Color displayed on the dispatch board and calendar</td><td>Helps dispatchers visually identify techs at a glance.</td></tr></tbody></table><div class="prompt-block"><strong>&#10067; Prompt</strong>Let's create users for your team. Start with the primary admin, then work through the rest. Who should we add first?</div><div class="warn-block"><strong>&#9888; Watch Out</strong>Password reset emails expire in 12 hours. If a user doesn't set their password in time, an admin must resend the invite from the User Management list. Build this reminder into your go-live communication to new users.</div><div class="tip-block"><strong>&#128161; Pro Tip</strong>Create a 'template user' for each role type first — configure all the settings, assign the permission set and group — then duplicate it for additional users in the same role. Saves significant setup time when onboarding large teams.</div></div></div><div class="section-block" id="s3"><div class="section-header"><div class="section-num">3</div><div class="section-title">Permission Sets — Full Coverage</div></div><div class="section-body"><p class="script-text">Permission Sets are the security backbone of Rev.io PSA. Every permission set is a collection of toggles that control access at a granular level — not just which modules a user can see, but what actions they can take within each module, what data they can view, and what they can modify or delete.</p><p class="script-text">Navigate to Admin &gt; User Management &gt; Permission Sets. Click Add Permission Set. Name it by role type.</p><p class="sublabel">Permission Categories</p><ul class="bullet-list"><li><strong>Service Module:</strong> Create tickets, edit tickets, close tickets, delete tickets, view all tickets vs. only assigned tickets, manage ticket types and statuses</li><li><strong>Customer Module:</strong> Create customers, edit customers, view customer billing data, access customer portal settings, merge duplicate accounts</li><li><strong>Billing Module:</strong> View invoices, create invoices, post charges, void invoices, apply payments, view customer financial data, run billing reports</li><li><strong>Inventory Module:</strong> View catalog, edit catalog, create purchase orders, receive inventory, manage warehouses</li><li><strong>Quoting Module:</strong> Create quotes, send proposals, view accepted quotes, convert quotes to tickets or invoices</li><li><strong>Admin Module:</strong> Manage system settings, manage users, manage permission sets, configure integrations, view audit logs</li><li><strong>Scheduling:</strong> Access dispatch board, create calendar events, view all users' schedules vs. only own</li><li><strong>Reports &amp; Analytics:</strong> View standard reports, build custom reports, export data, access financial reports</li><li><strong>Projects:</strong> Create and manage projects, view all projects vs. only assigned projects</li></ul><p class="sublabel">Recommended Role Profiles</p><table class="field-table"><thead><tr><th>Role</th><th>Suggested Access Level</th></tr></thead><tbody><tr><td>Technician</td><td>Service module (own tickets), time logs, own calendar, view-only catalog, no billing, no admin</td></tr><tr><td>Dispatcher</td><td>Service module (all tickets), full scheduling/dispatch board, view customers, no billing, no admin</td></tr><tr><td>Account Manager</td><td>Service module, customers, quoting, view billing, no admin, no inventory management</td></tr><tr><td>Billing Admin</td><td>Full billing module, view service and customers, no admin, no inventory</td></tr><tr><td>System Admin</td><td>Full access to all modules including Admin settings</td></tr><tr><td>Manager / Owner</td><td>Full access or full access minus ability to modify admin settings</td></tr></tbody></table><div class="prompt-block"><strong>&#10067; Prompt</strong>What roles do you have on your team and what should each one be able to do? Let's build a permission set for each role right now.</div><div class="tip-block"><strong>&#128161; Pro Tip</strong>Start with the most restrictive permission set (Technician) and build up from there. It's easier to grant additional access later than to remove it once people are used to having it.</div><div class="connect-block"><strong>&#8594; Connects To</strong>The full list of available permissions is documented at help.psarev.io/en/article/available-permissions. Reference it for edge cases like 'can this role approve timesheets?' or 'can this role see cost vs. sell price on catalog items?'</div></div></div><div class="section-block" id="s4"><div class="section-header"><div class="section-num">4</div><div class="section-title">User Groups — Structure and Strategy</div></div><div class="section-body"><p class="script-text">User groups are how Rev.io PSA organizes your team for ticket routing, scheduling, and reporting. A group is a named collection of users. When a ticket comes in, it can be assigned to a group instead of an individual — the whole group sees it and any member can act on it.</p><p class="script-text">Navigate to Admin &gt; User Management &gt; User Groups. Click Add User Group.</p><p class="sublabel">Key Concepts</p><ul class="bullet-list"><li><strong>Multiple group membership:</strong> A user can belong to any number of groups. A senior technician might be in 'Level 1 Support,' 'Level 2 Escalation,' and 'After Hours On-Call' simultaneously.</li><li><strong>Default ticket routing:</strong> In System Settings, you select a Default Ticket User Group — the group that newly created tickets are assigned to automatically. This is how unassigned inbound tickets land in the right queue.</li><li><strong>Dispatch board filtering:</strong> The dispatch board can be filtered by group, making it easy for a dispatcher to see only the techs relevant to their area or territory.</li><li><strong>Reporting dimension:</strong> Ticket volume, time logged, and other metrics can be sliced by user group in Analytics.</li></ul><p class="sublabel">Common Group Structures</p><table class="field-table"><thead><tr><th>Structure Type</th><th>Example Groups</th></tr></thead><tbody><tr><td>By tier</td><td>Level 1 Support, Level 2 Engineering, Level 3 Escalation</td></tr><tr><td>By territory</td><td>North Region, South Region, Downtown</td></tr><tr><td>By skill</td><td>Network Team, Hardware Team, Software Team</td></tr><tr><td>By schedule</td><td>Day Shift, Night Shift, After Hours On-Call</td></tr><tr><td>By customer type</td><td>Residential, Commercial, Enterprise</td></tr></tbody></table><div class="prompt-block"><strong>&#10067; Prompt</strong>How is your team structured operationally? Do different groups handle different types of work, different territories, or different customer segments?</div><div class="warn-block"><strong>&#9888; Watch Out</strong>Don't over-engineer groups at setup. Start with the groups that represent your actual daily routing decisions. You can always add more as the team grows and workflows become clearer.</div></div></div><div class="section-block" id="s5"><div class="section-header"><div class="section-num">5</div><div class="section-title">Managing Users Over Time</div></div><div class="section-body"><p class="script-text">User management isn't a one-time setup task — it requires ongoing maintenance as your team changes. Here's how to handle common scenarios:</p><p class="sublabel">Ongoing User Management Tasks</p><ul class="bullet-list"><li><strong>Adding a new hire:</strong> Create the user, assign permission set and group(s), set default labor rate and hourly cost. Send them the login link and confirm they set their password.</li><li><strong>Employee departure:</strong> Deactivate the user account immediately. Their historical data — tickets, time logs, notes — is preserved. Reassign any open tickets they owned. Remove them from user groups.</li><li><strong>Role change:</strong> Update the user's permission set and group assignments. Review their active ticket assignments if their territory or team is changing.</li><li><strong>Password reset:</strong> From the user's profile, use the Resend Invitation or Reset Password option. The new link expires in 12 hours.</li><li><strong>Audit user access:</strong> Periodically review who has access to the Admin module and Billing module. Remove access that's no longer needed.</li><li><strong>Permission set updates:</strong> When you change a permission set, the change applies to all users on that set immediately. Coordinate updates to avoid disruption.</li></ul><div class="tip-block"><strong>&#128161; Pro Tip</strong>Do a quarterly user audit: review the active user list, confirm all active users are still employed, verify permission sets still match job roles, and remove any stale access.</div></div></div><div class="action-box"><p class="sublabel">Action Items</p><ul class="checklist"><li>Create all team members as users</li><li>Build one permission set per distinct role type</li><li>Create all user groups that represent your routing and scheduling structure</li><li>Set default labor rates and hourly cost on all technician users</li><li>Assign calendar colors to field technicians for easy dispatch board identification</li><li>Communicate the password setup process and 12-hour expiry window to new users</li><li>Document your permission set definitions for future reference</li></ul></div>
+</main>
+<div class="nav-strip">
+  <span></span>
+  <a class="nav-next" href="dd_02_system_settings.html">System Settings &#8594;</a>
+</div>
+<footer>&copy; Rev.io PSA &nbsp;&mdash;&nbsp; Module Deep Dive Scripts &nbsp;&mdash;&nbsp; <a href="https://help.psarev.io" target="_blank">help.psarev.io</a></footer>
+</body>
+</html>
