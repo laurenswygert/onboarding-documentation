@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Rev.io PSA — Onboarding Call Scripts</title>
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f7fa;color:#1a2530;font-size:15px;line-height:1.7;}
+a{color:inherit;text-decoration:none;}
+.topnav{background:#1d3756;padding:.8rem 2rem;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.25);}
+.topnav-brand{display:flex;align-items:center;gap:.7rem;}
+.topnav-logo{width:30px;height:30px;background:#2499b6;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;}
+.topnav-name{font-size:16px;font-weight:600;color:#fff;}
+.topnav-tag{font-size:11px;font-weight:500;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,.4);}
+.topnav-home{font-size:12px;color:rgba(255,255,255,.55);display:flex;align-items:center;gap:.4rem;transition:color .15s;}
+.topnav-home:hover{color:#fff;}
+footer{background:#1d3756;padding:1.1rem 2rem;text-align:center;font-size:11.5px;color:rgba(255,255,255,.32);}
+footer a{color:#2499b6;}
+</style>
+<style>
+.hero{background:linear-gradient(120deg,#1d3756 60%,#1a4a72 100%);padding:3rem 2rem 2.5rem;border-bottom:3px solid #2499b6;text-align:center;}
+.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#2499b6;margin-bottom:.5rem;}
+.hero h1{font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:700;color:#fff;margin-bottom:.5rem;}
+.hero-sub{font-size:.95rem;color:rgba(255,255,255,.5);max-width:520px;margin:0 auto;}
+.cards{max-width:960px;margin:2.5rem auto;padding:0 1.5rem 4rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;}
+.call-card{background:#fff;border:1px solid #e4eaf0;border-radius:12px;padding:1.6rem;display:flex;flex-direction:column;gap:.85rem;transition:transform .18s,box-shadow .18s;border-top:4px solid var(--accent);}
+.call-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.1);}
+.call-card-header{display:flex;justify-content:space-between;align-items:center;}
+.call-badge{font-size:10.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);}
+.call-dur{font-size:11px;color:#8a9ab0;background:#f0f4f8;border-radius:4px;padding:.15rem .5rem;}
+.call-card-title{font-size:1.25rem;font-weight:700;color:#1d3756;}
+.call-card-desc{font-size:13.5px;color:#5a6a7a;line-height:1.6;flex:1;}
+.topic-pills{display:flex;flex-wrap:wrap;gap:.35rem;}
+.topic-pill{font-size:11px;background:#f0f4f8;border:1px solid #dde3ec;border-radius:4px;padding:.2rem .55rem;color:#4a5a6a;}
+.call-card-cta{margin-top:.25rem;font-size:13px;font-weight:600;color:var(--accent);}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <div class="topnav-brand">
+    <div class="topnav-logo">R</div>
+    <span class="topnav-name">Rev.io PSA</span>
+  </div>
+  <span></span>
+</nav>
+<div class="hero">
+  <div class="hero-eyebrow">Onboarding Program</div>
+  <h1>Rev.io PSA Call Scripts</h1>
+  <p class="hero-sub">Three structured calls covering the full platform. Select a call to begin.</p>
+</div>
+<div class="cards">
+
+<a class="call-card" href="call-1.html" style="--accent:#1d3756;">
+  <div class="call-card-header">
+    <span class="call-badge">Call 1 of 3</span>
+    <span class="call-dur">90–120 min</span>
+  </div>
+  <h2 class="call-card-title">Foundation & Setup</h2>
+  <p class="call-card-desc">Configure the core platform — users, settings, customers, catalog, and inventory. Everything the rest of the platform depends on.</p>
+  <div class="topic-pills"><span class="topic-pill">User Management</span><span class="topic-pill">System Settings</span><span class="topic-pill">Customers & Contacts</span><span class="topic-pill">Product Catalog</span><span class="topic-pill">Packages</span><span class="topic-pill">Purchase Orders</span><span class="topic-pill">Providers</span><span class="topic-pill">Inventory Management</span></div>
+  <div class="call-card-cta">Open Call &rarr;</div>
+</a>
+<a class="call-card" href="call-2.html" style="--accent:#2499b6;">
+  <div class="call-card-header">
+    <span class="call-badge">Call 2 of 3</span>
+    <span class="call-dur">90–120 min</span>
+  </div>
+  <h2 class="call-card-title">Service Operations</h2>
+  <p class="call-card-desc">Walk through the full service workflow — ticketing, quoting, contracts, recurring services, scheduling, and project management.</p>
+  <div class="topic-pills"><span class="topic-pill">Ticketing</span><span class="topic-pill">Quoting</span><span class="topic-pill">Contracts</span><span class="topic-pill">Recurring Services</span><span class="topic-pill">Scheduling & Dispatch</span><span class="topic-pill">Project Management</span></div>
+  <div class="call-card-cta">Open Call &rarr;</div>
+</a>
+<a class="call-card" href="call-3.html" style="--accent:#6ebe4f;">
+  <div class="call-card-header">
+    <span class="call-badge">Call 3 of 3</span>
+    <span class="call-dur">90–120 min</span>
+  </div>
+  <h2 class="call-card-title">Billing & Finance</h2>
+  <p class="call-card-desc">Configure the full billing cycle — charges, payment processors, invoice templates, invoicing, bill profiles, and accounting periods.</p>
+  <div class="topic-pills"><span class="topic-pill">Billing</span><span class="topic-pill">Payment Processors</span><span class="topic-pill">Invoice Templates</span><span class="topic-pill">Invoicing</span><span class="topic-pill">Bill Profiles</span><span class="topic-pill">Accounting Periods</span></div>
+  <div class="call-card-cta">Open Call &rarr;</div>
+</a>
+</div>
+<footer>&copy; Rev.io PSA &nbsp;&mdash;&nbsp; Onboarding Call Scripts &nbsp;&mdash;&nbsp; <a href="https://help.psarev.io" target="_blank">help.psarev.io</a></footer>
+</body>
+</html>
