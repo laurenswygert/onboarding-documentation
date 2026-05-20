@@ -715,6 +715,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
           <h1 class="welcome-title">Welcome to <span>Rev.io PSA</span></h1>
           <p class="welcome-subtitle">This guide walks you through setting up your PSA platform step by step. Work at your own pace — your progress is saved automatically as you go.</p>
         </div>
+        <div id="welcome-extra">
         <div class="welcome-cards">
           <div class="welcome-card">
             <div class="wc-icon" style="background:#eef6ff;">📋</div>
@@ -757,6 +758,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
           </div>
         </div>
         <button class="start-btn" onclick="showStep('user-mgmt')">Begin Setup &rarr;</button>
+        </div><!-- end welcome-extra -->
       </div>
     </div>
 
@@ -1843,6 +1845,12 @@ function showStep(id) {
     target.classList.add('active-screen');
   }
 
+  // Show/hide welcome extra content (cards, journey, button)
+  const welcomeExtra = document.getElementById('welcome-extra');
+  if (welcomeExtra) {
+    welcomeExtra.style.display = (id === 'welcome') ? '' : 'none';
+  }
+
   // Update sidebar active state
   document.querySelectorAll('.step-item').forEach(el => el.classList.remove('active'));
   const navItem = document.getElementById('nav-' + id);
@@ -1946,9 +1954,7 @@ document.getElementById('ticket-modal').addEventListener('click', function(e) {
 //  INIT
 // ═══════════════════════════════════════════════
 document.querySelectorAll('.step-screen').forEach(el => el.style.display = 'none');
-document.getElementById('screen-welcome').classList.add('active-screen');
-document.getElementById('nav-welcome').classList.add('active');
-updateProgress();
+showStep('welcome');
 </script>
 </body>
 </html>
