@@ -532,7 +532,29 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .modal-close:hover { background: var(--border); }
 
-/* Scrollbar */
+/* Ticket instructions modal */
+#ticket-modal {
+  display: none; position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,.45); backdrop-filter: blur(3px);
+  align-items: center; justify-content: center;
+}
+#ticket-modal.open { display: flex; }
+.ticket-steps {
+  list-style: none; padding: 0; margin-bottom: 1.25rem;
+}
+.ticket-steps li {
+  display: flex; align-items: flex-start; gap: .9rem;
+  padding: .75rem 0; border-bottom: 1px solid var(--border);
+}
+.ticket-steps li:last-child { border-bottom: none; }
+.ts-num {
+  flex-shrink: 0;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--azure); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .78rem; font-weight: 700; margin-top: .05rem;
+}
+.ts-text { font-size: .88rem; color: #3a4a5a; line-height: 1.6; padding-top: .2rem; }
 #sidebar::-webkit-scrollbar { width: 4px; }
 #sidebar::-webkit-scrollbar-track { background: transparent; }
 #sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
@@ -793,9 +815,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
         </div>
         <p class="rh-desc">Custom permission sets, role-based access control, and Single Sign-On (SSO) integrations require configuration assistance from our team. If you're unsure how to structure permissions for complex org hierarchies, we can help you design it.</p>
         <div class="rh-actions">
-          <button class="rh-btn rh-btn-primary" onclick="openHelpModal()">📞 Contact Rev.io</button>
-          <button class="rh-btn rh-btn-outline" onclick="openHelpModal()">📅 Schedule a Session</button>
-          <button class="rh-btn rh-btn-ghost" onclick="openHelpModal()">🎫 Submit a Ticket</button>
+          <a class="rh-btn rh-btn-primary" href="tel:+18664705502">📞 Call Us — 866-470-5502</a>
+          <button class="rh-btn rh-btn-ghost" onclick="openTicketModal()">🎫 Submit a Ticket</button>
         </div>
       </div>
 
@@ -889,9 +910,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
         <div class="rh-header"><span class="rh-badge">Rev.io Assistance</span><span class="rh-title">Not sure how to configure certain settings?</span></div>
         <p class="rh-desc">Some system settings — particularly SLA configurations, customer portal branding, and advanced notification rules — are best reviewed with our team to make sure they align with your service delivery model.</p>
         <div class="rh-actions">
-          <button class="rh-btn rh-btn-primary" onclick="openHelpModal()">📞 Contact Rev.io</button>
-          <button class="rh-btn rh-btn-outline" onclick="openHelpModal()">📅 Schedule a Session</button>
-          <button class="rh-btn rh-btn-ghost" onclick="openHelpModal()">🎫 Submit a Ticket</button>
+          <a class="rh-btn rh-btn-primary" href="tel:+18664705502">📞 Call Us — 866-470-5502</a>
+          <button class="rh-btn rh-btn-ghost" onclick="openTicketModal()">🎫 Submit a Ticket</button>
         </div>
       </div>
 
@@ -946,9 +966,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
         <div class="rh-header"><span class="rh-badge">Rev.io Assistance</span><span class="rh-title">Importing a large customer database?</span></div>
         <p class="rh-desc">If you have a significant number of existing customers to migrate from another system, our team can assist with bulk data imports using our migration template. This ensures your data comes in clean and properly linked.</p>
         <div class="rh-actions">
-          <button class="rh-btn rh-btn-primary" onclick="openHelpModal()">📞 Contact Rev.io</button>
-          <button class="rh-btn rh-btn-outline" onclick="openHelpModal()">📅 Schedule a Session</button>
-          <button class="rh-btn rh-btn-ghost" onclick="openHelpModal()">🎫 Submit a Ticket</button>
+          <a class="rh-btn rh-btn-primary" href="tel:+18664705502">📞 Call Us — 866-470-5502</a>
+          <button class="rh-btn rh-btn-ghost" onclick="openTicketModal()">🎫 Submit a Ticket</button>
         </div>
       </div>
 
@@ -1146,9 +1165,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
         <div class="rh-header"><span class="rh-badge">Rev.io Assistance</span><span class="rh-title">Need help with initial inventory setup?</span></div>
         <p class="rh-desc">If you have a large inventory to load or need help configuring multi-location tracking, our team can walk you through the setup in a focused session.</p>
         <div class="rh-actions">
-          <button class="rh-btn rh-btn-primary" onclick="openHelpModal()">📞 Contact Rev.io</button>
-          <button class="rh-btn rh-btn-outline" onclick="openHelpModal()">📅 Schedule a Session</button>
-          <button class="rh-btn rh-btn-ghost" onclick="openHelpModal()">🎫 Submit a Ticket</button>
+          <a class="rh-btn rh-btn-primary" href="tel:+18664705502">📞 Call Us — 866-470-5502</a>
+          <button class="rh-btn rh-btn-ghost" onclick="openTicketModal()">🎫 Submit a Ticket</button>
         </div>
       </div>
 
@@ -1250,9 +1268,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
         <div class="rh-header"><span class="rh-badge">Rev.io Assistance</span><span class="rh-title">Need custom quote templates?</span></div>
         <p class="rh-desc">If you need customized quote branding, multi-option quotes, or integration with e-signature tools, our team can help configure those advanced features.</p>
         <div class="rh-actions">
-          <button class="rh-btn rh-btn-primary" onclick="openHelpModal()">📞 Contact Rev.io</button>
-          <button class="rh-btn rh-btn-outline" onclick="openHelpModal()">📅 Schedule a Session</button>
-          <button class="rh-btn rh-btn-ghost" onclick="openHelpModal()">🎫 Submit a Ticket</button>
+          <a class="rh-btn rh-btn-primary" href="tel:+18664705502">📞 Call Us — 866-470-5502</a>
+          <button class="rh-btn rh-btn-ghost" onclick="openTicketModal()">🎫 Submit a Ticket</button>
         </div>
       </div>
 
@@ -1466,9 +1483,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
         <div class="rh-header"><span class="rh-badge">Rev.io Assistance Required</span><span class="rh-title">Initial billing configuration requires our team</span></div>
         <p class="rh-desc">Billing setup — including connecting your accounting system, configuring billing cycles, setting up batch billing runs, and enabling the billing queue — requires a configuration session with our team. This ensures your billing is accurate and your financial data flows correctly from day one.</p>
         <div class="rh-actions">
-          <button class="rh-btn rh-btn-primary" onclick="openHelpModal()">📞 Contact Rev.io</button>
-          <button class="rh-btn rh-btn-outline" onclick="openHelpModal()">📅 Schedule a Session</button>
-          <button class="rh-btn rh-btn-ghost" onclick="openHelpModal()">🎫 Submit a Ticket</button>
+          <a class="rh-btn rh-btn-primary" href="tel:+18664705502">📞 Call Us — 866-470-5502</a>
+          <button class="rh-btn rh-btn-ghost" onclick="openTicketModal()">🎫 Submit a Ticket</button>
         </div>
       </div>
 
@@ -1515,9 +1531,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
         <div class="rh-header"><span class="rh-badge">Rev.io Assistance</span><span class="rh-title">Need help designing your billing structure?</span></div>
         <p class="rh-desc">If you have complex billing needs — tiered pricing, multiple entities, or custom billing rules — our team can help you design a bill profile structure that works for your business.</p>
         <div class="rh-actions">
-          <button class="rh-btn rh-btn-primary" onclick="openHelpModal()">📞 Contact Rev.io</button>
-          <button class="rh-btn rh-btn-outline" onclick="openHelpModal()">📅 Schedule a Session</button>
-          <button class="rh-btn rh-btn-ghost" onclick="openHelpModal()">🎫 Submit a Ticket</button>
+          <a class="rh-btn rh-btn-primary" href="tel:+18664705502">📞 Call Us — 866-470-5502</a>
+          <button class="rh-btn rh-btn-ghost" onclick="openTicketModal()">🎫 Submit a Ticket</button>
         </div>
       </div>
 
@@ -1552,9 +1567,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
         <div class="rh-header"><span class="rh-badge">Rev.io Assistance Required</span><span class="rh-title">Tax configuration requires our team</span></div>
         <p class="rh-desc">Tax setup involves jurisdiction-specific rules and must be configured carefully to ensure compliance. Our team will work with you to set up the correct tax zones and rates based on where you operate and what you sell. This is not a step to configure independently — incorrect tax setup can create compliance and reconciliation issues.</p>
         <div class="rh-actions">
-          <button class="rh-btn rh-btn-primary" onclick="openHelpModal()">📞 Contact Rev.io</button>
-          <button class="rh-btn rh-btn-outline" onclick="openHelpModal()">📅 Schedule a Session</button>
-          <button class="rh-btn rh-btn-ghost" onclick="openHelpModal()">🎫 Submit a Ticket</button>
+          <a class="rh-btn rh-btn-primary" href="tel:+18664705502">📞 Call Us — 866-470-5502</a>
+          <button class="rh-btn rh-btn-ghost" onclick="openTicketModal()">🎫 Submit a Ticket</button>
         </div>
       </div>
 
@@ -1614,9 +1628,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
         <div class="rh-header"><span class="rh-badge">Rev.io Assistance</span><span class="rh-title">Need advanced invoice customization?</span></div>
         <p class="rh-desc">Custom invoice layouts, conditional sections, multi-column line item displays, and custom branding beyond the standard template options require assistance from our team.</p>
         <div class="rh-actions">
-          <button class="rh-btn rh-btn-primary" onclick="openHelpModal()">📞 Contact Rev.io</button>
-          <button class="rh-btn rh-btn-outline" onclick="openHelpModal()">📅 Schedule a Session</button>
-          <button class="rh-btn rh-btn-ghost" onclick="openHelpModal()">🎫 Submit a Ticket</button>
+          <a class="rh-btn rh-btn-primary" href="tel:+18664705502">📞 Call Us — 866-470-5502</a>
+          <button class="rh-btn rh-btn-ghost" onclick="openTicketModal()">🎫 Submit a Ticket</button>
         </div>
       </div>
 
@@ -1695,9 +1708,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
         <div class="rh-header"><span class="rh-badge">Rev.io Assistance Required</span><span class="rh-title">Payment processor connection requires our team</span></div>
         <p class="rh-desc">Connecting your payment gateway (such as Stripe, CardConnect, or another supported processor) requires credentials from your payment provider and configuration steps that our team performs alongside you. This step also involves testing the connection before any live transactions occur. Please have your payment gateway credentials ready before scheduling this session.</p>
         <div class="rh-actions">
-          <button class="rh-btn rh-btn-primary" onclick="openHelpModal()">📞 Contact Rev.io</button>
-          <button class="rh-btn rh-btn-outline" onclick="openHelpModal()">📅 Schedule a Session</button>
-          <button class="rh-btn rh-btn-ghost" onclick="openHelpModal()">🎫 Submit a Ticket</button>
+          <a class="rh-btn rh-btn-primary" href="tel:+18664705502">📞 Call Us — 866-470-5502</a>
+          <button class="rh-btn rh-btn-ghost" onclick="openTicketModal()">🎫 Submit a Ticket</button>
         </div>
       </div>
 
@@ -1727,7 +1739,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
         <h1 class="complete-title">Setup Complete!</h1>
         <p class="complete-sub">You've worked through all 19 configuration areas of Rev.io PSA. Your system is ready to support your team and deliver for your customers.</p>
         <div class="complete-actions">
-          <button class="nav-btn nav-btn-primary" onclick="openHelpModal()">📅 Schedule Go-Live Review</button>
+          <a class="nav-btn nav-btn-primary" href="tel:+18664705502">📞 Call Us — 866-470-5502</a>
+          <button class="nav-btn nav-btn-ghost" onclick="openTicketModal()">🎫 Submit a Ticket</button>
           <a href="https://help.psarev.io" target="_blank" class="nav-btn nav-btn-ghost">📚 Documentation Center</a>
           <button class="nav-btn nav-btn-ghost" onclick="showStep('welcome')">← Back to Start</button>
         </div>
@@ -1742,28 +1755,48 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   <div class="modal-box">
     <div class="modal-title">Get Help from Rev.io</div>
     <p class="modal-sub">Our team is here to help you configure your system. Choose the option that works best for you.</p>
-    <a class="modal-option" href="tel:+18005550100">
+    <a class="modal-option" href="tel:+18664705502">
       <div class="mo-icon">📞</div>
       <div class="mo-info">
         <div class="mo-name">Call Us</div>
-        <div class="mo-desc">Speak directly with a Rev.io specialist</div>
+        <div class="mo-desc">866-470-5502 — Speak directly with a Rev.io specialist</div>
       </div>
     </a>
-    <a class="modal-option" href="https://meetings.hubspot.com/revio" target="_blank">
-      <div class="mo-icon">📅</div>
-      <div class="mo-info">
-        <div class="mo-name">Schedule a Session</div>
-        <div class="mo-desc">Book a focused configuration session with our team</div>
-      </div>
-    </a>
-    <a class="modal-option" href="https://help.psarev.io" target="_blank">
+    <div class="modal-option" onclick="closeHelpModal(); openTicketModal();" style="cursor:pointer;">
       <div class="mo-icon">🎫</div>
       <div class="mo-info">
         <div class="mo-name">Submit a Support Ticket</div>
-        <div class="mo-desc">Create a ticket and our team will follow up</div>
+        <div class="mo-desc">Step-by-step instructions to submit a ticket from your PSA instance</div>
       </div>
-    </a>
+    </div>
     <button class="modal-close" onclick="closeHelpModal()">Close</button>
+  </div>
+</div>
+
+<!-- ═══════ TICKET INSTRUCTIONS MODAL ═══════ -->
+<div id="ticket-modal">
+  <div class="modal-box">
+    <div class="modal-title">How to Submit a Support Ticket</div>
+    <p class="modal-sub">Follow these steps from inside your Rev.io PSA instance:</p>
+    <ol class="ticket-steps">
+      <li>
+        <div class="ts-num">1</div>
+        <div class="ts-text">Click the <strong>Help &amp; Support</strong> button in the upper right corner of your PSA instance.</div>
+      </li>
+      <li>
+        <div class="ts-num">2</div>
+        <div class="ts-text">Select <strong>Contact Support</strong> as the subject.</div>
+      </li>
+      <li>
+        <div class="ts-num">3</div>
+        <div class="ts-text">Complete the rest of the form with your question or the area you need help with.</div>
+      </li>
+      <li>
+        <div class="ts-num">4</div>
+        <div class="ts-text">Click <strong>Submit</strong>. Our team will follow up shortly.</div>
+      </li>
+    </ol>
+    <button class="modal-close" onclick="closeTicketModal()">Got it</button>
   </div>
 </div>
 
@@ -1896,8 +1929,14 @@ function openHelpModal() {
 function closeHelpModal() {
   document.getElementById('help-modal').classList.remove('open');
 }
-document.getElementById('help-modal').addEventListener('click', function(e) {
-  if(e.target === this) closeHelpModal();
+function openTicketModal() {
+  document.getElementById('ticket-modal').classList.add('open');
+}
+function closeTicketModal() {
+  document.getElementById('ticket-modal').classList.remove('open');
+}
+document.getElementById('ticket-modal').addEventListener('click', function(e) {
+  if(e.target === this) closeTicketModal();
 });
 
 // ═══════════════════════════════════════════════
