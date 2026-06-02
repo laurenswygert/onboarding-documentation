@@ -85,8 +85,223 @@ footer a{color:var(--azure);text-decoration:none;}
 .eoc-next-btn:hover{opacity:.88;}
 .eoc-done{font-size:15px;color:rgba(255,255,255,.75);padding:.6rem 1rem;}
 </style>
+
+<style id="sidebar-styles">
+/* ── Sidebar shell ───────────────────────────────── */
+#sidebar {
+  position:fixed;top:0;left:0;height:100vh;width:280px;
+  background:#1d3756;
+  box-shadow:4px 0 24px rgba(0,0,0,.35);
+  z-index:1000;
+  display:flex;flex-direction:column;
+  transform:translateX(-100%);
+  transition:transform .28s cubic-bezier(.4,0,.2,1);
+  overflow:hidden;
+}
+#sidebar.sb-open { transform:translateX(0); }
+
+#sb-overlay {
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.45);z-index:999;
+  backdrop-filter:blur(2px);
+}
+#sb-overlay.sb-open { display:block; }
+
+/* ── Toggle button ───────────────────────────────── */
+#sb-toggle {
+  position:fixed;top:12px;left:14px;z-index:998;
+  width:40px;height:40px;border-radius:8px;
+  background:#1d3756;border:none;cursor:pointer;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:5px;
+  box-shadow:0 2px 10px rgba(0,0,0,.3);
+  transition:background .15s;
+  padding:0;
+}
+#sb-toggle:hover { background:#254870; }
+#sb-toggle span {
+  display:block;width:18px;height:2px;
+  background:#fff;border-radius:2px;
+  transition:transform .2s, opacity .2s;
+}
+
+/* ── Sidebar header ──────────────────────────────── */
+.sb-header {
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 1rem .75rem;
+  border-bottom:1px solid rgba(255,255,255,.1);
+  flex-shrink:0;
+}
+.sb-brand { display:flex;align-items:center;gap:.6rem; }
+.sb-logo {
+  width:28px;height:28px;background:#2499b6;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;color:#fff;flex-shrink:0;
+}
+.sb-brand-name { font-size:15px;font-weight:600;color:#fff; }
+.sb-close {
+  background:none;border:none;color:rgba(255,255,255,.45);
+  font-size:16px;cursor:pointer;padding:.2rem .4rem;border-radius:4px;
+  transition:color .15s,background .15s;line-height:1;
+}
+.sb-close:hover { color:#fff;background:rgba(255,255,255,.1); }
+
+/* ── Top nav (All Calls) ─────────────────────────── */
+.sb-nav-top { padding:.6rem .75rem .4rem;flex-shrink:0; }
+.sb-home {
+  display:block;font-size:13px;font-weight:500;
+  color:rgba(255,255,255,.6);padding:.45rem .65rem;border-radius:6px;
+  text-decoration:none;transition:color .15s,background .15s;
+}
+.sb-home:hover { color:#fff;background:rgba(255,255,255,.08);text-decoration:none; }
+.sb-home.sb-item-active {
+  color:#fff;background:rgba(255,255,255,.12);font-weight:600;
+}
+
+/* ── Call groups ─────────────────────────────────── */
+.sb-groups { flex:1;overflow-y:auto;padding:.25rem 0 .5rem; }
+.sb-groups::-webkit-scrollbar { width:4px; }
+.sb-groups::-webkit-scrollbar-thumb { background:rgba(255,255,255,.15);border-radius:4px; }
+
+.sb-group { border-bottom:1px solid rgba(255,255,255,.06); }
+
+.sb-group-header {
+  width:100%;display:flex;align-items:center;justify-content:space-between;
+  padding:.65rem .85rem .65rem 1rem;
+  background:none;border:none;cursor:pointer;
+  border-left:3px solid var(--call-color);
+  transition:background .15s;
+}
+.sb-group-header:hover { background:rgba(255,255,255,.06); }
+.sb-group-label {
+  font-size:11.5px;font-weight:700;letter-spacing:.6px;
+  text-transform:uppercase;color:rgba(255,255,255,.65);
+  text-align:left;line-height:1.3;
+}
+.sb-chevron {
+  font-size:18px;color:rgba(255,255,255,.3);
+  transform:rotate(0deg);
+  transition:transform .22s;flex-shrink:0;margin-left:.5rem;
+}
+.sb-group-open .sb-chevron { transform:rotate(90deg); }
+
+.sb-group-body {
+  display:none;padding:.2rem 0 .4rem;
+}
+.sb-group-open .sb-group-body { display:block; }
+
+/* ── Call landing link ───────────────────────────── */
+.sb-call-link {
+  display:block;font-size:12.5px;font-weight:500;
+  color:rgba(255,255,255,.45);padding:.35rem .85rem .35rem 1.25rem;
+  text-decoration:none;font-style:italic;
+  transition:color .15s,background .15s;
+}
+.sb-call-link:hover { color:rgba(255,255,255,.8);text-decoration:none; }
+.sb-call-link.sb-item-active {
+  color:#fff;font-weight:600;background:rgba(255,255,255,.08);
+}
+
+/* ── Topic links ─────────────────────────────────── */
+.sb-topic {
+  display:flex;align-items:center;gap:.6rem;
+  font-size:13px;color:rgba(255,255,255,.55);
+  padding:.38rem .85rem .38rem 1.1rem;
+  text-decoration:none;
+  transition:color .15s,background .15s;
+  line-height:1.35;
+}
+.sb-topic:hover { color:#fff;background:rgba(255,255,255,.07);text-decoration:none; }
+.sb-topic.sb-item-active {
+  color:#fff;background:rgba(255,255,255,.12);font-weight:600;
+}
+.sb-topic.sb-item-active .sb-num {
+  background:#2499b6;color:#fff;
+}
+.sb-num {
+  min-width:20px;height:20px;border-radius:4px;
+  background:rgba(255,255,255,.12);
+  font-size:10px;font-weight:700;color:rgba(255,255,255,.5);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+
+/* ── Footer ──────────────────────────────────────── */
+.sb-footer {
+  padding:.65rem 1rem;border-top:1px solid rgba(255,255,255,.08);
+  flex-shrink:0;
+}
+.sb-footer a {
+  font-size:11.5px;color:rgba(255,255,255,.3);
+  text-decoration:none;transition:color .15s;
+}
+.sb-footer a:hover { color:#2499b6; }
+
+/* ── Body offset when sidebar open (optional) ────── */
+body.sb-pushed { /* don't push on mobile — overlay instead */ }
+
+/* ── Nudge main content right of toggle button ───── */
+.topnav { padding-left:64px !important; }
+.call-banner { padding-left:64px !important; }
+</style>
 </head>
 <body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<div id="sb-overlay" onclick="closeSidebar()"></div>
+
+<div id="sidebar">
+  <div class="sb-header">
+    <div class="sb-brand">
+      <div class="sb-logo">R</div>
+      <span class="sb-brand-name">Rev.io PSA</span>
+    </div>
+    <button class="sb-close" onclick="closeSidebar()" aria-label="Close menu">&#10005;</button>
+  </div>
+  <div class="sb-nav-top">
+    <a class="sb-home" href="index.html">&#8962; All Calls</a>
+  </div>
+  <div class="sb-groups">
+    
+<div class="sb-group" data-call="1">
+  <button class="sb-group-header" style="--call-color:#1d3756;" onclick="toggleGroup(this)">
+    <span class="sb-group-label">Call 1 — Foundation & Setup</span>
+    <span class="sb-chevron">&#8250;</span>
+  </button>
+  <div class="sb-group-body">
+    <a class="sb-call-link" href="call-1.html">Overview</a>
+    <a class="sb-topic" href="01_User_Management_Call_Script.html"><span class="sb-num">1</span>User Management</a><a class="sb-topic" href="02_System_Settings_Call_Script.html"><span class="sb-num">2</span>System Settings</a><a class="sb-topic" href="03_Customers_Contacts_Call_Script.html"><span class="sb-num">3</span>Customers & Contacts</a><a class="sb-topic" href="05_Product_Catalog_Call_Script.html"><span class="sb-num">4</span>Product Catalog</a><a class="sb-topic" href="06_Packages_Call_Script.html"><span class="sb-num">5</span>Packages</a><a class="sb-topic" href="07_Purchase_Orders_Call_Script.html"><span class="sb-num">6</span>Purchase Orders</a><a class="sb-topic" href="08_Providers_Call_Script.html"><span class="sb-num">7</span>Providers</a><a class="sb-topic" href="09_Inventory_Management_Call_Script.html"><span class="sb-num">8</span>Inventory Management</a>
+  </div>
+</div>
+<div class="sb-group sb-group-open" data-call="2">
+  <button class="sb-group-header" style="--call-color:#2499b6;" onclick="toggleGroup(this)">
+    <span class="sb-group-label">Call 2 — Service Operations</span>
+    <span class="sb-chevron">&#8250;</span>
+  </button>
+  <div class="sb-group-body">
+    <a class="sb-call-link" href="call-2.html">Overview</a>
+    <a class="sb-topic" href="10_Ticketing_Call_Script.html"><span class="sb-num">1</span>Ticketing</a><a class="sb-topic" href="11_Quoting_Call_Script.html"><span class="sb-num">2</span>Quoting</a><a class="sb-topic" href="12_Contracts_Call_Script.html"><span class="sb-num">3</span>Contracts</a><a class="sb-topic sb-item-active" href="13_Recurring_Services_Call_Script.html"><span class="sb-num">4</span>Recurring Services</a><a class="sb-topic" href="14_Scheduling_Call_Script.html"><span class="sb-num">5</span>Scheduling & Dispatch</a><a class="sb-topic" href="15_Project_Management_Call_Script.html"><span class="sb-num">6</span>Project Management</a>
+  </div>
+</div>
+<div class="sb-group" data-call="3">
+  <button class="sb-group-header" style="--call-color:#6ebe4f;" onclick="toggleGroup(this)">
+    <span class="sb-group-label">Call 3 — Billing & Finance</span>
+    <span class="sb-chevron">&#8250;</span>
+  </button>
+  <div class="sb-group-body">
+    <a class="sb-call-link" href="call-3.html">Overview</a>
+    <a class="sb-topic" href="16_Billing_Call_Script.html"><span class="sb-num">1</span>Billing</a><a class="sb-topic" href="17_Payment_Processors_Call_Script.html"><span class="sb-num">2</span>Payment Processors</a><a class="sb-topic" href="18_Invoice_Templates_Call_Script.html"><span class="sb-num">3</span>Invoice Templates</a><a class="sb-topic" href="19_Invoicing_Call_Script.html"><span class="sb-num">4</span>Invoicing</a><a class="sb-topic" href="20_Bill_Profiles_Call_Script.html"><span class="sb-num">5</span>Bill Profiles</a><a class="sb-topic" href="21_Accounting_Periods_Call_Script.html"><span class="sb-num">6</span>Accounting Periods</a>
+  </div>
+</div>
+  </div>
+  <div class="sb-footer">
+    <a href="https://help.psarev.io" target="_blank">help.psarev.io &#8599;</a>
+  </div>
+</div>
+
+<button id="sb-toggle" onclick="openSidebar()" aria-label="Open navigation menu">
+  <span></span><span></span><span></span>
+</button>
+<!-- ═══ END SIDEBAR ═══ -->
 <div class="call-banner" style="background:#2499b6;">
   <span class="pill">Call 2 of 3: Service Operations</span>
   <span class="sep">|</span>
@@ -138,5 +353,25 @@ footer a{color:var(--azure);text-decoration:none;}
 </div>
 </main>
 <footer>&copy; Rev.io PSA &nbsp;&mdash;&nbsp; Onboarding Call Script &nbsp;&mdash;&nbsp; <a href="https://help.psarev.io" target="_blank">help.psarev.io</a></footer>
+
+<script>
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('sb-open');
+  document.getElementById('sb-overlay').classList.add('sb-open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('sb-open');
+  document.getElementById('sb-overlay').classList.remove('sb-open');
+  document.body.style.overflow = '';
+}
+function toggleGroup(btn) {
+  btn.closest('.sb-group').classList.toggle('sb-group-open');
+}
+// Close on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeSidebar();
+});
+</script>
 </body>
 </html>
