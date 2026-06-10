@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OC Complexity Calculator — Rev.io</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:    #0D1B2A;
+  --navy-2:  #162336;
+  --navy-3:  #1E3049;
+  --blue:    #2563EB;
+  --blue-lt: #DBEAFE;
+  --blue-md: #93C5FD;
+  --teal:    #0D9488;
+  --teal-lt: #CCFBF1;
+  --amber:   #D97706;
+  --amber-lt:#FEF3C7;
+  --red:     #DC2626;
+  --red-lt:  #FEE2E2;
+  --green:   #16A34A;
+  --green-lt:#DCFCE7;
+  --border:  rgba(255,255,255,0.08);
+  --border-light: rgba(255,255,255,0.14);
+  --text:    #F0F4F8;
+  --muted:   #8BA3BC;
+  --card:    rgba(255,255,255,0.04);
+  --card-hover: rgba(255,255,255,0.07);
+  --radius:  10px;
+  --radius-lg: 14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:15px;scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--navy);
+  color:var(--text);
+  min-height:100vh;
+  line-height:1.6;
+}
+
+/* ── Layout ── */
+.shell{max-width:860px;margin:0 auto;padding:2.5rem 1.5rem 5rem}
+header{margin-bottom:2.5rem;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.logo{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:.5rem}
+.page-title{font-size:28px;font-weight:600;color:var(--text);letter-spacing:-.02em;line-height:1.2}
+.page-sub{font-size:14px;color:var(--muted);margin-top:.35rem}
+.header-actions{display:flex;gap:.5rem;align-items:center;flex-shrink:0;margin-top:.25rem}
+
+/* ── Buttons ── */
+button{cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;border:none;border-radius:var(--radius);transition:all .15s ease}
+.btn-primary{background:var(--blue);color:#fff;padding:.55rem 1.1rem;display:inline-flex;align-items:center;gap:.4rem}
+.btn-primary:hover{background:#1D4ED8;transform:translateY(-1px)}
+.btn-primary:active{transform:translateY(0)}
+.btn-ghost{background:transparent;color:var(--muted);padding:.55rem 1rem;border:1px solid var(--border-light);display:inline-flex;align-items:center;gap:.4rem}
+.btn-ghost:hover{color:var(--text);border-color:rgba(255,255,255,.25);background:var(--card)}
+.btn-export{background:var(--teal);color:#fff;padding:.6rem 1.25rem;display:inline-flex;align-items:center;gap:.5rem;font-size:14px}
+.btn-export:hover{background:#0F766E;transform:translateY(-1px)}
+
+/* ── Score bar ── */
+.score-bar{
+  background:var(--navy-2);
+  border:1px solid var(--border-light);
+  border-radius:var(--radius-lg);
+  padding:1.5rem 1.75rem;
+  margin-bottom:2rem;
+  display:flex;align-items:center;gap:2rem;flex-wrap:wrap;
+  position:sticky;top:1rem;z-index:10;
+  backdrop-filter:blur(12px);
+}
+.score-big{font-size:56px;font-weight:300;color:var(--text);line-height:1;font-family:'DM Mono',monospace;min-width:72px}
+.score-meta{flex:1;min-width:180px}
+.tier-pill{display:inline-flex;align-items:center;gap:.4rem;font-size:13px;font-weight:500;padding:4px 12px;border-radius:20px;margin-bottom:.5rem}
+.tier-Low    {background:var(--green-lt);color:#14532D}
+.tier-Medium {background:var(--amber-lt);color:#78350F}
+.tier-High   {background:var(--red-lt);  color:#7F1D1D}
+.tier-VeryHigh{background:#7F1D1D;color:#FECACA}
+.tier-None   {background:rgba(255,255,255,.08);color:var(--muted)}
+.range-label{font-size:12px;color:var(--muted);margin-bottom:.5rem}
+.progress-track{height:5px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;width:100%;max-width:280px}
+.progress-fill{height:100%;border-radius:3px;transition:width .4s ease,background .4s ease}
+.score-breakdown{display:flex;gap:.75rem;flex-wrap:wrap;margin-left:auto}
+.mini-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:.5rem .85rem;text-align:center;min-width:70px}
+.mini-card-num{font-size:20px;font-weight:500;font-family:'DM Mono',monospace;color:var(--text)}
+.mini-card-lbl{font-size:11px;color:var(--muted);margin-top:1px;white-space:nowrap}
+
+/* ── Sections ── */
+.sections{display:flex;flex-direction:column;gap:1rem}
+.section-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:border-color .2s}
+.section-card:hover{border-color:var(--border-light)}
+.section-head{
+  padding:.85rem 1.25rem;
+  border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+  cursor:pointer;user-select:none;
+}
+.section-head:hover{background:var(--card-hover)}
+.section-title{font-size:14px;font-weight:500;color:var(--text);display:flex;align-items:center;gap:.5rem}
+.section-icon{font-size:15px;color:var(--muted)}
+.sec-pts-badge{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);background:rgba(255,255,255,.06);padding:3px 9px;border-radius:20px;border:1px solid var(--border);transition:all .2s;white-space:nowrap}
+.sec-pts-badge.has-pts{color:var(--teal);border-color:rgba(13,148,136,.3);background:rgba(13,148,136,.1)}
+.chevron{font-size:13px;color:var(--muted);transition:transform .25s;margin-left:.5rem}
+.section-body{padding:1rem 1.25rem;display:flex;flex-direction:column;gap:.85rem}
+.section-body.collapsed{display:none}
+
+/* ── Questions ── */
+.q-label{font-size:13px;color:var(--muted);line-height:1.45;margin-bottom:.35rem}
+.q-row{display:flex;flex-direction:column}
+select{
+  width:100%;
+  background:var(--navy-3);
+  color:var(--text);
+  border:1px solid var(--border-light);
+  border-radius:var(--radius);
+  padding:.5rem .75rem;
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238BA3BC' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right .75rem center;
+  cursor:pointer;
+}
+select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+select option{background:var(--navy-2)}
+.q-row-inline{display:flex;align-items:center;gap:.75rem}
+.q-row-inline select{flex:1}
+.pts-tag{font-size:12px;font-family:'DM Mono',monospace;padding:3px 9px;border-radius:20px;white-space:nowrap;background:rgba(255,255,255,.05);color:var(--muted);border:1px solid var(--border);min-width:52px;text-align:center;transition:all .2s}
+.pts-tag.lit{background:rgba(13,148,136,.15);color:#5EEAD4;border-color:rgba(13,148,136,.3)}
+
+/* ── Checkboxes ── */
+.cb-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:.5rem}
+.cb-item{
+  display:flex;align-items:center;gap:.6rem;
+  padding:.55rem .75rem;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  cursor:pointer;
+  transition:all .15s;
+  background:transparent;
+}
+.cb-item:hover{background:var(--card-hover);border-color:var(--border-light)}
+.cb-item.checked{background:rgba(13,148,136,.1);border-color:rgba(13,148,136,.35)}
+.cb-item input{display:none}
+.cb-box{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--border-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;font-size:10px}
+.cb-item.checked .cb-box{background:var(--teal);border-color:var(--teal);color:#fff}
+.cb-label{font-size:13px;color:var(--text);flex:1;line-height:1.3}
+.cb-pts{font-size:12px;font-family:'DM Mono',monospace;color:var(--muted)}
+.cb-item.checked .cb-pts{color:#5EEAD4}
+
+/* ── Internationalization ── */
+.intl-gate{display:flex;align-items:center;gap:.75rem}
+.intl-gate select{max-width:220px}
+.intl-detail{margin-top:.75rem;display:none;border-top:1px solid var(--border);padding-top:.85rem}
+.intl-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.intl-sub{font-size:12px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem}
+.multi-sel{
+  width:100%;height:140px;
+  background:var(--navy-3);
+  color:var(--text);
+  border:1px solid var(--border-light);
+  border-radius:var(--radius);
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;
+  padding:4px;
+}
+.multi-sel:focus{outline:none;border-color:var(--blue)}
+.multi-sel option{padding:5px 8px;border-radius:4px}
+.multi-sel option:checked{background:var(--teal);color:#fff}
+.multi-hint{font-size:11px;color:var(--muted);margin-top:.3rem}
+.intl-score-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.75rem}
+.intl-chip{font-size:12px;font-family:'DM Mono',monospace;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,.05);color:var(--muted);border:1px solid var(--border)}
+.intl-chip.has{background:rgba(13,148,136,.15);color:#5EEAD4;border-color:rgba(13,148,136,.3)}
+
+/* ── Export modal ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-bg.open{opacity:1;pointer-events:all}
+.modal{background:var(--navy-2);border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:1.75rem;width:100%;max-width:420px;transform:translateY(12px);transition:transform .2s}
+.modal-bg.open .modal{transform:translateY(0)}
+.modal-title{font-size:17px;font-weight:600;margin-bottom:.25rem}
+.modal-sub{font-size:13px;color:var(--muted);margin-bottom:1.25rem}
+.modal-field{margin-bottom:.85rem}
+.modal-label{font-size:12px;color:var(--muted);margin-bottom:.3rem;font-weight:500;text-transform:uppercase;letter-spacing:.05em}
+.modal-field input{width:100%;background:var(--navy-3);color:var(--text);border:1px solid var(--border-light);border-radius:var(--radius);padding:.5rem .75rem;font-family:'DM Sans',sans-serif;font-size:14px}
+.modal-field input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+.modal-actions{display:flex;gap:.5rem;justify-content:flex-end;margin-top:1.25rem}
+
+/* ── Print / export styles ── */
+@media print{
+  @page{size:letter portrait;margin:.5in}
+  html,body{background:#fff!important;color:#0D1B2A!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-size:11px}
+  .shell{padding:.25rem;max-width:100%}
+
+  /* Hide interactive chrome */
+  .header-actions,.modal-bg,.chevron,.btn-export,.btn-ghost,.btn-primary,
+  .progress-track,.intl-detail,.multi-hint,.score-breakdown{display:none!important}
+
+  /* Header */
+  header{margin-bottom:.5rem}
+  .page-title{font-size:16px}
+  .page-sub{font-size:10px;color:#475569}
+  .logo{font-size:9px}
+
+  /* Project info */
+  #proj-name,#proj-code{font-size:11px!important;padding:.2rem .4rem!important;border-color:#CBD5E1!important;background:#fff!important;color:#0D1B2A!important;font-weight:500}
+
+  /* Score bar — compact */
+  .score-bar{position:static!important;background:#fff!important;border:none!important;border-bottom:2px solid #0D1B2A!important;padding:.4rem 0;margin-bottom:.5rem;backdrop-filter:none;gap:1rem}
+  .score-big{font-size:28px!important;color:#0D1B2A!important}
+  .score-meta .range-label{font-size:9px;color:#64748B}
+  .tier-pill{font-size:10px;padding:2px 8px}
+  .tier-Low{background:#DCFCE7!important;color:#14532D!important}
+  .tier-Medium{background:#FEF3C7!important;color:#78350F!important}
+  .tier-High{background:#FEE2E2!important;color:#7F1D1D!important}
+  .tier-VeryHigh{background:#7F1D1D!important;color:#fff!important}
+  .tier-None{background:#F1F5F9!important;color:#64748B!important}
+
+  /* Sections — no boxes, just a section label line */
+  .sections{gap:0}
+  .section-card{background:#fff!important;border:none!important;margin-bottom:.15rem}
+  .section-head{background:#fff!important;border:none!important;border-bottom:1px solid #CBD5E1!important;padding:.2rem 0;margin-bottom:.2rem}
+  .section-title{font-size:10px!important;font-weight:700!important;color:#0D1B2A!important;text-transform:uppercase;letter-spacing:.06em}
+  .sec-pts-badge{font-size:9px!important;color:#0F766E!important;background:none!important;border:none!important}
+  .sec-pts-badge.has-pts{color:#0F766E!important}
+
+  /* Section body — collapsed sections still show */
+  .section-body{padding:.1rem 0 .3rem 0!important;gap:0!important;display:flex!important}
+  .section-body.collapsed{display:flex!important}
+
+  /* Each question row — single horizontal line */
+  .q-row{flex-direction:row!important;align-items:baseline;gap:.4rem;border-bottom:1px dotted #E2E8F0;padding:.15rem 0}
+  .q-label{font-size:10px!important;color:#334155!important;flex:1;white-space:normal;margin-bottom:0!important}
+  .q-row-inline{flex:0 0 auto;display:flex;align-items:center;gap:.3rem}
+
+  /* Hide dropdowns, show selected value as text via pts-tag */
+  select{display:none!important}
+  .pts-tag{font-size:10px!important;border:none!important;background:none!important;padding:0!important;color:#0D1B2A!important;white-space:nowrap;font-family:"DM Mono",monospace}
+  .pts-tag.lit{color:#0F766E!important;font-weight:600}
+
+  /* Checkboxes — show as compact inline list, only checked ones */
+  .cb-grid{display:flex!important;flex-wrap:wrap;gap:.2rem .6rem}
+  .cb-item{padding:.1rem .3rem!important;border:none!important;background:none!important;font-size:10px}
+  .cb-none-label{display:block!important}
+  .cb-item:not(.checked){display:none!important}
+  .cb-item.checked{background:none!important;border:none!important}
+  .cb-box{display:none!important}
+  .cb-label{font-size:10px!important;color:#0D1B2A!important}
+  .cb-pts{font-size:9px!important;color:#0F766E!important;font-family:"DM Mono",monospace}
+
+  /* Intl */
+  .intl-score-row{margin-top:.1rem}
+  .intl-chip{font-size:9px!important;padding:1px 6px}
+  .intl-chip.has{background:none!important;color:#0F766E!important;border-color:#CBD5E1!important}
+  .merchant-result-badge{display:none!important}
+
+  /* Importer number input */
+  input[type=number]{font-size:10px!important;padding:.2rem .4rem!important;border-color:#CBD5E1!important;background:#fff!important;color:#0D1B2A!important;width:60px!important}
+  input[type=text]{font-size:11px!important;padding:.2rem .4rem!important;border-color:#CBD5E1!important;background:#fff!important;color:#0D1B2A!important}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header>
+    <div>
+      <div class="logo">Rev.io — Onboarding</div>
+      <h1 class="page-title">Project Complexity Calculator</h1>
+      <p class="page-sub">Complete all sections to generate the Onboarding Consultant complexity score.</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-ghost" onclick="resetAll()">↺ Reset</button>
+      <button class="btn-export" onclick="window.print()">⬇ Save as PDF</button>
+    </div>
+  </header>
+
+  <!-- Project info -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:1rem;display:grid;grid-template-columns:1fr 1fr;gap:.75rem 1.5rem;">
+    <div>
+      <label style="font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:.3rem">Project name</label>
+      <input type="text" id="proj-name" placeholder="e.g. Acme Telecom" style="width:100%;background:var(--navy-3);color:var(--text);border:1px solid var(--border-light);border-radius:var(--radius);padding:.45rem .75rem;font-family:'DM Sans',sans-serif;font-size:14px;">
+    </div>
+    <div>
+      <label style="font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:.3rem">Client code</label>
+      <input type="text" id="proj-code" placeholder="e.g. ACM-001" style="width:100%;background:var(--navy-3);color:var(--text);border:1px solid var(--border-light);border-radius:var(--radius);padding:.45rem .75rem;font-family:'DM Sans',sans-serif;font-size:14px;">
+    </div>
+  </div>
+
+  <!-- Score bar -->
+  <div class="score-bar">
+    <div class="score-big" id="total-score">0</div>
+    <div class="score-meta">
+      <div class="tier-pill tier-None" id="tier-pill">○ Not yet scored</div>
+      <div class="range-label">0–17 Low · 18–35 Medium · 36–53 High · 54+ Very high</div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+    <div class="score-breakdown" id="breakdown"></div>
+  </div>
+
+  <div class="sections" id="form-root"></div>
+</div>
+
+
+<!-- Export modal -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal">
+    <div class="modal-title">Export complexity report</div>
+    <div class="modal-sub">Add client details before saving — these will appear on the exported document.</div>
+    <div class="modal-field">
+      <div class="modal-label">Client / Project name</div>
+      <input type="text" id="exp-client" placeholder="e.g. Acme Telecom">
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">Sales rep</div>
+      <input type="text" id="exp-rep" placeholder="Full name">
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">Date submitted</div>
+      <input type="date" id="exp-date">
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">Assigned OC consultant</div>
+      <input type="text" id="exp-oc" placeholder="Full name">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeExport()">Cancel</button>
+      <button class="btn-primary" onclick="doExport()">⬇ Save as HTML</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const scores = {};
+const sectionScores = {};
+
+const SECTIONS = [
+  {
+    id:"migration", title:"Client & project scope", icon:"⚙",
+    questions:[
+      {id:"segment", label:"What is the client's Monthly Recurring Revenue (MRR)?", options:[
+        {label:"≤ $500",score:1},{label:"$500 – $1,000",score:3},{label:"$1,000 – $3,000",score:5},{label:"$3,000 – $10,000",score:7},{label:"$10,000+",score:9}]},
+      {id:"accounts", label:"How many customer accounts does the client have?", options:[
+        {label:"< 200",score:0},{label:"≥ 200",score:1}]},
+    ]
+  },
+  {
+    id:"billing", title:"Billing configuration", icon:"🧾",
+    questions:[
+      {id:"bill_profiles", label:"Are there groups of customers with different sets of rules? (Bill Profiles)", options:[
+        {label:"Yes — bill profiles present",score:1},{label:"No",score:0}]},
+      {id:"daily_billers", label:"Does the customer have Daily Billers (Anniversary)?", options:[
+        {label:"Yes",score:2},{label:"No",score:0}]},
+      {id:"billing_combo", label:"Does the customer have a combination of Monthly, Quarterly, Annual billing?", options:[
+        {label:"Yes — combination billing",score:1},{label:"No",score:0}]},
+      {id:"comms_billing", label:"Do they have communications billing?", options:[
+        {label:"Yes",score:5},{label:"No",score:0}]},
+    ]
+  },
+  {
+    id:"data", title:"Data & systems", icon:"🗄",
+    questions:[
+
+      {id:"data_sources", label:"How many systems are we pulling data from?", options:[
+        {label:"1",score:0},{label:"2",score:1},{label:"3+",score:2}]},
+      {id:"systems_retiring", label:"Number of systems retiring once live (disparate systems)?", options:[
+        {label:"1",score:0},{label:"2",score:2},{label:"3+",score:4}]},
+      {id:"custom_integrations", label:"Are there custom integrations or contracted professional services?", options:[
+        {label:"Yes",score:5},{label:"No",score:0}]},
+      {id:"homegrown", label:"Is the current system homegrown?", options:[
+        {label:"Yes",score:5},{label:"No",score:0}]},
+    ]
+  },
+  {
+    id:"usage", title:"Usage, tax & deadlines", icon:"📡",
+    questions:[
+      {id:"usage_type", label:"What types of usage does the client have?", options:[
+        {label:"No usage",score:0},{label:"Voice only",score:1},{label:"Data only",score:1},{label:"Voice and Data",score:2}]},
+      {id:"tax_partner", label:"Does the client have a Rev.io-familiar tax compliance partner?", options:[
+        {label:"Yes",score:0},{label:"No",score:1}]},
+      {id:"deadline", label:"Is there a hard deadline to be off the current system?", options:[
+        {label:"Yes",score:1},{label:"No",score:0}]},
+    ]
+  },
+  {
+    id:"print", title:"Print & payment", icon:"🖨",
+    questions:[
+      {id:"print_vendor", label:"What company does the client use to print/send their bills?", options:[
+        {label:"None",score:0},{label:"OSG",score:1},{label:"Spandocs",score:1},{label:"Other",score:1}]},
+      {id:"lockbox", label:"Do they use a lockbox?", options:[
+        {label:"Yes",score:1},{label:"No",score:0}]},
+    ]
+  },
+];
+
+const ADDONS = [
+  {id:"addon_agent",    label:"Agent Bundle",              pts:2},
+  {id:"addon_bob",      label:"Bill on Behalf",             pts:3},
+  {id:"addon_portal",   label:"Enterprise Portal",          pts:2},
+  {id:"addon_sync",     label:"Sync",                       pts:2},
+  {id:"addon_analytics",label:"Analytics",                  pts:1},
+  {id:"addon_qbo",      label:"QBO Integration (Billing)",  pts:3},
+  {id:"addon_cw",       label:"ConnectWise integration",    pts:5},
+  {id:"addon_docusign", label:"DocuSign integration",       pts:5},
+  {id:"addon_cyber",    label:"Cyber Protect",              pts:2},
+  {id:"addon_inventory",label:"Inventory Management",       pts:1},
+  {id:"addon_ticketing",label:"Ticketing",                  pts:1},
+  {id:"addon_quoting",  label:"Quoting",                    pts:1},
+  {id:"addon_pm",       label:"Project Management",          pts:1},
+];
+
+const CURRENCIES = ["Euro (EUR)","British Pound (GBP)","Canadian Dollar (CAD)","Australian Dollar (AUD)","Mexican Peso (MXN)","Swiss Franc (CHF)","Brazilian Real (BRL)","Singapore Dollar (SGD)","Hong Kong Dollar (HKD)","Norwegian Krone (NOK)","Swedish Krona (SEK)","Danish Krone (DKK)"];
+const LANGUAGES  = ["Spanish","French","Canadian French","Portuguese","German","Mandarin Chinese","Japanese","Korean","Arabic","Dutch","Italian"];
+
+// State for display labels
+const answerLabels = {};
+const checkedAddons = new Set();
+let selectedCurrencies = [];
+let selectedLanguages = [];
+let isIntl = false;
+let merchantCurrent = "";
+let merchantMoving = "";
+
+const MERCHANT_OPTIONS = ["Authorize.net","Stripe","IPPay","Rev.io Payments","Other","None"];
+
+function calcMerchantScore(current, moving){
+  if(!current || !moving) return null;
+  if(["Authorize.net","Stripe","IPPay"].includes(current) && moving==="Rev.io Payments") return {score:1, label:"Token Migration — 1 pt"};
+  return {score:0, label:"No token migration"};
+}
+
+function getTier(n){
+  if(n===0) return{label:"Not yet scored",cls:"tier-None",color:"rgba(255,255,255,.15)",icon:"○"};
+  if(n<=17)  return{label:"Low complexity",cls:"tier-Low",color:"#16A34A",icon:"✓"};
+  if(n<=35)  return{label:"Medium complexity",cls:"tier-Medium",color:"#D97706",icon:"△"};
+  if(n<=53)  return{label:"High complexity",cls:"tier-High",color:"#DC2626",icon:"▲"};
+  return{label:"Very high complexity",cls:"tier-VeryHigh",color:"#7F1D1D",icon:"⚠"};
+}
+
+function recalc(){
+  const total = Object.values(scores).reduce((a,b)=>a+b,0);
+  document.getElementById("total-score").textContent = total;
+  const tier = getTier(total);
+  const pill = document.getElementById("tier-pill");
+  pill.textContent = tier.icon + " " + tier.label;
+  pill.className = "tier-pill " + tier.cls;
+  const pct = Math.min(100, Math.round((total/50)*100));
+  const fill = document.getElementById("progress-fill");
+  fill.style.width = pct + "%";
+  fill.style.background = tier.color;
+
+  // update importer pts tag
+  const impTag = document.getElementById("importer-pts-tag");
+  if(impTag){
+    const pts = scores["importers"]||0;
+    const val = parseInt(document.getElementById("importer-count")?.value)||0;
+    impTag.textContent = val===0 ? "—" : "+"+pts+" pts";
+    impTag.classList.toggle("lit", pts>0);
+  }
+
+  // update pts tags
+  document.querySelectorAll(".pts-tag[data-qid]").forEach(tag=>{
+    const qid = tag.dataset.qid;
+    const active = scores[qid] !== undefined;
+    const label = answerLabels[qid];
+    const pts = scores[qid];
+    if(active && label !== undefined){
+      tag.textContent = label + (pts > 0 ? " — +" + pts + " pts" : " — 0 pts");
+    } else {
+      tag.textContent = "—";
+    }
+    tag.classList.toggle("lit", active && pts > 0);
+  });
+
+  // section badges
+  SECTIONS.forEach(sec=>{
+    const pts = sec.questions.reduce((a,q)=>a+(scores[q.id]||0),0);
+    sectionScores[sec.id] = pts;
+    const badge = document.querySelector(`.sec-pts-badge[data-sec="${sec.id}"]`);
+    if(badge){ badge.textContent = pts + " pts"; badge.classList.toggle("has-pts", pts>0); }
+  });
+  // merchant token score
+  const merchantResult = calcMerchantScore(merchantCurrent, merchantMoving);
+  if(merchantResult !== null){ scores["merchant_token"]=merchantResult.score; answerLabels["merchant_token"]=merchantResult.label; }
+  else { delete scores["merchant_token"]; delete answerLabels["merchant_token"]; }
+  const merchantBadge = document.querySelector('.sec-pts-badge[data-sec="merchant"]');
+  const merchantPts = scores["merchant_token"]||0;
+  sectionScores["merchant"] = merchantPts;
+  if(merchantBadge){ merchantBadge.textContent=merchantPts+" pts"; merchantBadge.classList.toggle("has-pts",merchantPts>0); }
+  const merchantResultEl = document.getElementById("merchant-result");
+  if(merchantResultEl){
+    if(merchantResult){ merchantResultEl.textContent=merchantResult.label+" — +"+merchantResult.score+" pts"; merchantResultEl.style.display="block"; }
+    else{ merchantResultEl.style.display="none"; }
+  }
+
+  // toggle "None" label for modules
+  const noneLabel = document.querySelector(".cb-none-label");
+  if(noneLabel) noneLabel.style.display = checkedAddons.size===0 ? "block" : "none";
+
+  const addonPts = ADDONS.reduce((a,ad)=>a+(scores[ad.id]||0),0);
+  sectionScores["addons"] = addonPts;
+  const ab = document.querySelector('.sec-pts-badge[data-sec="addons"]');
+  if(ab){ ab.textContent = addonPts+" pts"; ab.classList.toggle("has-pts",addonPts>0); }
+
+  const merchantExportPts = scores["merchant_token"]||0;
+  const merchantExportLabel = answerLabels["merchant_token"]||"—";
+  const merchantRows = (merchantCurrent||merchantMoving) ? `
+    <tr><td colspan="3" style="padding:8px 10px;background:#F1F5F9;font-size:12px;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:.05em">💳 Merchant processor</td></tr>
+    <tr>
+      <td style="padding:7px 10px;font-size:13px;color:#334155;border-bottom:1px solid #E2E8F0">Current merchant processor</td>
+      <td style="padding:7px 10px;font-size:13px;color:#0F172A;border-bottom:1px solid #E2E8F0;font-weight:500">${merchantCurrent||"—"}</td>
+      <td style="padding:7px 10px;font-size:13px;color:#94A3B8;border-bottom:1px solid #E2E8F0;font-weight:500;text-align:right">—</td>
+    </tr>
+    <tr>
+      <td style="padding:7px 10px;font-size:13px;color:#334155;border-bottom:1px solid #E2E8F0">Moving to</td>
+      <td style="padding:7px 10px;font-size:13px;color:#0F172A;border-bottom:1px solid #E2E8F0;font-weight:500">${merchantMoving||"—"}</td>
+      <td style="padding:7px 10px;font-size:13px;color:#94A3B8;border-bottom:1px solid #E2E8F0;font-weight:500;text-align:right">—</td>
+    </tr>
+    <tr>
+      <td style="padding:7px 10px;font-size:13px;color:#334155;border-bottom:1px solid #E2E8F0">Token migration classification</td>
+      <td style="padding:7px 10px;font-size:13px;color:#0F172A;border-bottom:1px solid #E2E8F0;font-weight:500">${merchantExportLabel}</td>
+      <td style="padding:7px 10px;font-size:13px;color:${merchantExportPts>0?"#0D9488":"#94A3B8"};border-bottom:1px solid #E2E8F0;font-weight:500;text-align:right">${merchantExportPts>0?"+"+merchantExportPts:"—"}</td>
+    </tr>` : "";
+
+  const intlPts = scores["intl_combined"]||0;
+  sectionScores["intl"] = intlPts;
+  const ib = document.querySelector('.sec-pts-badge[data-sec="intl"]');
+  if(ib){ ib.textContent = intlPts+" pts"; ib.classList.toggle("has-pts",intlPts>0); }
+
+  // intl chips
+  const cc = document.getElementById("intl-curr-chip");
+  const lc = document.getElementById("intl-lang-chip");
+  const tc = document.getElementById("intl-total-chip");
+  if(cc){
+    const n = selectedCurrencies.length;
+    cc.textContent = n+" "+(n===1?"currency":"currencies");
+    cc.className = "intl-chip"+(n?" has":"");
+  }
+  if(lc){
+    const n = selectedLanguages.length;
+    lc.textContent = n+" "+(n===1?"language":"languages");
+    lc.className = "intl-chip"+(n?" has":"");
+  }
+  if(tc){
+    const pts = scores["intl_combined"]||0;
+    tc.textContent = "+"+pts+" pts";
+    tc.className = "intl-chip"+(pts?" has":"");
+  }
+
+  // breakdown mini cards
+  const breakdown = document.getElementById("breakdown");
+  const groups = [
+    {label:"Migration",val:sectionScores["migration"]||0},
+    {label:"Add-ons",val:sectionScores["addons"]||0},
+    {label:"Data",val:sectionScores["data"]||0},
+    {label:"Intl",val:sectionScores["intl"]||0},
+  ];
+  breakdown.innerHTML = groups.map(g=>`
+    <div class="mini-card">
+      <div class="mini-card-num">${g.val}</div>
+      <div class="mini-card-lbl">${g.label}</div>
+    </div>`).join("");
+}
+
+function toggleSection(id){
+  const body = document.getElementById("body-"+id);
+  const chev = document.getElementById("chev-"+id);
+  const collapsed = body.classList.toggle("collapsed");
+  chev.style.transform = collapsed ? "rotate(-90deg)" : "rotate(0deg)";
+}
+
+function buildDropdownSection(sec){
+  const card = document.createElement("div");
+  card.className = "section-card";
+  card.innerHTML = `
+    <div class="section-head" onclick="toggleSection('${sec.id}')">
+      <span class="section-title"><span class="section-icon">${sec.icon}</span> ${sec.title}</span>
+      <span style="display:flex;align-items:center;gap:.5rem">
+        <span class="sec-pts-badge" data-sec="${sec.id}">0 pts</span>
+        <span class="chevron" id="chev-${sec.id}">▾</span>
+      </span>
+    </div>
+    <div class="section-body" id="body-${sec.id}"></div>`;
+  const body = card.querySelector(".section-body");
+  sec.questions.forEach(q=>{
+    const row = document.createElement("div");
+    row.className = "q-row";
+    row.innerHTML = `<div class="q-label">${q.label}</div>`;
+    const inline = document.createElement("div");
+    inline.className = "q-row-inline";
+    const sel = document.createElement("select");
+    sel.innerHTML = `<option value="">— select —</option>` +
+      q.options.map(o=>`<option value="${o.score}" data-label="${o.label}">${o.label}</option>`).join("");
+    sel.addEventListener("change",()=>{
+      if(sel.value===""){delete scores[q.id]; delete answerLabels[q.id];}
+      else{ scores[q.id]=Number(sel.value); answerLabels[q.id]=sel.options[sel.selectedIndex].dataset.label; }
+      recalc();
+    });
+    const tag = document.createElement("span");
+    tag.className = "pts-tag"; tag.dataset.qid = q.id; tag.textContent = "—";
+    inline.appendChild(sel); inline.appendChild(tag);
+    row.appendChild(inline); body.appendChild(row);
+  });
+  return card;
+}
+
+function buildMerchantSection(){
+  const card = document.createElement("div");
+  card.className = "section-card";
+  card.innerHTML = `
+    <div class="section-head" onclick="toggleSection('merchant')">
+      <span class="section-title"><span class="section-icon">💳</span> Merchant processor</span>
+      <span style="display:flex;align-items:center;gap:.5rem">
+        <span class="sec-pts-badge" data-sec="merchant">0 pts</span>
+        <span class="chevron" id="chev-merchant">▾</span>
+      </span>
+    </div>
+    <div class="section-body" id="body-merchant"></div>`;
+  const body = card.querySelector(".section-body");
+
+  const optHtml = `<option value="">— select —</option>` + MERCHANT_OPTIONS.map(o=>`<option value="${o}">${o}</option>`).join("");
+
+  const r1 = document.createElement("div"); r1.className="q-row";
+  r1.innerHTML=`<div class="q-label">Who is their current merchant processor?</div>`;
+  const i1 = document.createElement("div"); i1.className="q-row-inline";
+  const s1 = document.createElement("select"); s1.id="merchant-current"; s1.innerHTML=optHtml;
+  const lbl1 = document.createElement("span"); lbl1.className="pts-tag"; lbl1.id="merchant-current-label"; lbl1.textContent="—";
+  s1.addEventListener("change",()=>{ merchantCurrent=s1.value; lbl1.textContent=s1.value||"—"; recalc(); });
+  i1.appendChild(s1); i1.appendChild(lbl1); r1.appendChild(i1); body.appendChild(r1);
+
+  const r2 = document.createElement("div"); r2.className="q-row";
+  r2.innerHTML=`<div class="q-label">Which merchant processor will they move to on Rev.io?</div>`;
+  const i2 = document.createElement("div"); i2.className="q-row-inline";
+  const s2 = document.createElement("select"); s2.id="merchant-moving"; s2.innerHTML=optHtml;
+  const lbl2 = document.createElement("span"); lbl2.className="pts-tag"; lbl2.id="merchant-moving-label"; lbl2.textContent="—";
+  s2.addEventListener("change",()=>{ merchantMoving=s2.value; lbl2.textContent=s2.value||"—"; recalc(); });
+  i2.appendChild(s2); i2.appendChild(lbl2); r2.appendChild(i2); body.appendChild(r2);
+
+  const resultEl = document.createElement("div");
+  resultEl.id="merchant-result";
+  resultEl.className="merchant-result-badge";
+  resultEl.style.cssText="display:none;margin-top:.5rem;font-size:13px;font-weight:500;padding:6px 12px;border-radius:8px;background:rgba(13,148,136,.12);color:#5EEAD4;border:1px solid rgba(13,148,136,.25)";
+  body.appendChild(resultEl);
+
+  return card;
+}
+
+function buildAddonsSection(){
+  const card = document.createElement("div");
+  card.className = "section-card";
+  card.innerHTML = `
+    <div class="section-head" onclick="toggleSection('addons')">
+      <span class="section-title"><span class="section-icon">🧩</span> Modules enabled</span>
+      <span style="display:flex;align-items:center;gap:.5rem">
+        <span class="sec-pts-badge" data-sec="addons">0 pts</span>
+        <span class="chevron" id="chev-addons">▾</span>
+      </span>
+    </div>
+    <div class="section-body" id="body-addons"></div>`;
+  const body = card.querySelector(".section-body");
+  const grid = document.createElement("div");
+  grid.className = "cb-grid";
+  // Print-only "None" placeholder shown when no modules are checked
+  const noneItem = document.createElement("span");
+  noneItem.className = "cb-none-label";
+  noneItem.textContent = "None";
+  noneItem.style.cssText = "display:none;font-size:10px;color:#64748B;font-style:italic";
+  grid.appendChild(noneItem);
+  ADDONS.forEach(ad=>{
+    const item = document.createElement("label");
+    item.className = "cb-item"; item.dataset.cbid = ad.id;
+    item.innerHTML = `<input type="checkbox"><div class="cb-box"></div><span class="cb-label">${ad.label}</span><span class="cb-pts">+${ad.pts}</span>`;
+    item.querySelector("input").addEventListener("change",e=>{
+      if(e.target.checked){ scores[ad.id]=ad.pts; checkedAddons.add(ad.id); }
+      else{ delete scores[ad.id]; checkedAddons.delete(ad.id); }
+      item.classList.toggle("checked", e.target.checked);
+      item.querySelector(".cb-box").textContent = e.target.checked ? "✓" : "";
+      recalc();
+    });
+    grid.appendChild(item);
+  });
+  body.appendChild(grid);
+  return card;
+}
+
+function buildIntlSection(){
+  const card = document.createElement("div");
+  card.className = "section-card";
+  card.innerHTML = `
+    <div class="section-head" onclick="toggleSection('intl')">
+      <span class="section-title"><span class="section-icon">🌐</span> Internationalization</span>
+      <span style="display:flex;align-items:center;gap:.5rem">
+        <span class="sec-pts-badge" data-sec="intl">0 pts</span>
+        <span class="chevron" id="chev-intl">▾</span>
+      </span>
+    </div>
+    <div class="section-body" id="body-intl"></div>`;
+  const body = card.querySelector(".section-body");
+
+  const gateRow = document.createElement("div");
+  gateRow.className = "q-row";
+  gateRow.innerHTML = `<div class="q-label">Is this client using the Internationalization module?</div>`;
+  const gateInline = document.createElement("div");
+  gateInline.className = "q-row-inline";
+  const gateSel = document.createElement("select");
+  gateSel.innerHTML = `<option value="no">No</option><option value="yes">Yes</option>`;
+  const gateLabel = document.createElement("span");
+  gateLabel.className = "pts-tag"; gateLabel.id = "intl-gate-label"; gateLabel.textContent = "No";
+  gateSel.addEventListener("change",()=>{ gateLabel.textContent = gateSel.value==="yes"?"Yes":"No"; });
+  gateInline.appendChild(gateSel); gateInline.appendChild(gateLabel); gateRow.appendChild(gateInline); body.appendChild(gateRow);
+
+  const detail = document.createElement("div");
+  detail.className = "intl-detail"; detail.id = "intl-detail";
+  detail.innerHTML = `
+    <div class="intl-grid">
+      <div>
+        <div class="intl-sub">Currencies <span style="font-weight:400;font-size:11px">(1 pt each)</span></div>
+        <select class="multi-sel" id="curr-sel" multiple aria-label="Select currencies">
+          ${CURRENCIES.map(c=>`<option value="${c}">${c}</option>`).join("")}
+        </select>
+        <div class="multi-hint">Hold Ctrl / Cmd to select multiple</div>
+      </div>
+      <div>
+        <div class="intl-sub">Languages <span style="font-weight:400;font-size:11px">(1 pt each)</span></div>
+        <select class="multi-sel" id="lang-sel" multiple aria-label="Select languages">
+          ${LANGUAGES.map(l=>`<option value="${l}">${l}</option>`).join("")}
+        </select>
+        <div class="multi-hint">Hold Ctrl / Cmd to select multiple</div>
+      </div>
+    </div>
+    <div class="intl-score-row">
+      <span class="intl-chip" id="intl-curr-chip">0 currencies</span>
+      <span class="intl-chip" id="intl-lang-chip">0 languages</span>
+      <span class="intl-chip" id="intl-total-chip">+0 pts</span>
+    </div>`;
+  body.appendChild(detail);
+
+  gateSel.addEventListener("change",()=>{
+    isIntl = gateSel.value === "yes";
+    detail.style.display = isIntl ? "block" : "none";
+    if(isIntl){
+      scores["intl_combined"] = 4;
+    } else {
+      delete scores["intl_combined"]; delete scores["intl_currencies"]; delete scores["intl_languages"];
+      selectedCurrencies=[]; selectedLanguages=[];
+      detail.querySelectorAll("option").forEach(o=>o.selected=false);
+    }
+    recalc();
+  });
+
+  setTimeout(()=>{
+    const cs = document.getElementById("curr-sel");
+    const ls = document.getElementById("lang-sel");
+    if(cs) cs.addEventListener("change",()=>{
+      selectedCurrencies = Array.from(cs.selectedOptions).map(o=>o.value);
+      recalc();
+    });
+    if(ls) ls.addEventListener("change",()=>{
+      selectedLanguages = Array.from(ls.selectedOptions).map(o=>o.value);
+      recalc();
+    });
+  },100);
+
+  return card;
+}
+
+function resetAll(){
+  if(!confirm("Reset all answers?")) return;
+  Object.keys(scores).forEach(k=>delete scores[k]);
+  checkedAddons.clear(); selectedCurrencies=[]; selectedLanguages=[]; isIntl=false;
+  document.querySelectorAll("select").forEach(s=>s.selectedIndex=0);
+  const pn=document.getElementById("proj-name"); if(pn) pn.value="";
+  const pc=document.getElementById("proj-code"); if(pc) pc.value="";
+  const impInput=document.getElementById("importer-count"); if(impInput){impInput.value=""; delete scores["importers"]; delete answerLabels["importers"];}
+  document.querySelectorAll(".cb-item").forEach(i=>{ i.classList.remove("checked"); i.querySelector(".cb-box").textContent=""; });
+  document.querySelectorAll(".multi-sel option").forEach(o=>o.selected=false);
+  document.getElementById("intl-detail").style.display="none";
+  merchantCurrent=""; merchantMoving="";
+  const ms1=document.getElementById("merchant-current"); if(ms1) ms1.value="";
+  const ms2=document.getElementById("merchant-moving"); if(ms2) ms2.value="";
+  const ml1=document.getElementById("merchant-current-label"); if(ml1) ml1.textContent="—";
+  const ml2=document.getElementById("merchant-moving-label"); if(ml2) ml2.textContent="—";
+  const mr=document.getElementById("merchant-result"); if(mr) mr.style.display="none";
+  SECTIONS.forEach(s=>{ if(document.getElementById("body-"+s.id)?.classList.contains("collapsed")) toggleSection(s.id); });
+  recalc();
+}
+
+// ── Export ──────────────────────────────────────────────────────────────────
+function openExport(){
+  document.getElementById("exp-date").value = new Date().toISOString().split("T")[0];
+  document.getElementById("modal-bg").classList.add("open");
+}
+function closeExport(){ document.getElementById("modal-bg").classList.remove("open"); }
+
+function doExport(){
+  const client  = document.getElementById("exp-client").value || "—";
+  const rep     = document.getElementById("exp-rep").value    || "—";
+  const date    = document.getElementById("exp-date").value   || "—";
+  const oc      = document.getElementById("exp-oc").value     || "—";
+  const total   = Object.values(scores).reduce((a,b)=>a+b,0);
+  const tier    = getTier(total);
+
+  const tierColors = {
+    "tier-Low":"#16A34A", "tier-Medium":"#D97706","tier-High":"#DC2626","tier-VeryHigh":"#7F1D1D","tier-None":"#64748B"
+  };
+  const tierColor = tierColors[tier.cls] || "#64748B";
+
+  const addonList = ADDONS.filter(a=>checkedAddons.has(a.id));
+  const totalAddonPts = addonList.reduce((a,b)=>a+b.pts,0);
+
+  function qRows(sec){
+    return sec.questions.map(q=>{
+      const label = answerLabels[q.id];
+      const pts = scores[q.id];
+      if(label===undefined) return "";
+      return `<tr>
+        <td style="padding:7px 10px;font-size:13px;color:#334155;border-bottom:1px solid #E2E8F0;width:60%">${q.label}</td>
+        <td style="padding:7px 10px;font-size:13px;color:#0F172A;border-bottom:1px solid #E2E8F0;font-weight:500">${label}</td>
+        <td style="padding:7px 10px;font-size:13px;color:${pts>0?"#0D9488":"#94A3B8"};border-bottom:1px solid #E2E8F0;font-weight:500;text-align:right">${pts>0?"+"+pts:"—"}</td>
+      </tr>`;
+    }).join("");
+  }
+
+  const allSectionRows = SECTIONS.map(sec=>{
+    const rows = qRows(sec);
+    if(!rows) return "";
+    return `
+      <tr><td colspan="3" style="padding:8px 10px;background:#F1F5F9;font-size:12px;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:.05em">${sec.icon} ${sec.title}</td></tr>
+      ${rows}`;
+  }).join("");
+
+  const addonRows = addonList.length ? `
+    <tr><td colspan="3" style="padding:8px 10px;background:#F1F5F9;font-size:12px;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:.05em">🧩 Modules enabled</td></tr>
+    ${addonList.map(a=>`<tr>
+      <td style="padding:7px 10px;font-size:13px;color:#334155;border-bottom:1px solid #E2E8F0">${a.label}</td>
+      <td style="padding:7px 10px;font-size:13px;color:#0F172A;border-bottom:1px solid #E2E8F0;font-weight:500">Purchased</td>
+      <td style="padding:7px 10px;font-size:13px;color:#0D9488;border-bottom:1px solid #E2E8F0;font-weight:500;text-align:right">+${a.pts}</td>
+    </tr>`).join("")}` : "";
+
+  const intlPts = scores["intl_combined"]||0;
+  const intlRows = isIntl ? `
+    <tr><td colspan="3" style="padding:8px 10px;background:#F1F5F9;font-size:12px;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:.05em">🌐 Internationalization</td></tr>
+    <tr>
+      <td style="padding:7px 10px;font-size:13px;color:#334155;border-bottom:1px solid #E2E8F0">Currencies</td>
+      <td style="padding:7px 10px;font-size:13px;color:#0F172A;border-bottom:1px solid #E2E8F0;font-weight:500">${selectedCurrencies.length ? selectedCurrencies.join(", ") : "None"}</td>
+      <td style="padding:7px 10px;font-size:13px;color:${selectedCurrencies.length?"#0D9488":"#94A3B8"};border-bottom:1px solid #E2E8F0;font-weight:500;text-align:right">${selectedCurrencies.length?"+"+selectedCurrencies.length:"—"}</td>
+    </tr>
+    <tr>
+      <td style="padding:7px 10px;font-size:13px;color:#334155;border-bottom:1px solid #E2E8F0">Languages</td>
+      <td style="padding:7px 10px;font-size:13px;color:#0F172A;border-bottom:1px solid #E2E8F0;font-weight:500">${selectedLanguages.length ? selectedLanguages.join(", ") : "None"}</td>
+      <td style="padding:7px 10px;font-size:13px;color:${selectedLanguages.length?"#0D9488":"#94A3B8"};border-bottom:1px solid #E2E8F0;font-weight:500;text-align:right">${selectedLanguages.length?"+"+selectedLanguages.length:"—"}</td>
+    </tr>` : "";
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Complexity Report — ${client}</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#F8FAFC;color:#0F172A;padding:2rem;max-width:800px;margin:0 auto}
+</style>
+</head>
+<body>
+<div style="background:#0D1B2A;color:#F0F4F8;padding:1.5rem 2rem;border-radius:12px;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem">
+  <div>
+    <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.1em;color:#8BA3BC;text-transform:uppercase;margin-bottom:.4rem">Rev.io — Onboarding</div>
+    <div style="font-size:22px;font-weight:600;letter-spacing:-.02em">Project Complexity Report</div>
+    <div style="font-size:13px;color:#8BA3BC;margin-top:.25rem">Generated ${new Date().toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"})}</div>
+  </div>
+  <div style="text-align:right">
+    <div style="font-size:52px;font-weight:300;font-family:'DM Mono',monospace;line-height:1">${total}</div>
+    <div style="display:inline-flex;align-items:center;gap:.3rem;background:${tierColor};color:#fff;font-size:12px;font-weight:500;padding:3px 12px;border-radius:20px;margin-top:.25rem">${tier.label}</div>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1.5rem">
+  ${[
+    {label:"Client",val:client},
+    {label:"Sales rep",val:rep},
+    {label:"Date submitted",val:date},
+    {label:"OC consultant",val:oc},
+  ].map(f=>`<div style="background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:.75rem 1rem">
+    <div style="font-size:11px;color:#64748B;text-transform:uppercase;letter-spacing:.05em;font-weight:500;margin-bottom:.2rem">${f.label}</div>
+    <div style="font-size:14px;font-weight:500;color:#0F172A">${f.val}</div>
+  </div>`).join("")}
+</div>
+
+<div style="background:#fff;border:1px solid #E2E8F0;border-radius:12px;overflow:hidden;margin-bottom:1.5rem">
+  <table style="width:100%;border-collapse:collapse">
+    <thead>
+      <tr style="background:#0D1B2A">
+        <th style="padding:10px 12px;text-align:left;font-size:12px;font-weight:500;color:#8BA3BC;letter-spacing:.05em">Question</th>
+        <th style="padding:10px 12px;text-align:left;font-size:12px;font-weight:500;color:#8BA3BC;letter-spacing:.05em">Answer</th>
+        <th style="padding:10px 12px;text-align:right;font-size:12px;font-weight:500;color:#8BA3BC;letter-spacing:.05em">Points</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${allSectionRows}
+      ${addonRows}
+      ${merchantRows}
+      ${intlRows}
+      <tr style="background:#F8FAFC">
+        <td colspan="2" style="padding:12px;font-size:14px;font-weight:600;color:#0F172A">Total complexity score</td>
+        <td style="padding:12px;font-size:18px;font-weight:600;font-family:'DM Mono',monospace;color:${tierColor};text-align:right">${total}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1.5rem">
+  ${[
+    {label:"Complexity tier",val:tier.label,color:tierColor},
+    {label:"Scope",val:(sectionScores["migration"]||0)+" pts",color:"#0F172A"},
+    {label:"Merchant",val:(sectionScores["merchant"]||0)+" pts",color:"#0F172A"},
+    {label:"Add-ons",val:(sectionScores["addons"]||0)+" pts",color:"#0F172A"},
+    {label:"Internationalization",val:(sectionScores["intl"]||0)+" pts",color:"#0F172A"},
+  ].map(f=>`<div style="background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:.75rem 1rem">
+    <div style="font-size:11px;color:#64748B;text-transform:uppercase;letter-spacing:.05em;font-weight:500;margin-bottom:.2rem">${f.label}</div>
+    <div style="font-size:15px;font-weight:600;color:${f.color}">${f.val}</div>
+  </div>`).join("")}
+</div>
+
+<div style="font-size:11px;color:#94A3B8;text-align:center;margin-top:1rem">Rev.io Onboarding · Complexity score thresholds: 0–17 Low · 18–35 Medium · 36–53 High · 54+ Very High · Confidential</div>
+</body>
+</html>`;
+
+  const blob = new Blob([html],{type:"text/html"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `Complexity_Report_${client.replace(/\s+/g,"_")}_${date}.html`;
+  a.click();
+  closeExport();
+}
+
+// Build the form
+const root = document.getElementById("form-root");
+SECTIONS.slice(0,2).forEach(s=>root.appendChild(buildDropdownSection(s)));
+root.appendChild(buildAddonsSection());
+root.appendChild(buildMerchantSection());
+SECTIONS.slice(2).forEach(s=>{
+  const card = buildDropdownSection(s);
+  if(s.id === "data"){
+    // Inject importers number input at top of data section body
+    const body = card.querySelector("#body-data");
+    const importerRow = document.createElement("div");
+    importerRow.className = "q-row";
+    importerRow.innerHTML = `<div class="q-label">Number of importer formats? (1 pt per 3 importers)</div>`;
+    const importerInline = document.createElement("div");
+    importerInline.className = "q-row-inline";
+    const importerInput = document.createElement("input");
+    importerInput.type = "number";
+    importerInput.min = "0";
+    importerInput.placeholder = "Enter count";
+    importerInput.id = "importer-count";
+    importerInput.style.cssText = "width:140px;background:var(--navy-3);color:var(--text);border:1px solid var(--border-light);border-radius:var(--radius);padding:.5rem .75rem;font-family:'DM Sans',sans-serif;font-size:14px;";
+    importerInput.addEventListener("input",()=>{
+      const val = parseInt(importerInput.value)||0;
+      let iPts = 0;
+      if(val >= 12) iPts = 5;
+      else if(val >= 9) iPts = 4;
+      else if(val >= 6) iPts = 3;
+      else if(val >= 3) iPts = 2;
+      else if(val >= 1) iPts = 1;
+      scores["importers"] = iPts;
+      answerLabels["importers"] = val+" importer"+(val===1?"":"s");
+      recalc();
+    });
+    const importerTag = document.createElement("span");
+    importerTag.className = "pts-tag";
+    importerTag.id = "importer-pts-tag";
+    importerTag.textContent = "—";
+    importerInline.appendChild(importerInput);
+    importerInline.appendChild(importerTag);
+    importerRow.appendChild(importerInline);
+    body.insertBefore(importerRow, body.firstChild);
+  }
+  root.appendChild(card);
+});
+root.appendChild(buildIntlSection());
+recalc();
+
+document.getElementById("modal-bg").addEventListener("click",e=>{ if(e.target===e.currentTarget) closeExport(); });
+</script>
+</body>
+</html>
