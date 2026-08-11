@@ -6,11 +6,100 @@
 <style>
   body {
     font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
-    max-width: 860px;
-    margin: 40px auto;
-    padding: 0 24px;
+    margin: 0;
     color: #1a1a1a;
     line-height: 1.55;
+  }
+  .page-content {
+    max-width: 860px;
+    margin: 40px auto;
+    padding: 0 24px 40px 24px;
+  }
+  @media (min-width: 900px) {
+    .page-content {
+      margin-left: 300px;
+      margin-right: auto;
+    }
+  }
+  .toc-toggle {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 20;
+    background: #2b579a;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 14px;
+    font-size: 14px;
+    cursor: pointer;
+    display: none;
+  }
+  @media (max-width: 899px) {
+    .toc-toggle {
+      display: block;
+    }
+  }
+  #toc {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 260px;
+    overflow-y: auto;
+    background: #f7f8fa;
+    border-right: 1px solid #ddd;
+    padding: 24px 20px 40px 20px;
+    box-sizing: border-box;
+    font-size: 13.5px;
+    z-index: 10;
+    transition: transform 0.2s ease;
+  }
+  @media (max-width: 899px) {
+    #toc {
+      transform: translateX(-100%);
+      top: 56px;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+    }
+    #toc.open {
+      transform: translateX(0);
+    }
+  }
+  #toc .toc-title {
+    font-weight: 700;
+    color: #2b579a;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    margin-bottom: 12px;
+  }
+  #toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0 0 4px 0;
+  }
+  #toc ul ul {
+    padding-left: 14px;
+    margin-top: 4px;
+  }
+  #toc li {
+    margin-bottom: 6px;
+  }
+  #toc a {
+    color: #1a1a1a;
+    text-decoration: none;
+    display: block;
+    padding: 3px 6px;
+    border-radius: 4px;
+  }
+  #toc a:hover {
+    background: #e8edf5;
+    color: #2b579a;
+  }
+  #toc .toc-group {
+    font-weight: 600;
+    color: #444;
+    padding: 3px 6px;
   }
   h1 {
     font-size: 26px;
@@ -73,9 +162,55 @@
 </head>
 <body>
 
+<button class="toc-toggle" id="tocToggle" onclick="document.getElementById('toc').classList.toggle('open')">&#9776; Contents</button>
+
+<nav id="toc">
+  <div class="toc-title">&#9776; Contents</div>
+  <ul>
+    <li><a href="#glossary">Glossary</a></li>
+    <li><a href="#triggers">Triggers</a>
+      <ul>
+        <li><a href="#on-hold-triggers">On-Hold Triggers</a></li>
+      </ul>
+    </li>
+    <li><a href="#rts-status-types">RTS Status Types</a>
+      <ul>
+        <li><a href="#status-paperwork">RTS Paperwork Incomplete</a></li>
+        <li><a href="#status-client">RTS Client</a></li>
+        <li><a href="#status-functionality">RTS Functionality</a></li>
+        <li><a href="#status-ghosting">RTS Ghosting</a></li>
+      </ul>
+    </li>
+    <li><a href="#processes">Processes</a>
+      <ul>
+        <li><a href="#process-onhold">On-Hold Process</a></li>
+        <li class="toc-group">RTS Process</li>
+        <li>
+          <ul>
+            <li><a href="#rts-process-paperwork">Paperwork Incomplete</a></li>
+            <li><a href="#rts-process-client">Client</a></li>
+            <li><a href="#rts-process-functionality">Functionality</a></li>
+            <li><a href="#rts-process-ghosting">Ghosting</a></li>
+          </ul>
+        </li>
+        <li class="toc-group">Resuming After RTS</li>
+        <li>
+          <ul>
+            <li><a href="#resuming-client">Client</a></li>
+            <li><a href="#resuming-functionality">Functionality</a></li>
+            <li><a href="#resuming-ghosting">Ghosting</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+<div class="page-content">
+
 <h1>REV.IO: RETURN TO SOURCE PROCESS</h1>
 
-<h2>GLOSSARY</h2>
+<h2 id="glossary">GLOSSARY</h2>
 <ul>
   <li><strong>RTS</strong> &ndash; Return to Source</li>
   <li><strong>OC</strong> &ndash; Onboarding Consultant</li>
@@ -86,32 +221,33 @@
   <li><strong>AM Leadership</strong> &ndash; Account Management Leadership</li>
 </ul>
 
-<h2>TRIGGERS</h2>
+<h2 id="triggers">TRIGGERS</h2>
 
-<h3>On-Hold Triggers</h3>
+<h3 id="on-hold-triggers">On-Hold Triggers</h3>
 <ul>
   <li>Client requests to delay the start of a project (updated timeframe will be documented in the initial contract)</li>
   <li>Client states they cannot provide required materials to onboard (License fees still apply) but provides a timeframe to do so &mdash; Timeline is extended two weeks or more past the project plan milestone deliverable date on the project plan.</li>
   <li>Client states that they do not have time to work on the project (License fees still apply) but provides a timeframe in which they can resume &mdash; Timeline provided is extended two weeks or more past the project plan milestone deliverable date on the project plan.</li>
 </ul>
 
-<h2>RTS STATUS TYPES</h2>
+<h2 id="rts-status-types">RTS STATUS TYPES</h2>
 <p class="note">RTS = Returned to Source</p>
 
-<h3>RTS Paperwork Incomplete</h3>
+<h3 id="status-paperwork">RTS Paperwork Incomplete</h3>
 <p><strong>Definition:</strong> Used prior to kickoff, when a project has not yet been assigned to an Onboarding Consultant. Applied when something is missing from the sales side before onboarding can start &mdash; for example, an unsigned addendum, missing contract paperwork, or an outstanding PS sign-off.</p>
 <p><strong>Triggers:</strong></p>
 <ul>
   <li>Missing addendum(s)</li>
   <li>Missing contract paperwork</li>
   <li>Missing PS sign-off</li>
+  <li>Changes to terms & conditions that are not documented in an addendum</li>
   <li>Any other required sales-side documentation not yet received prior to onboarding starting</li>
 </ul>
 <p><strong>Example:</strong> A signed addendum covering a custom integration was never returned by the client, so the project cannot be assigned or scheduled.</p>
 <p><strong>Timeline:</strong> The project does not kick off while it is in this status. Once the missing paperwork is received, the project comes out of RTS and onboarding begins.</p>
 <p><strong>Process:</strong> See <a href="#rts-process-paperwork">RTS Process &ndash; Paperwork Incomplete</a> below for the full steps and templates.</p>
 
-<h3>RTS Client</h3>
+<h3 id="status-client">RTS Client</h3>
 <p><strong>Definition:</strong> Used when the client has caused the RTS.</p>
 <p><strong>Triggers:</strong></p>
 <ul>
@@ -132,7 +268,7 @@
 <p><strong>Timeline:</strong> Governed by the triggers above &mdash; for example, an On-Hold timeline extended two weeks or more past the agreed resume date, missed deliverables/calls for two weeks or more, or exhausting the one allowed On-Hold extension.</p>
 <p><strong>Process:</strong> See <a href="#rts-process-client">RTS Process &ndash; Client</a> below for the full steps and templates.</p>
 
-<h3>RTS Functionality</h3>
+<h3 id="status-functionality">RTS Functionality</h3>
 <p><strong>Definition:</strong> Used when there is a product or functionality misalignment &mdash; the client is missing functionality they expected, or there is a mismatch between what was sold and what the product delivers. Whoever moves a project into this status must provide a detailed write-up covering: what the functionality gap is, a summary of the calls where it was discussed, and which Product Owner needs to be involved.</p>
 <p><strong>Triggers:</strong></p>
 <ul>
@@ -143,7 +279,7 @@
 <p><strong>Timeline:</strong> Resolution timeline depends on Product&rsquo;s review of the write-up. The OC and the assigned Product Owner determine next steps and communicate a target timeline back to Onboarding leadership and Sales.</p>
 <p><strong>Process:</strong> See <a href="#rts-process-functionality">RTS Process &ndash; Functionality</a> below for the full steps, including the Product confirmation call and internal write-up.</p>
 
-<h3>RTS Ghosting</h3>
+<h3 id="status-ghosting">RTS Ghosting</h3>
 <p><strong>Definition:</strong> Used when the client has not shown up for or responded to any communication for more than two weeks.</p>
 <p><strong>Triggers:</strong></p>
 <ul>
@@ -155,9 +291,9 @@
 
 <p class="note">Note: Sales involvement will not expedite the delivery of required information or expedite client&rsquo;s participation in the project.</p>
 
-<h2>PROCESSES</h2>
+<h2 id="processes">PROCESSES</h2>
 
-<h3>On-Hold Process</h3>
+<h3 id="process-onhold">On-Hold Process</h3>
 <ol>
   <li>Project is placed &ldquo;On-Hold&rdquo;</li>
   <li>Client is notified that the project is On-Hold</li>
@@ -180,7 +316,7 @@
   Best,
 </div>
 
-<h3>RTS Process</h3>
+<h3 id="process-rts">RTS Process</h3>
 <p class="note">Steps and messaging vary by RTS status. Use the walkthrough below that matches the status you are placing the project into. Anyone tagged in a channel post or internal notification is expected to acknowledge within 1 business day.</p>
 
 <h4 id="rts-process-paperwork">RTS Process &ndash; Paperwork Incomplete</h4>
@@ -338,7 +474,7 @@
 
 <p class="note">Note: This process includes all deliverables including but not limited to Project Charters being signed.</p>
 
-<h3>Resuming a Project After RTS</h3>
+<h3 id="process-resuming">Resuming a Project After RTS</h3>
 <p class="note">Notification and re-engagement messaging vary by RTS status. Use the walkthrough below that matches the status the project is coming out of. Anyone tagged is expected to acknowledge within 1 business day.</p>
 
 <h4 id="resuming-client">Resuming &ndash; Client</h4>
@@ -467,6 +603,18 @@
 </div>
 
 <p class="note">Projects with a reassignment can take up to five business days to bring back into onboarding, and there is no guarantee of getting the original project team back.</p>
+
+</div>
+
+<script>
+  document.querySelectorAll('#toc a').forEach(function(link) {
+    link.addEventListener('click', function() {
+      if (window.innerWidth < 900) {
+        document.getElementById('toc').classList.remove('open');
+      }
+    });
+  });
+</script>
 
 </body>
 </html>
