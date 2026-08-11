@@ -231,14 +231,11 @@
     <input type="checkbox" id="nav-toggle">
     <label class="nav-toggle-label" for="nav-toggle">☰ Contents</label>
     <div class="nav-body">
-      <ul>
-        <li><a href="#qualifying">What Qualifies for Each Path</a></li>
-      </ul>
       <div class="section-label">Workflows by Path</div>
       <ul>
         <li><a class="indent" href="#sales-sourced"><span class="dot" style="background:#2e6f95"></span>Sales-Sourced Deals</a></li>
         <li><a class="indent" href="#existing-client-migrations"><span class="dot" style="background:#1f7a5c"></span>Existing Client Migrations</a></li>
-        <li><a class="indent" href="#returns-to-onboarding"><span class="dot" style="background:#8a4b6b"></span>Returns to Onboarding</a></li>
+        <li><a class="indent" href="#return-to-onboarding"><span class="dot" style="background:#8a4b6b"></span>Return to Onboarding</a></li>
       </ul>
       <ul>
         <li><a href="#exceptions">Exceptions &amp; Edge Cases</a></li>
@@ -279,25 +276,17 @@
       <li><b>2-week data load gate:</b> if the data load information hasn't been received from the client within two weeks of Onboarding Leadership's brief review, the project is returned to Sales until it's provided — nothing moves forward without the data load, regardless of progress on any other part of the project.</li>
     </ul>
 
-    <h2 id="qualifying">What Qualifies for Each Path</h2>
-    <p>Not every request from Account Management or Client Success should route back into a full onboarding project. The criteria below are a first draft — flagged for Onboarding Leadership, Account Management, and Client Success to confirm.</p>
+    <h2 class="source-heading migration" id="existing-client-migrations">Existing Client Migrations <span class="badge migration">MIGRATION</span></h2>
+    <p>This follows a workflow closely mirroring the Sales process, for existing clients migrating from Tiger Paw or adding on the new UI for legacy billing.</p>
 
-    <h3 class="sub-heading">Existing Client Migrations</h3>
+    <h3 class="sub-heading">What Qualifies</h3>
     <ul class="plain">
       <li><b>Qualifies:</b> the account is migrating from Tiger Paw, or an existing legacy billing client is adding on the new Rev.io UI — this always requires a full onboarding project.</li>
       <li><b>Does not qualify:</b> routine account-management support questions that don't involve a platform migration or UI add-on.</li>
     </ul>
+    <div class="callout"><b>Open item:</b> confirm this qualifying criteria with Onboarding Leadership and Account Management — drafted here based on the distinction discussed, but not yet official policy.</div>
 
-    <h3 class="sub-heading">Returns to Onboarding</h3>
-    <ul class="plain">
-      <li><b>Qualifies:</b> there's a genuine, documented gap in the client's original training — they were never adequately trained on core functionality — and they need full retraining.</li>
-      <li><b>Does not qualify:</b> a one-off support question, a minor how-to request, or a refresher that Client Success can handle directly without a full onboarding re-engagement.</li>
-    </ul>
-
-    <div class="callout"><b>Open item:</b> confirm these qualifying criteria with Onboarding Leadership, Account Management, and Client Success — drafted here based on the distinction discussed (platform migration/UI add-on for Existing Client Migrations, genuine training gaps for Returns to Onboarding), but not yet official policy.</div>
-
-    <h2 class="source-heading migration" id="existing-client-migrations">Existing Client Migrations <span class="badge migration">MIGRATION</span></h2>
-    <p>See "What Qualifies for Each Path" above for when a request should route through here. This follows a workflow closely mirroring the Sales process, for existing clients migrating from Tiger Paw or adding on the new UI for legacy billing. The full intake workflow, start to finish:</p>
+    <p>The full intake workflow, start to finish:</p>
 
     <ol class="steps">
       <li><b>Account Management manually completes the <a href="#">Onboarding Brief</a></b> (in lieu of the auto-generated version Sales produces for new deals) and submits it to the Intake Channel. Onboarding Leadership then reviews that brief for completeness, reviews the contract, and confirms everything is notated as it should be.
@@ -320,8 +309,17 @@
 
     <div class="callout"><b>Open item:</b> confirm who sends the client introduction email on migrations — Sales or Account Management (see Related Documents / Open Items).</div>
 
-    <h2 class="source-heading return" id="returns-to-onboarding">Returns to Onboarding <span class="badge return">RETURN</span></h2>
-    <p>See "What Qualifies for Each Path" above for when a request should route through here. This looks similar to what's outlined for Existing Client Migrations, but needs more structure — several steps below are marked <span class="badge tbd">TBD</span> because the level of detail provided doesn't yet confirm whether the full Sales/Migrations sequence applies to a returning account or a lighter-weight version is used, flagged for confirmation with Onboarding Leadership and Client Success:</p>
+    <h2 class="source-heading return" id="return-to-onboarding">Return to Onboarding <span class="badge return">RETURN</span></h2>
+    <p>This looks similar to what's outlined for Existing Client Migrations, but needs more structure.</p>
+
+    <h3 class="sub-heading">What Qualifies</h3>
+    <ul class="plain">
+      <li><b>Qualifies:</b> there's a genuine, documented gap in the client's original training — they were never adequately trained on core functionality — and they need full retraining.</li>
+      <li><b>Does not qualify:</b> a one-off support question, a minor how-to request, or a refresher that Client Success can handle directly without a full onboarding re-engagement.</li>
+    </ul>
+    <div class="callout"><b>Open item:</b> confirm this qualifying criteria with Onboarding Leadership and Client Success — drafted here based on the distinction discussed, but not yet official policy.</div>
+
+    <p>The full workflow, start to finish — several steps below are marked <span class="badge tbd">TBD</span> because the level of detail provided doesn't yet confirm whether the full Sales/Migrations sequence applies to a returning account or a lighter-weight version is used, flagged for confirmation with Onboarding Leadership and Client Success:</p>
 
     <ol class="steps">
       <li><b>Client Success provides a detailed outline</b> of why the account is being returned and what specific training needs to occur — this path is for accounts with genuine gaps in their initial training, not just a request for extra support. If the return is data-load-related, CS includes specific documentation of the issue and what's needed to resolve it. Onboarding Leadership reviews this documentation for completeness. <span class="badge tbd">TBD</span> — the exact scope of this review hasn't been confirmed, but is expected to be lighter-weight than a new deal or conversion since there's no new contract involved.
@@ -349,7 +347,7 @@
       <tr><td>Data load info not received within 2 weeks of Leadership's brief review</td><td>Project is returned to Sales (or AM) until the information is provided. All other workstreams pause — nothing moves forward without the data load, even if other pieces of the project are ready.</td></tr>
       <tr><td>Brief incomplete or contract has gaps</td><td>Onboarding Leadership pushes the brief back to the Sales Rep (or AM) for addendums / missing information before the project can proceed.</td></tr>
       <tr><td>Existing Client Migration (Tiger Paw / legacy billing new-UI add-on)</td><td>Onboarding Brief is completed manually by Account Management via the provided link, then submitted to the Intake Channel, rather than being auto-generated from a closed deal.</td></tr>
-      <tr><td>Returns to Onboarding</td><td>Reserved for accounts with genuine gaps in their initial training — not a request for additional support. Requires a detailed written reason for the return and the specific training needed. If data load issues triggered the return, specific documentation of the issue and what's needed must be included.</td></tr>
+      <tr><td>Return to Onboarding</td><td>Reserved for accounts with genuine gaps in their initial training — not a request for additional support. Requires a detailed written reason for the return and the specific training needed. If data load issues triggered the return, specific documentation of the issue and what's needed must be included.</td></tr>
       <tr><td>Kickoff call not held within 48 hours of intro email</td><td>Acceptable — the 48-hour requirement is for the calendar hold to be set, not for the call itself to occur.</td></tr>
       <tr><td>Project team not assigned within 3 business days</td><td>Not expected — Onboarding Leadership's SLA is to assign the project team within three business days of everything being handed back to them, regardless of any open questions about the project.</td></tr>
     </table>
@@ -379,9 +377,9 @@
     <p>Open items to confirm with stakeholders:</p>
     <ul class="plain">
       <li>Who sends the client intro email on Existing Client Migrations — Sales or Account Management</li>
-      <li>Scope of Onboarding Leadership's review for Returns to Onboarding</li>
-      <li>Whether Returns to Onboarding go through full complexity scoring and instance handling, or a lighter-weight process</li>
-      <li>Whether the 2-week data load gate and 24/48-hour scheduling SLAs apply to Returns to Onboarding</li>
+      <li>Scope of Onboarding Leadership's review for Return to Onboarding</li>
+      <li>Whether Return to Onboarding goes through full complexity scoring and instance handling, or a lighter-weight process</li>
+      <li>Whether the 2-week data load gate and 24/48-hour scheduling SLAs apply to Return to Onboarding</li>
       <li>Process owner and review cadence (defaulted above to Onboarding Leadership / Quarterly — confirm)</li>
     </ul>
 
@@ -391,7 +389,7 @@
       <tr><th>Step</th><th>Responsible</th><th>Accountable</th><th>Consulted</th><th>Informed</th></tr>
       <tr><td>Deal closed / brief generated (Sales)</td><td>Sales Rep</td><td>Sales Rep</td><td>—</td><td>Onboarding Leadership</td></tr>
       <tr><td>Manual brief submission (Existing Client Migrations)</td><td>Account Management</td><td>Account Management</td><td>Onboarding Leadership</td><td>Intake Channel</td></tr>
-      <tr><td>Return documentation (Returns to Onboarding)</td><td>Client Success</td><td>Client Success</td><td>Onboarding Leadership</td><td>OC / DE (if assigned)</td></tr>
+      <tr><td>Return documentation (Return to Onboarding)</td><td>Client Success</td><td>Client Success</td><td>Onboarding Leadership</td><td>OC / DE (if assigned)</td></tr>
       <tr><td>Brief &amp; contract review</td><td>Onboarding Leadership</td><td>Onboarding Leadership</td><td>Sales Rep / AM</td><td>—</td></tr>
       <tr><td>Push-back for gaps / addendums</td><td>Onboarding Leadership</td><td>Onboarding Leadership</td><td>—</td><td>Sales Rep / AM / CS</td></tr>
       <tr><td>API credential collection</td><td>Sales Rep</td><td>Sales Rep</td><td>Onboarding</td><td>Client</td></tr>
