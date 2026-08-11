@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding Intake Process — SOP</title>
+<style>
+  :root {
+    --navy: #1f3864;
+    --blue: #2e6f95;
+    --green: #1f7a5c;
+    --maroon: #8a4b6b;
+    --red: #b23b3b;
+    --amber: #9a7b1f;
+    --gray: #5b6b7c;
+    --light: #f2f4f7;
+    --border: #d8dee5;
+    --bg: #ffffff;
+    --text: #1c1f24;
+    --sidebar-w: 260px;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.55;
+  }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .layout { display: flex; min-height: 100vh; }
+
+  /* Sidebar */
+  nav.sidebar {
+    width: var(--sidebar-w);
+    flex-shrink: 0;
+    border-right: 1px solid var(--border);
+    padding: 24px 18px;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  nav.sidebar .brand {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+  nav.sidebar .brand-sub {
+    font-size: 12px;
+    color: var(--gray);
+    margin-bottom: 18px;
+  }
+  nav.sidebar ul {
+    list-style: none;
+    margin: 0; padding: 0;
+  }
+  nav.sidebar li { margin: 2px 0; }
+  nav.sidebar a {
+    display: block;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 13.5px;
+    color: var(--text);
+  }
+  nav.sidebar a:hover { background: var(--light); text-decoration: none; }
+  nav.sidebar .section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--gray);
+    margin: 18px 0 6px 10px;
+  }
+  nav.sidebar .indent { padding-left: 22px; font-size: 13px; color: #444; }
+  nav.sidebar .dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:7px; }
+
+  #nav-toggle { display: none; }
+  label.nav-toggle-label { display: none; }
+
+  main {
+    flex: 1;
+    min-width: 0;
+    padding: 40px 48px 80px;
+    max-width: 900px;
+  }
+
+  h1.title { font-size: 30px; color: var(--navy); margin: 0 0 4px; }
+  .subtitle { color: var(--gray); font-style: italic; margin: 0 0 20px; font-size: 15px; }
+
+  .meta-box {
+    background: var(--light);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 28px;
+    font-size: 13.5px;
+  }
+  .meta-box div { margin: 3px 0; }
+  .meta-box b { color: var(--navy); }
+
+  h2 {
+    font-size: 22px;
+    color: var(--navy);
+    border-bottom: 2px solid var(--navy);
+    padding-bottom: 8px;
+    margin: 44px 0 16px;
+    scroll-margin-top: 20px;
+  }
+  h2.source-heading { scroll-margin-top: 20px; }
+  h2.source-heading.sales { border-color: var(--blue); color: var(--blue); }
+  h2.source-heading.migration { border-color: var(--green); color: var(--green); }
+  h2.source-heading.return { border-color: var(--maroon); color: var(--maroon); }
+
+  h3.sub-heading {
+    font-size: 16px;
+    color: var(--navy);
+    margin: 26px 0 10px;
+  }
+
+  p { font-size: 14.5px; margin: 10px 0; }
+  ul.plain { font-size: 14.5px; padding-left: 22px; }
+  ul.plain li { margin: 4px 0; }
+
+  .callout {
+    font-size: 13.5px;
+    background: #fbf6e3;
+    border: 1px solid #ecdca0;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 12px 0;
+  }
+  .callout b { color: var(--amber); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 24px;
+    font-size: 13px;
+  }
+  table th {
+    background: var(--navy);
+    color: #fff;
+    text-align: left;
+    padding: 9px 12px;
+    font-weight: 600;
+  }
+  table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  table tr:nth-child(even) td { background: #fafbfc; }
+  .table-wrap { overflow-x: auto; }
+
+  ol.steps {
+    font-size: 14.5px;
+    padding-left: 24px;
+    margin: 14px 0 30px;
+  }
+  ol.steps li {
+    margin: 12px 0;
+    padding-left: 4px;
+  }
+  ol.steps li b { color: var(--navy); }
+  ol.steps li.tbd { padding-left: 10px; border-left: 3px solid var(--amber); }
+  ul.sub-steps {
+    margin: 8px 0 0;
+    padding-left: 20px;
+    font-size: 13.5px;
+    color: #333;
+    list-style: disc;
+  }
+  ul.sub-steps li { margin: 4px 0; }
+
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 999px;
+    color: #fff;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .badge.sales { background: var(--blue); }
+  .badge.migration { background: var(--green); }
+  .badge.return { background: var(--maroon); }
+  .badge.tbd { background: var(--amber); }
+
+  footer {
+    margin-top: 60px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--gray);
+  }
+
+  @media (max-width: 860px) {
+    .layout { flex-direction: column; }
+    nav.sidebar {
+      width: 100%;
+      height: auto;
+      position: relative;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+      padding: 14px 18px;
+    }
+    label.nav-toggle-label {
+      display: block;
+      font-weight: 700;
+      color: var(--navy);
+      cursor: pointer;
+      font-size: 14px;
+    }
+    nav.sidebar .nav-body { display: none; margin-top: 10px; }
+    #nav-toggle:checked ~ .nav-body { display: block; }
+    main { padding: 28px 20px 60px; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <nav class="sidebar">
+    <div class="brand">Onboarding Intake Process</div>
+    <div class="brand-sub">Standard Operating Procedure</div>
+    <input type="checkbox" id="nav-toggle">
+    <label class="nav-toggle-label" for="nav-toggle">☰ Contents</label>
+    <div class="nav-body">
+      <ul>
+        <li><a href="#qualifying">What Qualifies for Each Path</a></li>
+      </ul>
+      <div class="section-label">Workflows by Path</div>
+      <ul>
+        <li><a class="indent" href="#sales-sourced"><span class="dot" style="background:#2e6f95"></span>Sales-Sourced Deals</a></li>
+        <li><a class="indent" href="#existing-client-migrations"><span class="dot" style="background:#1f7a5c"></span>Existing Client Migrations</a></li>
+        <li><a class="indent" href="#returns-to-onboarding"><span class="dot" style="background:#8a4b6b"></span>Returns to Onboarding</a></li>
+      </ul>
+      <ul>
+        <li><a href="#exceptions">Exceptions &amp; Edge Cases</a></li>
+        <li><a href="#metrics">Metrics</a></li>
+        <li><a href="#related">Related Documents / Open Items</a></li>
+        <li><a href="#raci">RACI Matrix</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <h1 class="title">Onboarding Intake Process</h1>
+    <p class="subtitle">Standard Operating Procedure</p>
+    <div class="meta-box">
+      <div><b>Owner:</b> Onboarding Leadership</div>
+      <div><b>Last Updated:</b> August 11, 2026</div>
+      <div><b>Review Cadence:</b> Quarterly (suggested — confirm with Onboarding Leadership)</div>
+    </div>
+
+    <h2 class="source-heading sales" id="sales-sourced">Sales-Sourced Deals <span class="badge sales">SALES</span></h2>
+    <p>The full intake workflow for a new deal closed by Sales, start to finish.</p>
+
+    <ol class="steps">
+      <li><b>Sales closes the deal,</b> which auto-generates the Onboarding Sales Brief. Onboarding Leadership then reviews that brief for completeness, reviews the contract, and confirms everything is notated as it should be.
+        <ul class="sub-steps">
+          <li>If there are any gaps — missing addendums, contract terms, or other information — the brief is pushed back to the Sales Rep for correction before moving forward.</li>
+        </ul>
+      </li>
+      <li><b>Onboarding Leadership preps the project:</b> generates a complexity score, uses automation to create the project channels and templates, creates the client instance, and assigns an Onboarding Consultant (OC) and, as needed, a Data Engineer (DE) — within three business days of everything being handed back to Onboarding Leadership.</li>
+      <li><b>The project status changes to "Ready for Onboarding,"</b> and a message is posted in the project channel tagging the project team, with links to the sales brief and the complexity calculator.</li>
+      <li><b>Sales sends an email introduction</b> to the client.</li>
+      <li><b>The Onboarding Consultant proposes call times</b> within 24 hours of the intro email being sent, and gets the kickoff call set on the calendar within 48 hours of that email. The call itself doesn't have to occur within 48 hours — it just needs to be on the calendar by then.</li>
+    </ol>
+
+    <h3 class="sub-heading">Requirements &amp; Things to Know</h3>
+    <ul class="plain">
+      <li><b>Data load approach:</b> Sales is required to provide API credentials. If they're available, the standard 60-calendar-day timeline applies; if not, the client uses the Data Migration Template and the timeline extends by two weeks to 75 calendar days.</li>
+      <li><b>2-week data load gate:</b> if the data load information hasn't been received from the client within two weeks of Onboarding Leadership's brief review, the project is returned to Sales until it's provided — nothing moves forward without the data load, regardless of progress on any other part of the project.</li>
+    </ul>
+
+    <h2 id="qualifying">What Qualifies for Each Path</h2>
+    <p>Not every request from Account Management or Client Success should route back into a full onboarding project. The criteria below are a first draft — flagged for Onboarding Leadership, Account Management, and Client Success to confirm.</p>
+
+    <h3 class="sub-heading">Existing Client Migrations</h3>
+    <ul class="plain">
+      <li><b>Qualifies:</b> the account is migrating from Tiger Paw, or an existing legacy billing client is adding on the new Rev.io UI — this always requires a full onboarding project.</li>
+      <li><b>Does not qualify:</b> routine account-management support questions that don't involve a platform migration or UI add-on.</li>
+    </ul>
+
+    <h3 class="sub-heading">Returns to Onboarding</h3>
+    <ul class="plain">
+      <li><b>Qualifies:</b> there's a genuine, documented gap in the client's original training — they were never adequately trained on core functionality — and they need full retraining.</li>
+      <li><b>Does not qualify:</b> a one-off support question, a minor how-to request, or a refresher that Client Success can handle directly without a full onboarding re-engagement.</li>
+    </ul>
+
+    <div class="callout"><b>Open item:</b> confirm these qualifying criteria with Onboarding Leadership, Account Management, and Client Success — drafted here based on the distinction discussed (platform migration/UI add-on for Existing Client Migrations, genuine training gaps for Returns to Onboarding), but not yet official policy.</div>
+
+    <h2 class="source-heading migration" id="existing-client-migrations">Existing Client Migrations <span class="badge migration">MIGRATION</span></h2>
+    <p>See "What Qualifies for Each Path" above for when a request should route through here. This follows a workflow closely mirroring the Sales process, for existing clients migrating from Tiger Paw or adding on the new UI for legacy billing. The full intake workflow, start to finish:</p>
+
+    <ol class="steps">
+      <li><b>Account Management manually completes the <a href="#">Onboarding Brief</a></b> (in lieu of the auto-generated version Sales produces for new deals) and submits it to the Intake Channel. Onboarding Leadership then reviews that brief for completeness, reviews the contract, and confirms everything is notated as it should be.
+        <ul class="sub-steps">
+          <li>If there are any gaps — missing addendums, contract terms, or other information — the brief is pushed back to Account Management for correction before moving forward.</li>
+          <li>Part of the Onboarding Brief discloses whether this is a Tiger Paw migration or a new-UI add-on for a legacy billing client, and the brief's questions adjust accordingly to collect the specific technical information needed for that path.</li>
+        </ul>
+      </li>
+      <li><b>Onboarding Leadership preps the project:</b> generates a complexity score, uses automation to create the project channels and templates, creates the client instance, and assigns an Onboarding Consultant (OC) and, as needed, a Data Engineer (DE) — within three business days of everything being handed back to Onboarding Leadership.</li>
+      <li><b>The project status changes to "Ready for Onboarding,"</b> and a message is posted in the project channel tagging the project team, with links to the onboarding brief and the complexity calculator.</li>
+      <li class="tbd"><b>An email introduction is sent to the client</b> — <span class="badge tbd">TBD</span> whether this is owned by Sales or Account Management on a migration.</li>
+      <li><b>The Onboarding Consultant proposes call times</b> within 24 hours of the intro email being sent, and gets the kickoff call set on the calendar within 48 hours of that email. The call itself doesn't have to occur within 48 hours — it just needs to be on the calendar by then.</li>
+    </ol>
+
+    <h3 class="sub-heading">Requirements &amp; Things to Know</h3>
+    <ul class="plain">
+      <li><b>Data load approach:</b> API credentials are required. If they're available, the standard 60-calendar-day timeline applies; if not, the client uses the Data Migration Template and the timeline extends by two weeks to 75 calendar days.</li>
+      <li><b>2-week data load gate:</b> if the data load information hasn't been received within two weeks of Onboarding Leadership's brief review, the project is returned to Account Management until it's provided — nothing moves forward without the data load, regardless of progress on any other part of the project.</li>
+    </ul>
+
+    <div class="callout"><b>Open item:</b> confirm who sends the client introduction email on migrations — Sales or Account Management (see Related Documents / Open Items).</div>
+
+    <h2 class="source-heading return" id="returns-to-onboarding">Returns to Onboarding <span class="badge return">RETURN</span></h2>
+    <p>See "What Qualifies for Each Path" above for when a request should route through here. This looks similar to what's outlined for Existing Client Migrations, but needs more structure — several steps below are marked <span class="badge tbd">TBD</span> because the level of detail provided doesn't yet confirm whether the full Sales/Migrations sequence applies to a returning account or a lighter-weight version is used, flagged for confirmation with Onboarding Leadership and Client Success:</p>
+
+    <ol class="steps">
+      <li><b>Client Success provides a detailed outline</b> of why the account is being returned and what specific training needs to occur — this path is for accounts with genuine gaps in their initial training, not just a request for extra support. If the return is data-load-related, CS includes specific documentation of the issue and what's needed to resolve it. Onboarding Leadership reviews this documentation for completeness. <span class="badge tbd">TBD</span> — the exact scope of this review hasn't been confirmed, but is expected to be lighter-weight than a new deal or conversion since there's no new contract involved.
+        <ul class="sub-steps">
+          <li>If there are gaps in the outline, training plan, or data load documentation, it's pushed back to Client Success for correction.</li>
+        </ul>
+      </li>
+      <li class="tbd"><b>Onboarding Leadership preps the project:</b> handles complexity scoring and instance check as applicable, and assigns (or reassigns) an Onboarding Consultant (OC) and, as needed, a Data Engineer (DE) — within three business days of everything being handed back to Onboarding Leadership. <span class="badge tbd">TBD</span> — since a returning account's instance already exists, whether a new complexity score is generated or the instance step is skipped/abbreviated hasn't been confirmed.</li>
+      <li><b>The project status changes to "Ready for Onboarding,"</b> and a message is posted in the project channel with a link to the return documentation.</li>
+      <li class="tbd"><b>The Onboarding Consultant reaches out to the client to schedule time</b> to begin the returned work or training — no intro email is needed since the relationship already exists. <span class="badge tbd">TBD</span> — whether the same 24-hour-proposal / 48-hour-scheduling SLA used for new-client kickoffs applies here hasn't been confirmed.</li>
+    </ol>
+
+    <h3 class="sub-heading">Requirements &amp; Things to Know</h3>
+    <ul class="plain">
+      <li><b>Data load issues (if applicable):</b> <span class="badge tbd">TBD</span> — Onboarding determines what's needed to resolve a data-load-related return, but whether this follows the same API-credentials-vs.-Data-Migration-Template decision and 60/75-day timeline used on new deals hasn't been confirmed.</li>
+    </ul>
+
+    <div class="callout"><b>Open item:</b> confirm with Onboarding Leadership and Client Success how much of the full intake sequence (review depth, complexity scoring, instance handling, scheduling SLAs) applies to returning accounts versus a lighter-weight process built specifically for returns.</div>
+
+    <h2 id="exceptions">Exceptions and Edge Cases</h2>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Scenario</th><th>What to Do</th></tr>
+      <tr><td>No API credentials from Sales</td><td>Client uses the Data Migration Template instead; standard 60-day timeline extends to 75 calendar days (+2 weeks).</td></tr>
+      <tr><td>Data load info not received within 2 weeks of Leadership's brief review</td><td>Project is returned to Sales (or AM) until the information is provided. All other workstreams pause — nothing moves forward without the data load, even if other pieces of the project are ready.</td></tr>
+      <tr><td>Brief incomplete or contract has gaps</td><td>Onboarding Leadership pushes the brief back to the Sales Rep (or AM) for addendums / missing information before the project can proceed.</td></tr>
+      <tr><td>Existing Client Migration (Tiger Paw / legacy billing new-UI add-on)</td><td>Onboarding Brief is completed manually by Account Management via the provided link, then submitted to the Intake Channel, rather than being auto-generated from a closed deal.</td></tr>
+      <tr><td>Returns to Onboarding</td><td>Reserved for accounts with genuine gaps in their initial training — not a request for additional support. Requires a detailed written reason for the return and the specific training needed. If data load issues triggered the return, specific documentation of the issue and what's needed must be included.</td></tr>
+      <tr><td>Kickoff call not held within 48 hours of intro email</td><td>Acceptable — the 48-hour requirement is for the calendar hold to be set, not for the call itself to occur.</td></tr>
+      <tr><td>Project team not assigned within 3 business days</td><td>Not expected — Onboarding Leadership's SLA is to assign the project team within three business days of everything being handed back to them, regardless of any open questions about the project.</td></tr>
+    </table>
+    </div>
+
+    <h2 id="metrics">Metrics</h2>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Metric</th><th>Target</th><th>How to Measure</th></tr>
+      <tr><td>Standard onboarding timeline</td><td>60 calendar days</td><td>Days from Leadership's brief review to go-live (API credentials provided)</td></tr>
+      <tr><td>Extended timeline (no API credentials)</td><td>75 calendar days</td><td>Days from Leadership's brief review to go-live (Data Migration Template in use)</td></tr>
+      <tr><td>Data load SLA</td><td>Received within 2 weeks of brief review</td><td>Time elapsed from Leadership's review to data load receipt</td></tr>
+      <tr><td>Call-time proposal SLA</td><td>Within 24 hrs of client intro email</td><td>Time from intro email sent to OC proposing kickoff times</td></tr>
+      <tr><td>Kickoff scheduling SLA</td><td>Calendar hold set within 48 hrs of intro email</td><td>Time from intro email sent to kickoff call being placed on the calendar</td></tr>
+      <tr><td>Assignment SLA</td><td>3 business days</td><td>Time from everything being handed back to Onboarding Leadership to the project team (OC / DE) being assigned — applies across all three sources</td></tr>
+    </table>
+    </div>
+
+    <h2 id="related">Related Documents / Open Items</h2>
+    <p>Links to add once available:</p>
+    <ul class="plain">
+      <li>Onboarding Sales Brief template (Sales-Sourced Deals)</li>
+      <li>Onboarding Brief link (Existing Client Migrations) — currently a placeholder link in that section above; swap in the real URL</li>
+      <li>Complexity calculator</li>
+      <li>Data Migration Template</li>
+    </ul>
+    <p>Open items to confirm with stakeholders:</p>
+    <ul class="plain">
+      <li>Who sends the client intro email on Existing Client Migrations — Sales or Account Management</li>
+      <li>Scope of Onboarding Leadership's review for Returns to Onboarding</li>
+      <li>Whether Returns to Onboarding go through full complexity scoring and instance handling, or a lighter-weight process</li>
+      <li>Whether the 2-week data load gate and 24/48-hour scheduling SLAs apply to Returns to Onboarding</li>
+      <li>Process owner and review cadence (defaulted above to Onboarding Leadership / Quarterly — confirm)</li>
+    </ul>
+
+    <h2 id="raci">RACI Matrix</h2>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Step</th><th>Responsible</th><th>Accountable</th><th>Consulted</th><th>Informed</th></tr>
+      <tr><td>Deal closed / brief generated (Sales)</td><td>Sales Rep</td><td>Sales Rep</td><td>—</td><td>Onboarding Leadership</td></tr>
+      <tr><td>Manual brief submission (Existing Client Migrations)</td><td>Account Management</td><td>Account Management</td><td>Onboarding Leadership</td><td>Intake Channel</td></tr>
+      <tr><td>Return documentation (Returns to Onboarding)</td><td>Client Success</td><td>Client Success</td><td>Onboarding Leadership</td><td>OC / DE (if assigned)</td></tr>
+      <tr><td>Brief &amp; contract review</td><td>Onboarding Leadership</td><td>Onboarding Leadership</td><td>Sales Rep / AM</td><td>—</td></tr>
+      <tr><td>Push-back for gaps / addendums</td><td>Onboarding Leadership</td><td>Onboarding Leadership</td><td>—</td><td>Sales Rep / AM / CS</td></tr>
+      <tr><td>API credential collection</td><td>Sales Rep</td><td>Sales Rep</td><td>Onboarding</td><td>Client</td></tr>
+      <tr><td>Data load collection (2-week gate)</td><td>Client / Sales</td><td>Onboarding Leadership</td><td>Data Engineer</td><td>Onboarding Consultant</td></tr>
+      <tr><td>Complexity scoring &amp; automation</td><td>Onboarding Leadership / System</td><td>Onboarding Leadership</td><td>—</td><td>OC / DE</td></tr>
+      <tr><td>Instance creation</td><td>Onboarding Leadership</td><td>Onboarding Leadership</td><td>—</td><td>Onboarding Consultant</td></tr>
+      <tr><td>OC / DE assignment</td><td>Onboarding Leadership</td><td>Onboarding Leadership</td><td>—</td><td>OC / DE</td></tr>
+      <tr><td>Ready for Onboarding + channel post</td><td>Onboarding Leadership / System</td><td>Onboarding Leadership</td><td>—</td><td>Project team</td></tr>
+      <tr><td>Client introduction email</td><td>Sales Rep (or AM on conversions)</td><td>Sales Rep / AM</td><td>Onboarding Consultant</td><td>Client</td></tr>
+      <tr><td>Kickoff call scheduling</td><td>Onboarding Consultant</td><td>Onboarding Consultant</td><td>Client</td><td>Onboarding Leadership</td></tr>
+    </table>
+    </div>
+
+    <footer>Onboarding Intake Process SOP — Last updated August 11, 2026</footer>
+  </main>
+</div>
+</body>
+</html>
