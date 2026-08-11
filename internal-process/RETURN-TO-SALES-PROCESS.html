@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>REV.IO: RETURN TO SALES PROCESS</title>
+<title>REV.IO: RETURNED TO SOURCE PROCESS</title>
 <style>
   body {
     font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
@@ -73,7 +73,7 @@
 </head>
 <body>
 
-<h1>REV.IO: RETURN TO SALES PROCESS</h1>
+<h1>REV.IO: RETURNED TO SOURCE PROCESS</h1>
 
 <h2>TRIGGERS</h2>
 
@@ -84,20 +84,67 @@
   <li>Client states that they do not have time to work on the project (License fees still apply) but provides a timeframe in which they can resume &mdash; Timeline provided is extended two weeks or more past the project plan milestone deliverable date on the project plan.</li>
 </ul>
 
-<h3>RTS Triggers</h3>
+<h2>RTS STATUS TYPES</h2>
+<p class="note">RTS = Returned to Source</p>
+
+<h3>RTS Paperwork Incomplete</h3>
+<p><strong>Definition:</strong> Used prior to kickoff, when a project has not yet been assigned to an Onboarding Consultant. Applied when something is missing from the sales side before onboarding can start &mdash; for example, an unsigned addendum, missing contract paperwork, or an outstanding PS sign-off.</p>
+<p><strong>Triggers:</strong></p>
+<ul>
+  <li>Missing addendum(s)</li>
+  <li>Missing contract paperwork</li>
+  <li>Missing PS sign-off</li>
+  <li>Any other required sales-side documentation not yet received prior to onboarding starting</li>
+</ul>
+<p><strong>Example:</strong> A signed addendum covering a custom integration was never returned by the client, so the project cannot be assigned or scheduled.</p>
+<p><strong>Timeline:</strong> The project does not kick off while it is in this status. Once the missing paperwork is received, the project comes out of RTS and onboarding begins.</p>
+<p><strong>Process:</strong> See <a href="#rts-process-paperwork">RTS Process &ndash; Paperwork Incomplete</a> below for the full steps and templates.</p>
+
+<h3>RTS Client</h3>
+<p><strong>Definition:</strong> Used when:</p>
+<ul>
+  <li>The client is unable to make deliverables on time</li>
+  <li>We have not received the data load by two weeks from kickoff</li>
+  <li>The client requests it due to a contract misalignment or payment terms misalignment</li>
+  <li>The client needs to stop the project for some reason but is unable to give us a return date</li>
+  <li>The client has been on hold for an extended amount of time and has gone through their allowed extensions</li>
+</ul>
+<p><strong>Triggers:</strong></p>
 <ul>
   <li>Project is on hold and the client does not pay license fees.</li>
   <li>Overdue balance that has not been resolved. OC has reminded client at least twice.</li>
   <li>Project is On-Hold past the date agreed upon with the client when they were originally placed on hold, with not clear start date within two weeks of the agreed upon date that the project would restart.</li>
   <li>Client does not provide required deliverables within two weeks of the due date.</li>
-  <li>The client does not participate, fails to show for two weeks&rsquo; worth of calls, and/or fails to deliver any deliverables for more than two weeks.</li>
   <li>Client refuses to participate in executive alignment calls</li>
   <li>Client does not provide requests for additional information or updated deliverables within 2 weeks of the request after agreeing to do so</li>
+  <li>Client is extremely unprofessional and disrespectful.</li>
+</ul>
+<p><strong>Example:</strong> The client&rsquo;s main point of contact leaves the company mid-project and no replacement has been named, so the client asks to pause the project but cannot commit to a return date.</p>
+<p><strong>Timeline:</strong> Governed by the triggers above &mdash; for example, an On-Hold timeline extended two weeks or more past the agreed resume date, missed deliverables/calls for two weeks or more, or exhausting the one allowed On-Hold extension.</p>
+<p><strong>Process:</strong> See <a href="#rts-process-client">RTS Process &ndash; Client</a> below for the full steps and templates.</p>
+
+<h3>RTS Functionality</h3>
+<p><strong>Definition:</strong> Used when there is a product or functionality misalignment &mdash; the client is missing functionality they expected, or there is a mismatch between what was sold and what the product delivers. Whoever moves a project into this status must provide a detailed write-up covering: what the functionality gap is, a summary of the calls where it was discussed, and which Product Owner needs to be involved.</p>
+<p><strong>Triggers:</strong></p>
+<ul>
   <li>Client refuses to move forward due to an unforeseen requirement that we can not or will not deliver</li>
   <li>Client states that they were promised or told something during the sale that we can't or won't do</li>
-  <li>Client is extremely unprofessional and disrespectful.</li>
-  <li class="note">Note: Sales involvement will not expedite the delivery of required information or expedite client&rsquo;s participation in the project</li>
 </ul>
+<p><strong>Example:</strong> The client expected a specific reporting export that isn&rsquo;t currently supported; the OC documents the gap, the calls where it came up, and identifies the Product Owner for that area.</p>
+<p><strong>Timeline:</strong> Resolution timeline depends on Product&rsquo;s review of the write-up. The OC and the assigned Product Owner determine next steps and communicate a target timeline back to Onboarding leadership and Sales.</p>
+<p><strong>Process:</strong> See <a href="#rts-process-functionality">RTS Process &ndash; Functionality</a> below for the full steps, including the Product confirmation call and internal write-up.</p>
+
+<h3>RTS Ghosting</h3>
+<p><strong>Definition:</strong> Used when the client has not shown up for or responded to any communication for more than two weeks.</p>
+<p><strong>Triggers:</strong></p>
+<ul>
+  <li>The client does not participate, fails to show for two weeks&rsquo; worth of calls, and/or fails to deliver any deliverables for more than two weeks.</li>
+</ul>
+<p><strong>Example:</strong> The client misses two consecutive project calls and does not respond to follow-up emails or calls from the OC for over two weeks.</p>
+<p><strong>Timeline:</strong> Moved to RTS Ghosting once two weeks of unresponsiveness has passed. The project stays in this status until the client becomes responsive again.</p>
+<p><strong>Process:</strong> See <a href="#rts-process-ghosting">RTS Process &ndash; Ghosting</a> below. The channel post must include the full outreach log &mdash; last contact date and all attempts made to reach the client.</p>
+
+<p class="note">Note: Sales involvement will not expedite the delivery of required information or expedite client&rsquo;s participation in the project.</p>
 
 <h2>PROCESSES</h2>
 
@@ -110,43 +157,92 @@
   <li>OC sets expectations around estimated lead-time to resume a Project after client is ready to resume, and the new milestone dates for the project based on client providing missing deliverables</li>
   <li>OC &mdash; Project status is updated in Notion</li>
   <li>Projects are allowed 1 extension and then would be RTS</li>
+  <li>About a week before the review date, the OC checks in with the client using the email below. Use the version that matches the RTS status the project would move to if the hold is not resolved.</li>
 </ol>
 
-<h3>RTS Process</h3>
-<ol>
-  <li>The Onboarding Consultant will post in the project channel that they will be RTSing.</li>
-  <li>They will @mention the sales rep as well as onboarding leadership.</li>
-  <li>They will list a detailed explanation as to why they are returning the project to sales, including any outstanding deliverables, functionality misalignments, and any disputes that the client may have.</li>
-  <li>Once that post is made, the OC will email the client using the templates that are also on the page, filling in the placeholders where necessary.</li>
-  <li>Once that email has been sent, they will update the status in the Notion database to RTS and whatever the general category of RTS is.</li>
-  <li>They will also fill in the RTS start date on the database so that that is there and list any of the reasons for RTS in the blockers field.</li>
-  <li>Any calls that are scheduled will be removed from the calendar.</li>
-  <li>Tickets should be placed into an on-hold status.</li>
-</ol>
-<p class="note">Note: This process includes all deliverables including but not limited to Project Charters being signed.</p>
-
-<h2>RTS EMAIL TEMPLATES</h2>
-
-<div class="situation">SITUATION: Onboarding Consultant posts in the project channel and @mentions the Sales Rep and onboarding leadership, notifying them of the RTS via Teams:</div>
-<div class="template-body">
-  <strong>Template:</strong><br><br>
-  What&rsquo;s needed:
-  <ul>
-    <li>Deliverables</li>
-    <li>Call Attendance</li>
-  </ul>
-  What attempts have been made to resolve:<br><br>
-  Ask of Sales:<br><br>
-  Main Contacts:<br>
-  Name &ndash; Email &ndash; Phone
+<h4>Check-In Email &ndash; Leads to RTS Paperwork Incomplete</h4>
+<p class="note">Uncommon &ndash; Paperwork Incomplete normally applies pre-kickoff. Use this version only if an already-active project is paused pending new paperwork, such as a contract amendment for expanded scope.</p>
+<div class="template-body" id="checkin-email-paperwork">
+  As discussed, we are going to move your project to an On Hold status until <span class="placeholder">MM/DD/YY</span>.<br><br>
+  On-Hold means that all project work is suspended until <span class="placeholder">MM/DD/YY</span>. This includes all project and configuration calls and importer development work. You will still have access to ZenDesk to submit support tickets.<br><br>
+  We will check in with you about a week before <span class="placeholder">MM/DD/YY</span>. If the outstanding paperwork has not been received by then, we will need to put your project in a &ldquo;returned to source&rdquo; status until it is resolved. This means your sales rep or account manager, <span class="placeholder">REP NAME</span>, will become your main point of contact with Rev.io during this time.<br><br>
+  All project work &mdash; including calls, data loads, and configuration &mdash; will stop while your project is in RTS status and will not resume until you are back in onboarding.<br><br>
+  Please note that your license fee is not affected by this change. If billing has already started, it will continue on its current schedule. If it has not started yet, it will begin on <span class="placeholder">MM/DD/YY</span> as outlined in your contract, regardless of project or RTS status.<br><br>
+  Best,
 </div>
 
-<p>Onboarding Consultant sends client RTS Email Template including Rev.io Executives, Sales rep, Director of Onboarding, Director of Sales</p>
+<h4>Check-In Email &ndash; Leads to RTS Client</h4>
+<div class="template-body" id="checkin-email-client">
+  As discussed, we are going to move your project to an On Hold status until <span class="placeholder">MM/DD/YY</span>.<br><br>
+  On-Hold means that all project work is suspended until <span class="placeholder">MM/DD/YY</span>. This includes all project and configuration calls and importer development work. You will still have access to ZenDesk to submit support tickets.<br><br>
+  We will check in with you about a week before <span class="placeholder">MM/DD/YY</span>. If you are not ready to restart the project or unable to provide a new start date, we will need to return your project to source. This means your sales rep or account manager, <span class="placeholder">REP NAME</span>, will become your main point of contact with Rev.io during this time and your project team will likely be reassigned.<br><br>
+  All project work &mdash; including calls, data loads, and configuration &mdash; will stop while your project is in RTS status and will not resume until you are back in onboarding.<br><br>
+  Please note that your license fee is not affected by this change. If billing has already started, it will continue on its current schedule. If it has not started yet, it will begin on <span class="placeholder">MM/DD/YY</span> as outlined in your contract, regardless of project or RTS status.<br><br>
+  Best,
+</div>
 
-<div class="situation">SITUATION: Onboarding Consultant sends client the following RTS email with Sales Rep cc&rsquo;d:</div>
-<div class="template-body">
+<h4>Check-In Email &ndash; Leads to RTS Functionality</h4>
+<div class="template-body" id="checkin-email-functionality">
+  As discussed, we are going to move your project to an On Hold status until <span class="placeholder">MM/DD/YY</span> while our product team reviews <span class="placeholder">FUNCTIONALITY/FEATURE</span>.<br><br>
+  On-Hold means that all project work is suspended until <span class="placeholder">MM/DD/YY</span>. This includes all project and configuration calls and importer development work. You will still have access to ZenDesk to submit support tickets.<br><br>
+  We will check in with you about a week before <span class="placeholder">MM/DD/YY</span>. If our product team has not completed their review by then, we will need to put your project in a &ldquo;returned to source&rdquo; status while that continues. This means your sales rep or account manager, <span class="placeholder">REP NAME</span>, will become your main point of contact with Rev.io during this time and your project team will likely be reassigned.<br><br>
+  All project work &mdash; including calls, data loads, and configuration &mdash; will stop while your project is in RTS status and will not resume until you are back in onboarding.<br><br>
+  Please note that your license fee is not affected by this change. If billing has already started, it will continue on its current schedule. If it has not started yet, it will begin on <span class="placeholder">MM/DD/YY</span> as outlined in your contract, regardless of project or RTS status.<br><br>
+  Best,
+</div>
+
+<h4>Check-In Email &ndash; Leads to RTS Ghosting</h4>
+<p class="note">Use this version only if the client agreed to the hold and then stopped responding before the check-in date.</p>
+<div class="template-body" id="checkin-email-ghosting">
+  As discussed, we are going to move your project to an On Hold status until <span class="placeholder">MM/DD/YY</span>.<br><br>
+  On-Hold means that all project work is suspended until <span class="placeholder">MM/DD/YY</span>. This includes all project and configuration calls and importer development work. You will still have access to ZenDesk to submit support tickets.<br><br>
+  We will check in with you about a week before <span class="placeholder">MM/DD/YY</span>. If we are unable to reach you by then, we will need to put your project in a &ldquo;returned to source&rdquo; status due to lack of response. This means your sales rep or account manager, <span class="placeholder">REP NAME</span>, will become your main point of contact with Rev.io during this time and your project team will likely be reassigned.<br><br>
+  All project work &mdash; including calls, data loads, and configuration &mdash; will stop while your project is in RTS status and will not resume until you are back in onboarding.<br><br>
+  Please note that your license fee is not affected by this change. If billing has already started, it will continue on its current schedule. If it has not started yet, it will begin on <span class="placeholder">MM/DD/YY</span> as outlined in your contract, regardless of project or RTS status.<br><br>
+  Best,
+</div>
+
+<h3>RTS Process</h3>
+<p class="note">Steps and messaging vary by RTS status. Use the walkthrough below that matches the status you are placing the project into.</p>
+
+<h4 id="rts-process-paperwork">RTS Process &ndash; Paperwork Incomplete</h4>
+<ol>
+  <li>The OC (or Sales, since the project has not yet been assigned to onboarding) updates the project status in Notion to RTS &ndash; Paperwork Incomplete. The RTS start date is captured automatically; list the missing item(s) in the blockers field.</li>
+  <li>Post in the project channel, @mentioning the Sales Rep and Onboarding Leadership:</li>
+</ol>
+<div class="template-body" id="channel-post-paperwork">
+  <strong>RTS Status:</strong> Paperwork Incomplete<br>
+  <strong>Client:</strong> <span class="placeholder">CLIENT NAME</span><br><br>
+  <strong>What the problem is:</strong> <span class="placeholder">Describe the missing item &ndash; addendum, contract paperwork, PS sign-off, etc.</span><br><br>
+  <strong>How to fix it:</strong> <span class="placeholder">What needs to be signed or provided, and by whom, before the project can be assigned and kicked off</span><br><br>
+  <strong>Contacts:</strong><br>
+  Client contact who needs to provide/sign &ndash; Name &ndash; Email &ndash; Phone<br>
+  Rev.io contract owner &ndash; Name &ndash; Email<br><br>
+  <strong>Relevant call recordings:</strong> <span class="placeholder">N/A unless a discovery/sales call touched on this &ndash; link and timestamp if so</span>
+</div>
+<p class="note">No client-facing notification for this status &mdash; Sales/Account Management handles the paperwork directly with the client. Since the project has not started, there are also typically no calls to remove from the calendar or tickets to place on hold.</p>
+
+<h4 id="rts-process-client">RTS Process &ndash; Client</h4>
+<ol>
+  <li>The OC updates the project status in Notion to RTS &ndash; Client. The RTS start date is captured automatically; the OC manually lists the reason(s) for RTS in the blockers field.</li>
+  <li>The OC posts in the project channel, @mentions the Sales Rep and Onboarding Leadership, with a detailed explanation as to why the project is being returned to source:</li>
+</ol>
+<div class="template-body" id="channel-post-client">
+  <strong>RTS Status:</strong> Client<br>
+  <strong>Client:</strong> <span class="placeholder">CLIENT NAME</span><br><br>
+  <strong>What the problem is:</strong> <span class="placeholder">Specify: deliverables not made on time, data load not received within two weeks of kickoff, contract or payment terms misalignment, client stopping the project with no return date, or client has exhausted their allowed On-Hold extension</span><br><br>
+  <strong>How to fix it:</strong> <span class="placeholder">What the client needs to deliver or complete, and by when, to resolve</span><br><br>
+  <strong>Contacts:</strong><br>
+  Client SME &ndash; Name &ndash; Email &ndash; Phone<br>
+  Executive Sponsor &ndash; Name &ndash; Email &ndash; Phone<br><br>
+  <strong>Relevant call recordings:</strong> <span class="placeholder">Link(s) and timestamp(s) of calls where the deliverable or timeline was discussed</span>
+</div>
+<ol start="3">
+  <li>The OC emails the client:</li>
+</ol>
+<div class="template-body" id="client-email-client">
   <em>If missing deliverables/calls:</em><br><br>
-  We haven&rsquo;t received the deliverables below. All of these are critical to being able to progress the project and get you transitioned to the Rev.io Platform. Since we are not able to move forward, I will need to put your project in a &ldquo;return to sales&rdquo; status.<br><br>
+  We haven&rsquo;t received the deliverables below. All of these are critical to being able to progress the project and get you transitioned to the Rev.io Platform. Since we are not able to move forward, I will need to put your project in a &ldquo;returned to source&rdquo; status.<br><br>
   Missing deliverables:
   <ul>
     <li>deliverable 1</li>
@@ -155,28 +251,171 @@
   </ul>
   <em>Misalignment on fees/payments missing/product expectations:</em>
   <ul>
-    <li>Due to the recent misalignment on the timing of the fees, I will need to return your account to sales.</li>
-    <li>Since we have not been able to collect payment on your Rev.io account, I will need to return your account to sales.</li>
-    <li>Based on our conversions about (topic misalignment), I feel it would be best to return your account to sales so that we can all be on the same page on expectations.</li>
+    <li>Due to the recent misalignment on the timing of the fees, I will need to return your account to source.</li>
+    <li>Since we have not been able to collect payment on your Rev.io account, I will need to return your account to source.</li>
+    <li>Based on our conversions about (topic misalignment), I feel it would be best to return your account to source so that we can all be on the same page on expectations.</li>
   </ul>
   <strong>Main Body (required, DO NOT EDIT outside of red text):</strong><br><br>
-  This means your weekly project calls and configuration calls will stop effectively immediately. All importers will be removed from the development queue. Due to capacity planning, the project team will likely be reassigned. Your sales rep, <span class="placeholder">REP NAME</span>, will take over as your primary contact with Rev.io during this time. Also, as a reminder your license fee of <span class="placeholder">$XXXX</span> starts on <span class="placeholder">MM/DD/YY</span> regardless of project status.<br><br>
-  Once (insert reason for RTS) is resolved, please reach out to <span class="placeholder">(SALES REP)</span>. Our Onboarding Leadership will then assign a Rev.io project team so your weekly calls can be scheduled and a project plan with the new start and activation date can be established. This process may take up to 30 days to complete once the project is returned to Onboarding.
+  All project work &mdash; including calls, data loads, and configuration &mdash; will stop effectively immediately and will not resume until your project is back in onboarding. All importers will be removed from the development queue. Due to capacity planning, the project team will likely be reassigned. Your sales rep or account manager, <span class="placeholder">REP NAME</span>, will become your main point of contact with Rev.io during this time.<br><br>
+  Please note that your license fee is not affected by this change. If billing has already started, it will continue on its current schedule. If it has not started yet, it will begin on <span class="placeholder">MM/DD/YY</span> as outlined in your contract, regardless of project or RTS status.<br><br>
+  Once (insert reason for RTS) is resolved, please reach out to <span class="placeholder">(SALES REP / ACCOUNT MANAGER)</span>. Our Onboarding Leadership will then assign a Rev.io project team so your weekly calls can be scheduled and a project plan with the new start and activation date can be established. This process may take up to 30 days to complete once the project is returned to Onboarding.
 </div>
+<ol start="4">
+  <li>Any calls that are scheduled will be removed from the calendar.</li>
+  <li>Tickets should be placed into an on-hold status.</li>
+</ol>
 
-<p>Onboarding Consultant sends client On-Hold Email Template including Rev.io Executives, Sales rep, Director of Onboarding, Director of Sales</p>
+<h4 id="rts-process-functionality">RTS Process &ndash; Functionality</h4>
+<ol>
+  <li>Before anything else, the OC holds a call with Product to confirm it is truly a product gap and not something that can be resolved within onboarding.</li>
+  <li>The OC updates the project status in Notion to RTS &ndash; Functionality. The RTS start date is captured automatically; the OC manually lists the reason(s) for RTS in the blockers field.</li>
+  <li>The OC posts in the project channel, @mentions the Sales Rep and Onboarding Leadership:</li>
+</ol>
+<div class="template-body" id="channel-post-functionality">
+  <strong>RTS Status:</strong> Functionality<br>
+  <strong>Client:</strong> <span class="placeholder">CLIENT NAME</span><br><br>
+  <strong>What the problem is:</strong> <span class="placeholder">Describe the functionality gap or misalignment</span><br><br>
+  <strong>How to fix it:</strong> Needs Product review. Product Owner: <span class="placeholder">NAME</span>. Full write-up and call recordings to follow via the internal RTS Functionality write-up (below).<br><br>
+  <strong>Contacts:</strong><br>
+  Product Owner &ndash; Name &ndash; Email<br>
+  Client SME (feedback source) &ndash; Name &ndash; Email &ndash; Phone<br><br>
+  <strong>Relevant call recordings:</strong> <span class="placeholder">Link(s) and timestamp(s) of calls where the functionality was discussed and the client gave feedback</span>
+</div>
+<ol start="4">
+  <li>The OC prepares the internal RTS Functionality write-up, including call recordings, for Product, Sales, and Onboarding Leadership &mdash; Rev.io eyes only:</li>
+</ol>
+<div class="template-body" id="internal-writeup-functionality">
+  <strong>Subject:</strong> RTS Functionality &ndash; <span class="placeholder">CLIENT NAME</span><br><br>
+  <strong>To:</strong> Product Owner (<span class="placeholder">NAME</span>), Sales Rep/Account Manager (<span class="placeholder">NAME</span>), Onboarding Leadership<br><br>
+  <strong>Call recordings / snippets:</strong>
+  <ul>
+    <li>Recording link and timestamp where the functionality was discussed</li>
+    <li>Recording link and timestamp of the client&rsquo;s feedback on it</li>
+  </ul>
+  <strong>OC written summary:</strong>
+  <ul>
+    <li>What the functionality gap or misalignment is:</li>
+    <li>What the client expected vs. what the product currently supports:</li>
+    <li>Impact to the client if unresolved:</li>
+    <li>Calls where this was discussed (dates):</li>
+    <li>Product Owner who needs to be involved:</li>
+  </ul>
+  Do not share this write-up or the attached recordings outside of Rev.io.
+</div>
+<ol start="5">
+  <li>The OC emails the client, if needed:</li>
+</ol>
+<div class="template-body" id="client-email-functionality">
+  Hi <span class="placeholder">CLIENT NAME</span>,<br><br>
+  During our recent calls, we identified that <span class="placeholder">FUNCTIONALITY/FEATURE</span> does not currently align with what was discussed during your onboarding. We want to make sure this gets the right level of review from our product team before we move forward, so we are pausing active project work in the meantime.<br><br>
+  All project work &mdash; including calls, data loads, and configuration &mdash; will stop while your project is in RTS status and will not resume until you are back in onboarding.<br><br>
+  Your sales rep or account manager, <span class="placeholder">REP NAME</span>, will become your main point of contact with Rev.io during this time.<br><br>
+  Please note that your license fee is not affected by this change. If billing has already started, it will continue on its current schedule. If it has not started yet, it will begin on <span class="placeholder">MM/DD/YY</span> as outlined in your contract, regardless of project or RTS status.<br><br>
+  We will follow up with next steps as soon as we have more information from our product team.<br><br>
+  Best,
+</div>
+<ol start="6">
+  <li>Any calls that are scheduled will be removed from the calendar.</li>
+  <li>Tickets should be placed into an on-hold status.</li>
+</ol>
 
-<div class="situation">SITUATION: Onboarding Consultant sends client ON HOLD email template to notify them of change in project status, with Sales Rep cc&rsquo;d:</div>
-<div class="template-body">
-  As discussed, we are going to move your project to an On Hold status until <span class="placeholder">MM/DD/YY</span>.<br><br>
-  On-Hold means that all project work is suspended until <span class="placeholder">MM/DD/YY</span>. This includes all project and configuration calls and importer development work. You will still have access to ZenDesk to submit support tickets.<br><br>
-  We will check in with you about a week before <span class="placeholder">MM/DD/YY</span>. If you are not ready to restart the project or unable to provide a new start date, we will need to return your project to sales. This means your sales rep, <span class="placeholder">REP NAME</span>, will take over as your primary contact with Rev.io during this time and your project team will likely be reassigned.<br><br>
-  Also, as a reminder your license fee of <span class="placeholder">$XXXX</span> starts on <span class="placeholder">MM/DD/YY</span> regardless of project status.<br><br>
+<h4 id="rts-process-ghosting">RTS Process &ndash; Ghosting</h4>
+<ol>
+  <li>The OC updates the project status in Notion to RTS &ndash; Ghosting. The RTS start date is captured automatically; the OC manually lists the last contact date and reason(s) for RTS in the blockers field.</li>
+  <li>The OC posts in the project channel, @mentions the Sales Rep and Onboarding Leadership, including the full outreach log:</li>
+</ol>
+<div class="template-body" id="channel-post-ghosting">
+  <strong>RTS Status:</strong> Ghosting<br>
+  <strong>Client:</strong> <span class="placeholder">CLIENT NAME</span><br><br>
+  <strong>What the problem is:</strong> Client has not responded to or shown up for communication in <span class="placeholder">X</span> weeks (2+ weeks required for this status).<br><br>
+  <strong>Last time we heard from them:</strong> <span class="placeholder">Date and channel &ndash; call, email, ticket reply, etc.</span><br><br>
+  <strong>All attempts to reach them:</strong> List every attempt made, both before the last contact date and between the last contact date and this RTS notice.
+  <ul>
+    <li>Tickets: <span class="placeholder">date(s) and ticket #</span></li>
+    <li>Emails: <span class="placeholder">date(s)</span></li>
+    <li>Phone calls: <span class="placeholder">date(s)</span></li>
+    <li>Other (Teams, text, etc.): <span class="placeholder">date(s)</span></li>
+  </ul>
+  <strong>How to fix it:</strong> <span class="placeholder">Outreach attempts remaining or planned &ndash; alternate contact, phone, escalation to Executive Sponsor</span><br><br>
+  <strong>Contacts:</strong><br>
+  Last known Client SME &ndash; Name &ndash; Email &ndash; Phone<br>
+  Executive Sponsor &ndash; Name &ndash; Email &ndash; Phone<br><br>
+  <strong>Relevant call recordings:</strong> <span class="placeholder">Link to last completed call and any missed/no-show call logs</span>
+</div>
+<ol start="3">
+  <li>The OC emails the client:</li>
+</ol>
+<div class="template-body" id="client-email-ghosting">
+  Hi <span class="placeholder">CLIENT NAME</span>,<br><br>
+  We haven&rsquo;t been able to reach you or receive a response since <span class="placeholder">LAST CONTACT DATE</span>, despite multiple attempts by phone, email, and ticket. Since we have not been able to keep your project moving forward, I will need to put your account in a &ldquo;returned to source&rdquo; status.<br><br>
+  All project work &mdash; including calls, data loads, and configuration &mdash; will stop while your project is in RTS status and will not resume until you are back in onboarding.<br><br>
+  Your sales rep or account manager, <span class="placeholder">REP NAME</span>, will become your main point of contact with Rev.io during this time.<br><br>
+  Please note that your license fee is not affected by this change. If billing has already started, it will continue on its current schedule. If it has not started yet, it will begin on <span class="placeholder">MM/DD/YY</span> as outlined in your contract, regardless of project or RTS status.<br><br>
+  Whenever you&rsquo;re ready to continue, please reach out to <span class="placeholder">(SALES REP / ACCOUNT MANAGER)</span> and we will get your project reassigned and back on the calendar.<br><br>
+  Best,
+</div>
+<ol start="4">
+  <li>Any calls that are scheduled will be removed from the calendar.</li>
+  <li>Tickets should be placed into an on-hold status.</li>
+</ol>
+
+<p class="note">Note: This process includes all deliverables including but not limited to Project Charters being signed.</p>
+
+<h3>Resuming a Project After RTS</h3>
+<p class="note">Notification and re-engagement messaging vary by RTS status. Use the walkthrough below that matches the status the project is coming out of.</p>
+
+<h4 id="resuming-paperwork">Resuming &ndash; Paperwork Incomplete</h4>
+<ol>
+  <li>The Sales Rep notifies the Onboarding Consultant and Onboarding Leadership that the missing paperwork has been received:</li>
+</ol>
+<div class="template-body" id="resume-notify-oc-paperwork">
+  Hi ________,<br><br>
+  We have received the outstanding paperwork for <span class="placeholder">CLIENT NAME</span>. Here is a summary of our conversations and what was received.<br><br>
+  SUMMARY OF CONVERSATIONS:
+  <ul>
+    <li>Summary 1</li>
+    <li>Summary 2</li>
+  </ul>
+  ITEMS RECEIVED:
+  <ul>
+    <li>Addendum</li>
+    <li>Contract paperwork</li>
+    <li>PS sign-off</li>
+  </ul>
+  Please assign an Onboarding Consultant and get the project scheduled for kickoff. Let me know if you have any questions.<br><br>
+  Thanks,
+</div>
+<ol start="2">
+  <li>Onboarding Leadership determines who the Onboarding Consultant &mdash; and potentially the DER &mdash; will be for the project. This may change from the original project team.</li>
+  <li>Once the project team is determined, the Sales Rep holds a 30-minute review meeting with the new or newly confirmed project team, covering:
+    <ul>
+      <li>Any reason(s) why the project went into RTS</li>
+      <li>What the solutions were</li>
+      <li>What was agreed to with the client</li>
+      <li>A full rundown of everything that happened since the RTS, so everyone is on the same page</li>
+    </ul>
+  </li>
+  <li>The Sales Rep notifies client stakeholders that the project is resuming:</li>
+</ol>
+<div class="template-body" id="resume-notify-client-paperwork">
+  Hi ________,<br><br>
+  This email is to let you know that we have received the outstanding paperwork from your team and we are excited to get your project underway.<br><br>
+  ITEMS RECEIVED:
+  <ul>
+    <li>Addendum</li>
+    <li>Contract paperwork</li>
+    <li>PS sign-off</li>
+  </ul>
+  We will now assign your onboarding team and reach out to schedule your kickoff call.<br><br>
+  Thank you for your attention to this and please let us know if you have any questions.<br><br>
   Best,
 </div>
 
-<div class="situation">SITUATION: Sales Rep has received outstanding deliverables from client and is notifying the Onboarding Consultant that project work can resume and project is no longer in RTS status:</div>
-<div class="template-body">
+<h4 id="resuming-client">Resuming &ndash; Client</h4>
+<ol>
+  <li>The Sales Rep notifies the Onboarding Consultant and Onboarding Leadership that the client&rsquo;s deliverables have been received and the project is ready to resume:</li>
+</ol>
+<div class="template-body" id="resume-notify-oc-client">
   Hi ________,<br><br>
   We have received the outstanding deliverables for <span class="placeholder">CLIENT NAME</span>. Here is a summary of our conversations and I have provided the outstanding deliverables listed below.<br><br>
   SUMMARY OF CONVERSATIONS:
@@ -194,9 +433,19 @@
   I have scheduled the next project call for <span class="placeholder">DATE/TIME</span> based on your availability. Please let me know if you have any questions.<br><br>
   Thanks,
 </div>
-
-<div class="situation">SITUATION: Sales Rep notifies client stakeholders that project status is out of RTS and project work will resume, with Onboarding Consultant cc&rsquo;d:</div>
-<div class="template-body">
+<ol start="2">
+  <li>Onboarding Leadership determines who the Onboarding Consultant &mdash; and potentially the DER &mdash; will be for the project. This may change from the original project team.</li>
+  <li>Once the project team is determined, the Sales Rep holds a 30-minute review meeting with the new or newly confirmed project team, covering:
+    <ul>
+      <li>Any reason(s) why the project went into RTS</li>
+      <li>What the solutions were</li>
+      <li>What was agreed to with the client</li>
+      <li>A full rundown of everything that happened since the RTS, so everyone is on the same page</li>
+    </ul>
+  </li>
+  <li>The Sales Rep notifies client stakeholders that the project is resuming:</li>
+</ol>
+<div class="template-body" id="resume-notify-client-client">
   Hi ________,<br><br>
   This email is to inform you that we have received all necessary deliverables (listed below) that were outstanding from your team and we are excited to re-engage your project team.<br><br>
   DELIVERABLES:
@@ -209,6 +458,88 @@
   Thank you for your attention and diligence towards addressing our concerns and please let us know if you have any questions.<br><br>
   Best,
 </div>
+
+<h4 id="resuming-functionality">Resuming &ndash; Functionality</h4>
+<ol>
+  <li>The Sales Rep notifies the Onboarding Consultant and Onboarding Leadership that Product&rsquo;s review is complete and the project is ready to resume:</li>
+</ol>
+<div class="template-body" id="resume-notify-oc-functionality">
+  Hi ________,<br><br>
+  Our product team has completed their review for <span class="placeholder">CLIENT NAME</span>. Here is a summary of the outcome.<br><br>
+  SUMMARY OF CONVERSATIONS:
+  <ul>
+    <li>Summary 1</li>
+    <li>Summary 2</li>
+  </ul>
+  RESOLUTION:
+  <ul>
+    <li>What Product determined</li>
+    <li>Any workaround or roadmap commitment provided to the client</li>
+  </ul>
+  I have scheduled the next project call for <span class="placeholder">DATE/TIME</span> based on your availability. Please let me know if you have any questions.<br><br>
+  Thanks,
+</div>
+<ol start="2">
+  <li>Onboarding Leadership determines who the Onboarding Consultant &mdash; and potentially the DER &mdash; will be for the project. This may change from the original project team.</li>
+  <li>Once the project team is determined, the Sales Rep holds a 30-minute review meeting with the new or newly confirmed project team, covering:
+    <ul>
+      <li>Any reason(s) why the project went into RTS</li>
+      <li>What the solutions were</li>
+      <li>What was agreed to with the client</li>
+      <li>A full rundown of everything that happened since the RTS, so everyone is on the same page</li>
+    </ul>
+  </li>
+  <li>The Sales Rep notifies client stakeholders that the project is resuming:</li>
+</ol>
+<div class="template-body" id="resume-notify-client-functionality">
+  Hi ________,<br><br>
+  This email is to let you know that our product team has completed their review, and we are excited to re-engage your project team.<br><br>
+  RESOLUTION:
+  <ul>
+    <li>What Product determined</li>
+    <li>Any workaround or roadmap commitment provided</li>
+  </ul>
+  We will now resume your regular weekly project calls and working sessions. On the next call, we will review the overall status of your project and adjust the activation timeline accordingly.<br><br>
+  Thank you for your patience while we worked through this and please let us know if you have any questions.<br><br>
+  Best,
+</div>
+
+<h4 id="resuming-ghosting">Resuming &ndash; Ghosting</h4>
+<ol>
+  <li>The Sales Rep notifies the Onboarding Consultant and Onboarding Leadership that the client has become responsive again and is ready to continue:</li>
+</ol>
+<div class="template-body" id="resume-notify-oc-ghosting">
+  Hi ________,<br><br>
+  <span class="placeholder">CLIENT NAME</span> has responded and confirmed they are ready to continue. Here is a summary of our conversations.<br><br>
+  SUMMARY OF CONVERSATIONS:
+  <ul>
+    <li>Summary 1</li>
+    <li>Summary 2</li>
+  </ul>
+  I have scheduled the next project call for <span class="placeholder">DATE/TIME</span> based on your availability. Please let me know if you have any questions.<br><br>
+  Thanks,
+</div>
+<ol start="2">
+  <li>Onboarding Leadership determines who the Onboarding Consultant &mdash; and potentially the DER &mdash; will be for the project. This may change from the original project team.</li>
+  <li>Once the project team is determined, the Sales Rep holds a 30-minute review meeting with the new or newly confirmed project team, covering:
+    <ul>
+      <li>Any reason(s) why the project went into RTS</li>
+      <li>What the solutions were</li>
+      <li>What was agreed to with the client</li>
+      <li>A full rundown of everything that happened since the RTS, so everyone is on the same page</li>
+    </ul>
+  </li>
+  <li>The Sales Rep notifies client stakeholders that the project is resuming:</li>
+</ol>
+<div class="template-body" id="resume-notify-client-ghosting">
+  Hi ________,<br><br>
+  This email is to let you know that we have reconnected with your team and we are excited to re-engage your project.<br><br>
+  We will now resume your regular weekly project calls and working sessions. On the next call, we will review the overall status of your project and adjust the activation timeline accordingly.<br><br>
+  Thank you and please let us know if you have any questions.<br><br>
+  Best,
+</div>
+
+<p class="note">Projects with a reassignment can take up to five business days to bring back into onboarding, and there is no guarantee of getting the original project team back.</p>
 
 </body>
 </html>
